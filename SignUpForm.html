@@ -4,10 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TUTTI 회원가입</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap"
-      rel="stylesheet"
-    />
     <style>
       * {
         box-sizing: border-box;
@@ -36,13 +32,12 @@
       }
 
       .logo {
-        font-family: "Satisfy", cursive;
-        font-size: 64px;
-        color: #247eb6;
-        text-align: center;
-        text-shadow: 0.8px 0.8px 0 #247eb6, -0.8px 0.8px 0 #247eb6,
-          0.8px -0.8px 0 #247eb6, -0.8px -0.8px 0 #247eb6;
         margin-bottom: 40px;
+      }
+
+      .logo img {
+        width: 200px;
+        height: auto;
       }
 
       form {
@@ -114,7 +109,10 @@
   </head>
   <body>
     <div class="container">
-      <div class="logo">Tutti</div>
+      <div class="logo">
+        <img src="./tutti.png" alt="Tutti 로고" />
+      </div>
+
       <form id="signupForm">
         <div class="input-wrapper">
           <input type="text" id="nickname" placeholder="닉네임" required />
