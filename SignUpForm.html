@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TUTTI 회원가입</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: radial-gradient(
+          circle at center,
+          #e3f2fd 0%,
+          #cfe9fd 20%,
+          #e8f5fe 80%
+        );
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      .container {
+        width: 90%;
+        max-width: 720px;
+        padding: 40px 20px;
+      }
+
+      .logo {
+        font-family: "Satisfy", cursive;
+        font-size: 64px;
+        color: #247eb6;
+        text-align: center;
+        text-shadow: 0.8px 0.8px 0 #247eb6, -0.8px 0.8px 0 #247eb6,
+          0.8px -0.8px 0 #247eb6, -0.8px -0.8px 0 #247eb6;
+        margin-bottom: 40px;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .input-wrapper {
+        position: relative;
+      }
+
+      .input-wrapper::before {
+        content: "●";
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        font-size: 14px;
+        color: #247eb6;
+        transition: color 0.2s ease;
+      }
+
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        min-height: 80px;
+        padding: 5px 5px 5px 30px;
+        font-size: 20px;
+        border: 1px solid #ccc;
+        border-radius: 13px;
+        background-color: #fff;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        outline: none;
+      }
+
+      input::placeholder {
+        color: #999;
+      }
+
+      .error {
+        color: red;
+        font-size: 14px;
+        margin-top: -12px;
+        margin-bottom: 12px;
+        text-align: left;
+      }
+
+      button {
+        width: 100%;
+        max-width: 483px;
+        height: 80px;
+        background-color: #8bcdf6;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        border: none;
+        border-radius: 30px;
+        padding: 7px 0;
+        margin: 10px auto 0;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">Tutti</div>
+      <form id="signupForm">
+        <div class="input-wrapper">
+          <input type="text" id="nickname" placeholder="닉네임" required />
+        </div>
+        <div class="input-wrapper">
+          <input type="text" id="username" placeholder="아이디" required />
+        </div>
+        <div class="input-wrapper">
+          <input
+            type="password"
+            id="password"
+            placeholder="비밀번호"
+            required
+          />
+        </div>
+        <div class="input-wrapper">
+          <input
+            type="password"
+            id="confirmPassword"
+            placeholder="비밀번호 재입력"
+            required
+          />
+        </div>
+
+        <p class="error" id="passwordError"></p>
+        <p class="error" id="confirmError"></p>
+
+        <button type="submit" id="submitBtn" disabled>회원가입</button>
+      </form>
+    </div>
+
+    <script>
+      const form = document.getElementById("signupForm");
+      const submitBtn = document.getElementById("submitBtn");
+
+      const requiredFields = [
+        document.getElementById("nickname"),
+        document.getElementById("username"),
+        document.getElementById("password"),
+        document.getElementById("confirmPassword"),
+      ];
+
+      const passwordError = document.getElementById("passwordError");
+      const confirmError = document.getElementById("confirmError");
+
+      function checkFields() {
+        let allFilled = true;
+
+        requiredFields.forEach((field) => {
+          const wrapper = field.parentElement;
+          if (field.value.trim() === "") {
+            wrapper.classList.remove("filled");
+            allFilled = false;
+          } else {
+            wrapper.classList.add("filled");
+          }
+        });
+
+        submitBtn.disabled = !allFilled;
+      }
+
+      requiredFields.forEach((field) => {
+        field.addEventListener("input", checkFields);
+      });
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const password = document.getElementById("password").value;
+        const confirmPassword =
+          document.getElementById("confirmPassword").value;
+
+        let valid = true;
+
+        if (password.length < 8) {
+          passwordError.textContent = "비밀번호는 8자 이상이어야 합니다.";
+          valid = false;
+        } else {
+          passwordError.textContent = "";
+        }
+
+        if (password !== confirmPassword) {
+          confirmError.textContent = "비밀번호가 일치하지 않습니다.";
+          valid = false;
+        } else {
+          confirmError.textContent = "";
+        }
+
+        if (valid) {
+          alert("회원가입이 완료되었습니다!");
+          form.reset();
+          requiredFields.forEach((f) =>
+            f.parentElement.classList.remove("filled")
+          );
+          submitBtn.disabled = true;
+        }
+      });
+    </script>
+  </body>
+</html>
