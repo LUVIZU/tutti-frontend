@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TUTTI 로그인</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background: #f9fcff;
+        font-family: Arial, sans-serif;
+        min-height: 100vh;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      .blur-circle {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .blur-circle-1 {
+        width: 783px;
+        height: 783px;
+        background: #ddf2ff;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        filter: blur(500px);
+        opacity: 1;
+      }
+
+      .blur-circle-2 {
+        width: 507px;
+        height: 507px;
+        background: #b0dcf7;
+        top: 240px;
+        left: 60%;
+        transform: translateX(-50%);
+        filter: blur(250px);
+        opacity: 0.2;
+      }
+
+      .container {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 720px;
+        padding: 40px 20px;
+      }
+
+      .logo {
+        margin-bottom: 40px;
+        display: flex;
+        justify-content: flex-start;
+      }
+
+      .logo img {
+        width: 204px;
+        height: 82px;
+        display: block;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+      }
+
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        max-width: 698px;
+        height: 102px;
+        padding: 20px;
+        font-size: 20px;
+        border: 1px solid #ccc;
+        border-radius: 16px;
+        background-color: #fff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        outline: none;
+      }
+
+      input::placeholder {
+        color: #999;
+        font-size: 20px;
+        padding-left: 5px;
+      }
+
+      button {
+        width: 100%;
+        max-width: 483px;
+        height: 90px;
+        background-color: #8bcdf6;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        margin-top: 40px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      button:active {
+        background-color: #5dbce4;
+      }
+
+      @media (max-width: 768px) {
+        .logo {
+          margin-bottom: 24px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+          font-size: 14px;
+          height: 80px;
+        }
+
+        button {
+          height: 70px;
+          font-size: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="blur-circle blur-circle-1"></div>
+    <div class="blur-circle blur-circle-2"></div>
+
+    <div class="container">
+      <div class="logo">
+        <img src="./tutti.png" alt="Tutti 로고" />
+      </div>
+      <form onsubmit="return handleLogin(event)">
+        <input type="text" id="username" placeholder="아이디" required />
+        <input type="password" id="password" placeholder="비밀번호" required />
+        <button type="submit">로그인</button>
+      </form>
+    </div>
+
+    <script>
+      function handleLogin(event) {
+        event.preventDefault();
+
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value;
+
+        if (!username || !password) {
+          alert("아이디와 비밀번호를 입력해주세요.");
+          return false;
+        }
+
+        alert("로그인 시도: " + username);
+        return true;
+      }
+    </script>
+  </body>
+</html>
