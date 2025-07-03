@@ -13,19 +13,48 @@
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
-        background: radial-gradient(
-          circle at center,
-          #e3f2fd 0%,
-          #cfe9fd 20%,
-          #e8f5fe 80%
-        );
+        background: #f9fcff;
         display: flex;
         justify-content: center;
         align-items: center;
         min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* 블러 원 */
+      .blur-circle {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .blur-circle-1 {
+        width: 783px;
+        height: 783px;
+        background: #ddf2ff;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        filter: blur(500px);
+        opacity: 1;
+      }
+
+      .blur-circle-2 {
+        width: 507px;
+        height: 507px;
+        background: #b0dcf7;
+        top: 240px;
+        left: 60%;
+        transform: translateX(-50%);
+        filter: blur(250px);
+        opacity: 0.2;
       }
 
       .container {
+        position: relative;
+        z-index: 1;
         width: 90%;
         max-width: 720px;
         padding: 40px 20px;
@@ -63,7 +92,8 @@
       input[type="text"],
       input[type="password"] {
         width: 100%;
-        min-height: 80px;
+        min-width: 698px;
+        min-height: 102px;
         padding: 5px 5px 5px 30px;
         font-size: 20px;
         border: 1px solid #ccc;
@@ -105,9 +135,26 @@
         opacity: 0.5;
         cursor: not-allowed;
       }
+
+      @media (max-width: 768px) {
+        input[type="text"],
+        input[type="password"] {
+          min-height: 80px;
+          font-size: 16px;
+        }
+
+        button {
+          height: 70px;
+          font-size: 18px;
+        }
+      }
     </style>
   </head>
   <body>
+    <!-- 블러 원 배경 -->
+    <div class="blur-circle blur-circle-1"></div>
+    <div class="blur-circle blur-circle-2"></div>
+
     <div class="container">
       <div class="logo">
         <img src="./tutti.png" alt="Tutti 로고" />
@@ -213,3 +260,4 @@
     </script>
   </body>
 </html>
+
