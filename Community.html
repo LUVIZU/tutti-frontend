@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TUTTI 커뮤니티</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      .blur-circle {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .header,
+      .wrapper,
+      .sidebar,
+      .content {
+        position: relative;
+        z-index: 10;
+      }
+
+      .blur-circle-1 {
+        width: 783px;
+        height: 783px;
+        background: #ddf2ff;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        filter: blur(500px);
+        opacity: 1;
+      }
+
+      .blur-circle-2 {
+        width: 507px;
+        height: 507px;
+        background: #b0dcf7;
+        top: 240px;
+        left: 60%;
+        transform: translateX(-50%);
+        filter: blur(250px);
+        opacity: 0.2;
+      }
+
+      .logo img {
+        width: 128px;
+        height: 52px;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        padding-top: 100px;
+      }
+
+      .wrapper {
+        width: 90vw;
+        max-width: 1549px;
+        padding: 20px;
+        display: flex;
+        flex-direction: row;
+        gap: 0;
+      }
+
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 5vw;
+        z-index: 1000;
+      }
+
+      .header .user-actions {
+        display: flex;
+        align-items: center;
+        width: auto;
+        height: 42px;
+        gap: 14px;
+      }
+
+      .nav-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 37px;
+        padding: 10px 14px;
+        font-family: "Inter", sans-serif;
+        font-size: 20px;
+        font-weight: 500;
+        border-right: 1px solid #e1e1e1;
+        position: relative;
+        background-color: #f9f9f9;
+      }
+
+      .notification {
+        position: relative;
+      }
+
+      .badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        width: 18px;
+        height: 18px;
+        background: #ff3b3b;
+        color: white;
+        font-size: 12px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .profile-btn {
+        width: 37px;
+        height: 37px;
+        border: 1px solid #247eb6;
+        border-radius: 1000px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+      }
+
+      .profile-btn img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .sidebar {
+        width: 330px;
+        height: 980px;
+        padding: 2px;
+        background-color: white;
+        border-top: 5px solid #247eb6;
+      }
+
+      .sidebar h2 {
+        color: #247eb6;
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 40px;
+        margin-top: 37px;
+        text-align: center;
+      }
+
+      .stats {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10.67px;
+        margin-top: 15px;
+      }
+
+      .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 16px;
+        color: #000;
+      }
+
+      .stat-item img.user-icon {
+        width: 26.27px;
+        height: 20.3px;
+      }
+
+      .stat-item img.calendar-icon {
+        width: 18.67px;
+        height: 18.67px;
+      }
+
+      .stat-item img.day-icon {
+        width: 13.33px;
+        height: 17px;
+      }
+
+      .write-button {
+        margin: 20px auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 237px;
+        height: 46px;
+        background-color: #b0dcf7;
+        border-radius: 21.02px;
+        gap: 7.01px;
+        color: white;
+        font-size: 20px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .write-button img {
+        width: 20px;
+        height: 20px;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        margin-top: 20px;
+        padding: 0 15px;
+      }
+
+      .sidebar li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      .sidebar li.active {
+        background-color: #e6f4fd;
+      }
+
+      .sidebar li.active span {
+        color: #247eb6;
+        font-weight: 600;
+      }
+
+      .icon-all {
+        width: 26px;
+        height: 26px;
+      }
+      .icon-star {
+        width: 27px;
+        height: 26px;
+      }
+      .icon-info {
+        width: 27px;
+        height: 26px;
+      }
+      .icon-group {
+        width: 37px;
+        height: 26px;
+      }
+      .icon-mission {
+        width: 20.8px;
+        height: 26px;
+      }
+      .icon-calendar {
+        width: 26px;
+        height: 26px;
+      }
+
+      .content {
+        flex: 1;
+        width: 1207px;
+        height: 980px;
+        padding-top: 68px;
+        padding-left: 43px;
+      }
+
+      .content .title-bar {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .content .title-bar h3 {
+        font-family: "Inter", sans-serif;
+        font-size: 35px;
+        font-weight: 600;
+        line-height: 30px;
+        color: #000000;
+        margin: 0;
+      }
+
+      .content .title-bar span {
+        font-family: "Inter", sans-serif;
+        font-size: 20px;
+        width: 39px;
+        height: 30px;
+        font-weight: 400;
+        color: #939393;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        table-layout: fixed;
+        background-color: white;
+      }
+
+      table tbody tr {
+        position: relative;
+      }
+
+      table td {
+        padding: 0 12px;
+        border-bottom: 1px solid #e1e1e1;
+        height: 58px;
+        font-size: 20px;
+        line-height: 30px;
+        vertical-align: middle;
+      }
+
+      table td.column {
+        border-left: 16px solid #8bcdf6;
+        padding-left: 12px;
+        text-align: center;
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 30px;
+        vertical-align: middle;
+      }
+
+      table th:nth-child(1),
+      table td:nth-child(1) {
+        width: 159.12px;
+        text-align: center;
+        font-weight: 400;
+        vertical-align: middle;
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      table th:nth-child(2),
+      table td:nth-child(2) {
+        font-size: 20px;
+        line-height: 30px;
+      }
+
+      table th:nth-child(3),
+      table td:nth-child(3) {
+        width: 159px;
+      }
+
+      table th:nth-child(4),
+      table td:nth-child(4) {
+        width: 168px;
+      }
+
+      .pagination {
+        margin-top: 20px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12.64px;
+      }
+
+      .page-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 29.24px;
+        height: 32.4px;
+        border: 0.24px solid #e1e1e1;
+        border-radius: 3.95px;
+        font-family: "Inter", sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        color: #000;
+        background-color: #fff;
+        cursor: pointer;
+      }
+
+      .page-btn.active {
+        background-color: #e1e1e1;
+      }
+
+      .arrow-btn {
+        width: 0;
+        height: 0;
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+        border-left: 12px solid #247eb6;
+        margin-left: 4px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="blur-circle blur-circle-1"></div>
+    <div class="blur-circle blur-circle-2"></div>
+    <div class="header">
+      <div class="logo">
+        <img src="./icons/tutti.png" alt="Tutti 로고" />
+      </div>
+      <div class="user-actions">
+        <div class="nav-box">홈</div>
+        <div class="nav-box notification">
+          알림
+          <span class="badge">0</span>
+        </div>
+        <div class="profile-btn">
+          <img id="profileImage" src="./icons/profile.png" alt="프로필" />
+        </div>
+      </div>
+    </div>
+
+    <div class="wrapper">
+      <div class="sidebar">
+        <h2>TOEIC 커뮤니티</h2>
+        <div class="stats">
+          <div class="stat-item">
+            <img src="./icons/user.png" class="user-icon" alt="유저 아이콘" />
+            <span>00명</span>
+          </div>
+          <div class="stat-item">
+            <img
+              src="./icons/calendar-blue.png"
+              class="calendar-icon"
+              alt="달력 아이콘"
+            />
+            <span>0/00</span>
+          </div>
+          <div class="stat-item">
+            <img src="./icons/day.png" class="day-icon" alt="D-day 아이콘" />
+            <span>-61</span>
+          </div>
+        </div>
+
+        <div class="write-button">
+          <img src="./icons/pencil.png" alt="글쓰기 아이콘" />
+          <span>글쓰기</span>
+        </div>
+
+        <ul id="menu-list">
+          <li data-title="전체글" data-icon="all" class="active">
+            <img src="./icons/all-blue.png" class="icon-all" />
+            <span>전체글</span>
+          </li>
+          <li data-title="인기글" data-icon="star">
+            <img src="./icons/star-gray.png" class="icon-star" />
+            <span>인기글</span>
+          </li>
+          <li data-title="정보글" data-icon="info">
+            <img src="./icons/info-gray.png" class="icon-info" />
+            <span>정보글</span>
+          </li>
+          <li data-title="스터디 모집" data-icon="group">
+            <img src="./icons/group-gray.png" class="icon-group" />
+            <span>스터디 모집</span>
+          </li>
+          <li data-title="미션" data-icon="mission">
+            <img src="./icons/mission-gray.png" class="icon-mission" />
+            <span>미션</span>
+          </li>
+          <li data-title="시험 일정" data-icon="calendar">
+            <img src="./icons/calendar-gray.png" class="icon-calendar" />
+            <span>시험 일정</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="content">
+        <div class="title-bar">
+          <h3>전체글</h3>
+          <span>(00)</span>
+        </div>
+        <table>
+          <tbody></tbody>
+        </table>
+        <div class="pagination"></div>
+      </div>
+    </div>
+    <script>
+      const posts = [
+        {
+          category: "최신글",
+          title: "토익 LC만 올리는 법 아시는 분 계신가요?ㅠㅠ",
+          author: "엘비에프",
+          date: "2025.06.24",
+        },
+        ...Array.from({ length: 21 }, (_, i) => {
+          const cat =
+            i % 3 === 0 ? "최신글" : i % 3 === 1 ? "정보글" : "스터디";
+          return {
+            category: cat,
+            title: `글 제목 ${i + 2}`,
+            author: `작성자 ${i + 2}`,
+            date: `2025.07.${((i % 30) + 1).toString().padStart(2, "0")}`,
+          };
+        }),
+      ];
+      const postsPerPage = 11;
+      let currentPage = 1;
+      const tableBody = document.querySelector("table tbody");
+      const pagination = document.querySelector(".pagination");
+      function renderPosts(page) {
+        tableBody.innerHTML = "";
+        const start = (page - 1) * postsPerPage;
+        const pagePosts = posts.slice(start, start + postsPerPage);
+        for (const post of pagePosts) {
+          const row = document.createElement("tr");
+          row.innerHTML = `<td class="column">${post.category}</td><td>${post.title}</td><td>${post.author}</td><td>${post.date}</td>`;
+          tableBody.appendChild(row);
+        }
+      }
+      function renderPagination() {
+        pagination.innerHTML = "";
+        const totalPages = Math.ceil(posts.length / postsPerPage);
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement("span");
+          btn.className = "page-btn" + (i === currentPage ? " active" : "");
+          btn.textContent = i;
+          btn.addEventListener("click", () => {
+            currentPage = i;
+            renderPosts(currentPage);
+            renderPagination();
+          });
+          pagination.appendChild(btn);
+        }
+        if (currentPage < totalPages) {
+          const arrow = document.createElement("span");
+          arrow.className = "page-btn";
+          arrow.innerHTML = "▶";
+          arrow.addEventListener("click", () => {
+            currentPage++;
+            renderPosts(currentPage);
+            renderPagination();
+          });
+          pagination.appendChild(arrow);
+        }
+      }
+      renderPosts(currentPage);
+      renderPagination();
+
+      // JS: 로그인 시 프로필 이미지 교체 예시
+      const isLoggedIn = true; // 실제 로그인 여부로 대체
+      const profileImage = document.getElementById("profileImage");
+
+      if (isLoggedIn) {
+        profileImage.src = "./user/profile123.jpg"; // 유저가 업로드한 프로필 이미지
+      } else {
+        profileImage.src = "./icons/profile-default.png"; // 기본 이미지
+      }
+    </script>
+  </body>
+</html>
