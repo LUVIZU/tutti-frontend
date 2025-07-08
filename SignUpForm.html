@@ -191,15 +191,22 @@
       </form>
     </div>
 
+    <!-- config.js 먼저 로드 -->
+    <script src="config.js"></script>
     <script>
       const form = document.getElementById("signupForm");
       const submitBtn = document.getElementById("submitBtn");
 
+      const nicknameEl = document.getElementById("nickname");
+      const usernameEl = document.getElementById("username");
+      const passwordEl = document.getElementById("password");
+      const confirmPasswordEl = document.getElementById("confirmPassword");
+
       const requiredFields = [
-        document.getElementById("nickname"),
-        document.getElementById("username"),
-        document.getElementById("password"),
-        document.getElementById("confirmPassword"),
+        nicknameEl,
+        usernameEl,
+        passwordEl,
+        confirmPasswordEl,
       ];
 
       const passwordError = document.getElementById("passwordError");
@@ -225,12 +232,13 @@
         field.addEventListener("input", checkFields);
       });
 
-      form.addEventListener("submit", function (e) {
+      form.addEventListener("submit", async function (e) {
         e.preventDefault();
 
-        const password = document.getElementById("password").value;
-        const confirmPassword =
-          document.getElementById("confirmPassword").value;
+        const loginId = usernameEl.value.trim();
+        const password = passwordEl.value.trim();
+        const confirmPassword = confirmPasswordEl.value.trim();
+        const nickname = nicknameEl.value.trim();
 
         let valid = true;
 
@@ -248,16 +256,45 @@
           confirmError.textContent = "";
         }
 
-        if (valid) {
+        if (!valid) return;
+
+        try {
+          console.log("회원가입 요청 시도:", BASE_URL);
+
+          const res = await fetch(`${BASE_URL}/api/users/signup`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              loginId,
+              password,
+              username: loginId,
+              nickname,
+            }),
+          });
+
+          // 먼저 응답 상태 체크
+          if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || "회원가입 실패");
+          }
+
+          const data = await res.json();
+
           alert("회원가입이 완료되었습니다!");
+          window.location.href = "index.html"; // ✅ 이 줄 추가로 페이지 이동
+
           form.reset();
           requiredFields.forEach((f) =>
             f.parentElement.classList.remove("filled")
           );
           submitBtn.disabled = true;
+        } catch (err) {
+          console.error("회원가입 실패:", err);
+          alert("회원가입 실패: " + err.message);
         }
       });
     </script>
   </body>
 </html>
-

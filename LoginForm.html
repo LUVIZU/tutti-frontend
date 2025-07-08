@@ -150,8 +150,9 @@
       </form>
     </div>
 
+    <script src="config.js"></script>
     <script>
-      function handleLogin(event) {
+      async function handleLogin(event) {
         event.preventDefault();
 
         const username = document.getElementById("username").value.trim();
@@ -162,8 +163,36 @@
           return false;
         }
 
-        alert("로그인 시도: " + username);
-        return true;
+        try {
+          const res = await fetch(`${BASE_URL}/api/users/login`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              loginId: username, // ✅ loginId 명확히 사용
+              password: password,
+            }),
+          });
+
+          if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || "로그인 실패");
+          }
+
+          const data = await res.json();
+
+          // 예시: 토큰 저장
+          localStorage.setItem("accessToken", data.accessToken);
+
+          alert("로그인 성공!");
+          window.location.href = "CommuForm.html"; // 👉 로그인 성공 후 이동할 페이지로 변경
+        } catch (err) {
+          console.error("로그인 실패:", err);
+          alert("로그인 실패: " + err.message);
+        }
+
+        return false;
       }
     </script>
   </body>
