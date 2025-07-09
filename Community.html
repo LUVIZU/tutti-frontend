@@ -62,19 +62,19 @@
 
       .wrapper {
         width: 90vw;
-        max-width: 1549px;
-        padding: 20px;
+        max-width: 1280px;
+        padding-top: 20px;
         display: flex;
         flex-direction: row;
         gap: 0;
       }
 
       .header {
-        position: fixed;
-        top: 0;
+        position: absolute;
+        top: 10px;
         left: 0;
         width: 100%;
-        height: 100px;
+        height: 80px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -96,12 +96,10 @@
         justify-content: center;
         height: 37px;
         padding: 10px 14px;
-        font-family: "Inter", sans-serif;
         font-size: 20px;
         font-weight: 500;
         border-right: 1px solid #e1e1e1;
         position: relative;
-        background-color: #f9f9f9;
       }
 
       .notification {
@@ -142,19 +140,21 @@
       }
 
       .sidebar {
-        width: 330px;
-        height: 980px;
+        width: 280px;
+        height: auto;
         padding: 2px;
         background-color: white;
         border-top: 5px solid #247eb6;
+        flex-shrink: 0;
+        flex-grow: 0;
       }
 
       .sidebar h2 {
         color: #247eb6;
         font-family: "Inter", sans-serif;
         font-weight: 700;
-        font-size: 40px;
-        margin-top: 37px;
+        font-size: 36px;
+        margin-top: 30px;
         text-align: center;
       }
 
@@ -194,20 +194,20 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 237px;
-        height: 46px;
+        width: 200px;
+        height: 40px;
         background-color: #b0dcf7;
         border-radius: 21.02px;
         gap: 7.01px;
         color: white;
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 600;
         cursor: pointer;
       }
 
       .write-button img {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
       }
 
       .sidebar ul {
@@ -224,6 +224,22 @@
         margin-bottom: 10px;
         border-radius: 8px;
         cursor: pointer;
+      }
+
+      .sidebar li[data-icon="group"] {
+        border-bottom: 1px solid #e1e1e1;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+      }
+      .sidebar li[data-icon="mission"] {
+        border-bottom: 1px solid #e1e1e1;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+      }
+      .sidebar li[data-icon="calendar"] {
+        border-bottom: 1px solid #e1e1e1;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
       }
 
       .sidebar li.active {
@@ -262,10 +278,10 @@
 
       .content {
         flex: 1;
-        width: 1207px;
-        height: 980px;
-        padding-top: 68px;
-        padding-left: 43px;
+        padding-top: 40px;
+        padding-left: 30px;
+        display: flex;
+        flex-direction: column;
       }
 
       .content .title-bar {
@@ -273,22 +289,21 @@
         align-items: baseline;
         gap: 10px;
         margin-bottom: 20px;
+        margin-top: 0px;
       }
 
       .content .title-bar h3 {
-        font-family: "Inter", sans-serif;
-        font-size: 35px;
+        font-size: 28px;
         font-weight: 600;
-        line-height: 30px;
+        line-height: 20px;
         color: #000000;
         margin: 0;
       }
 
       .content .title-bar span {
-        font-family: "Inter", sans-serif;
-        font-size: 20px;
-        width: 39px;
-        height: 30px;
+        font-size: 16px;
+        width: auto;
+        height: auto;
         font-weight: 400;
         color: #939393;
       }
@@ -296,7 +311,7 @@
       table {
         width: 100%;
         border-collapse: collapse;
-        font-size: 14px;
+        font-size: 16px;
         table-layout: fixed;
         background-color: white;
       }
@@ -308,9 +323,9 @@
       table td {
         padding: 0 12px;
         border-bottom: 1px solid #e1e1e1;
-        height: 58px;
-        font-size: 20px;
-        line-height: 30px;
+        height: 50px;
+        font-size: 18px;
+        line-height: 20px;
         vertical-align: middle;
       }
 
@@ -319,7 +334,7 @@
         padding-left: 12px;
         text-align: center;
         font-weight: 400;
-        font-size: 20px;
+        font-size: 16px;
         line-height: 30px;
         vertical-align: middle;
       }
@@ -336,8 +351,23 @@
 
       table th:nth-child(2),
       table td:nth-child(2) {
-        font-size: 20px;
+        font-size: 16px;
         line-height: 30px;
+      }
+
+      table td.post-title-cell a {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+        display: block;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        padding-left: 0;
+      }
+
+      table td.post-title-cell a:hover {
+        text-decoration: underline;
       }
 
       table th:nth-child(3),
@@ -351,12 +381,13 @@
       }
 
       .pagination {
-        margin-top: 20px;
+        margin-top: 50px;
         text-align: center;
         display: flex;
         justify-content: center;
         align-items: center;
         gap: 12.64px;
+        padding-bottom: 30px;
       }
 
       .page-btn {
@@ -467,9 +498,10 @@
       <div class="content">
         <div class="title-bar">
           <h3>전체글</h3>
-          <span>(00)</span>
+          <span>(22)</span>
         </div>
         <table>
+          <thead></thead>
           <tbody></tbody>
         </table>
         <div class="pagination"></div>
@@ -483,34 +515,119 @@
           author: "엘비에프",
           date: "2025.06.24",
         },
-        ...Array.from({ length: 21 }, (_, i) => {
+        {
+          category: "스터디",
+          title: "850 목표인데 7월부터 제대로 달릴분?",
+          author: "별토리",
+          date: "2025.06.24",
+        },
+        {
+          category: "정보글",
+          title: "RC 시간 부족한분들께 제가 쓴 문제풀이 순서 팁 공유해요",
+          author: "장금2",
+          date: "2025.06.24",
+        },
+        {
+          category: "정보글",
+          title: "토익 2개월 공부 루틴 공유합니다 (850 달성 후기)",
+          author: "할수있다",
+          date: "2025.06.24",
+        },
+        {
+          category: "정보글",
+          title: "3주 만에 LC +100 오른 비법 정리했어요",
+          author: "영어뽀개기",
+          date: "2025.06.24",
+        },
+        {
+          category: "최신글",
+          title: "하루 2시간 공부 루틴 괜찮은지 봐주세요",
+          author: "미미앤두잇",
+          date: "2025.06.24",
+        },
+        {
+          category: "최신글",
+          title: "단어장 추천 좀 해주세요 (왕기초)",
+          author: "일본어못하면",
+          date: "2025.06.24",
+        },
+        {
+          category: "정보글",
+          title: "해커스 교재별 난이도 비교 (정리표 포함)",
+          author: "엘리1116",
+          date: "2025.06.24",
+        },
+        {
+          category: "최신글",
+          title: "공부할 때 배경음악 들으세요?",
+          author: "김열공",
+          date: "2025.06.24",
+        },
+        {
+          category: "스터디",
+          title: "같이 공부할 분 구해요~!!!",
+          author: "취업해야만",
+          date: "2025.06.24",
+        },
+        {
+          category: "최신글",
+          title: "이 문제 알려주실 분 ㅠㅠㅠ 예상 정답이 모르겠어요",
+          author: "고수님",
+          date: "2025.06.24",
+        },
+
+        ...Array.from({ length: 11 }, (_, i) => {
           const cat =
-            i % 3 === 0 ? "최신글" : i % 3 === 1 ? "정보글" : "스터디";
+            i % 3 === 0 ? "최신글" : i % 3 === 1 ? "정보글" : "스터디 모집";
           return {
             category: cat,
-            title: `글 제목 ${i + 2}`,
-            author: `작성자 ${i + 2}`,
-            date: `2025.07.${((i % 30) + 1).toString().padStart(2, "0")}`,
+            title: `추가 게시글 제목 ${i + 1}`,
+            author: `추가 작성자 ${i + 1}`,
+            date: `2025.06.${(23 - i).toString().padStart(2, "0")}`,
           };
         }),
       ];
+
       const postsPerPage = 11;
       let currentPage = 1;
       const tableBody = document.querySelector("table tbody");
       const pagination = document.querySelector(".pagination");
+      const totalPostsSpan = document.querySelector(".title-bar span");
+
       function renderPosts(page) {
         tableBody.innerHTML = "";
         const start = (page - 1) * postsPerPage;
         const pagePosts = posts.slice(start, start + postsPerPage);
-        for (const post of pagePosts) {
+
+        pagePosts.forEach((post) => {
           const row = document.createElement("tr");
-          row.innerHTML = `<td class="column">${post.category}</td><td>${post.title}</td><td>${post.author}</td><td>${post.date}</td>`;
+          row.innerHTML = `
+            <td class="column">${post.category}</td>
+            <td class="post-title-cell"><a href="PostDetail.html?id=${post.title}">${post.title}</a></td>
+            <td>${post.author}</td>
+            <td>${post.date}</td>
+          `;
           tableBody.appendChild(row);
-        }
+        });
       }
+
       function renderPagination() {
         pagination.innerHTML = "";
         const totalPages = Math.ceil(posts.length / postsPerPage);
+
+        // Previous button
+        if (currentPage > 1) {
+          const prevArrow = document.createElement("span");
+          prevArrow.className = "arrow-btn";
+          prevArrow.style.transform = "rotate(180deg)";
+          prevArrow.addEventListener("click", () => {
+            currentPage--;
+            renderPosts(currentPage);
+            renderPagination();
+          });
+          pagination.appendChild(prevArrow);
+        }
+
         for (let i = 1; i <= totalPages; i++) {
           const btn = document.createElement("span");
           btn.className = "page-btn" + (i === currentPage ? " active" : "");
@@ -522,29 +639,31 @@
           });
           pagination.appendChild(btn);
         }
+
+        // Next button
         if (currentPage < totalPages) {
-          const arrow = document.createElement("span");
-          arrow.className = "page-btn";
-          arrow.innerHTML = "▶";
-          arrow.addEventListener("click", () => {
+          const nextArrow = document.createElement("span");
+          nextArrow.className = "arrow-btn";
+          nextArrow.addEventListener("click", () => {
             currentPage++;
             renderPosts(currentPage);
             renderPagination();
           });
-          pagination.appendChild(arrow);
+          pagination.appendChild(nextArrow);
         }
       }
+
+      totalPostsSpan.textContent = `(${posts.length})`;
       renderPosts(currentPage);
       renderPagination();
 
-      // JS: 로그인 시 프로필 이미지 교체 예시
-      const isLoggedIn = true; // 실제 로그인 여부로 대체
+      const isLoggedIn = true;
       const profileImage = document.getElementById("profileImage");
 
       if (isLoggedIn) {
-        profileImage.src = "./user/profile123.jpg"; // 유저가 업로드한 프로필 이미지
+        profileImage.src = "./user/profile123.jpg";
       } else {
-        profileImage.src = "./icons/profile-default.png"; // 기본 이미지
+        profileImage.src = "./icons/profile.png";
       }
     </script>
   </body>
