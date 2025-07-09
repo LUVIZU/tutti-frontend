@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TUTTI 커뮤니티</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      .blur-circle {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .header,
+      .wrapper,
+      .sidebar,
+      .content {
+        position: relative;
+        z-index: 10;
+      }
+
+      .blur-circle-1 {
+        width: 783px;
+        height: 783px;
+        background: #ddf2ff;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        filter: blur(500px);
+        opacity: 1;
+      }
+
+      .blur-circle-2 {
+        width: 507px;
+        height: 507px;
+        background: #b0dcf7;
+        top: 240px;
+        left: 60%;
+        transform: translateX(-50%);
+        filter: blur(250px);
+        opacity: 0.2;
+      }
+
+      .logo img {
+        width: 128px;
+        height: 52px;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        padding-top: 100px;
+      }
+
+      .wrapper {
+        width: 90vw;
+        max-width: 1280px;
+        padding-top: 20px;
+        display: flex;
+        flex-direction: row;
+        gap: 0;
+      }
+
+      .header {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        width: 100%;
+        height: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 5vw;
+        z-index: 1000;
+      }
+
+      .header .user-actions {
+        display: flex;
+        align-items: center;
+        width: auto;
+        height: 42px;
+        gap: 14px;
+      }
+
+      .nav-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 37px;
+        padding: 10px 14px;
+        font-size: 20px;
+        font-weight: 500;
+        border-right: 1px solid #e1e1e1;
+        position: relative;
+      }
+
+      .notification {
+        position: relative;
+      }
+
+      .badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        width: 18px;
+        height: 18px;
+        background: #ff3b3b;
+        color: white;
+        font-size: 12px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .profile-btn {
+        width: 37px;
+        height: 37px;
+        border: 1px solid #247eb6;
+        border-radius: 1000px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+      }
+
+      .profile-btn img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .sidebar {
+        width: 280px;
+        height: auto;
+        padding: 2px;
+        background-color: white;
+        border-top: 5px solid #247eb6;
+        flex-shrink: 0;
+        flex-grow: 0;
+      }
+
+      .sidebar h2 {
+        color: #247eb6;
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 36px;
+        margin-top: 30px;
+        text-align: center;
+      }
+
+      .stats {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10.67px;
+        margin-top: 15px;
+      }
+
+      .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 16px;
+        color: #000;
+      }
+
+      .stat-item img.user-icon {
+        width: 26.27px;
+        height: 20.3px;
+      }
+
+      .stat-item img.calendar-icon {
+        width: 18.67px;
+        height: 18.67px;
+      }
+
+      .stat-item img.day-icon {
+        width: 13.33px;
+        height: 17px;
+      }
+
+      .write-button {
+        margin: 20px auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 200px;
+        height: 40px;
+        background-color: #b0dcf7;
+        border-radius: 21.02px;
+        gap: 7.01px;
+        color: white;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .write-button img {
+        width: 18px;
+        height: 18px;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        margin-top: 20px;
+        padding: 0 15px;
+      }
+
+      .sidebar li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      .sidebar li[data-icon="group"] {
+        border-bottom: 1px solid #e1e1e1;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+      }
+      .sidebar li[data-icon="mission"] {
+        border-bottom: 1px solid #e1e1e1;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+      }
+      .sidebar li[data-icon="calendar"] {
+        border-bottom: 1px solid #e1e1e1;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+      }
+
+      .sidebar li.active {
+        background-color: #e6f4fd;
+      }
+
+      .sidebar li.active span {
+        color: #247eb6;
+        font-weight: 600;
+      }
+
+      .icon-all {
+        width: 26px;
+        height: 26px;
+      }
+      .icon-star {
+        width: 27px;
+        height: 26px;
+      }
+      .icon-info {
+        width: 27px;
+        height: 26px;
+      }
+      .icon-group {
+        width: 37px;
+        height: 26px;
+      }
+      .icon-mission {
+        width: 20.8px;
+        height: 26px;
+      }
+      .icon-calendar {
+        width: 26px;
+        height: 26px;
+      }
+
+      .content {
+        flex: 1;
+        padding-top: 40px;
+        padding-left: 30px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .content .title-bar {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        margin-bottom: 20px;
+        margin-top: 0px;
+      }
+
+      .content .title-bar h3 {
+        font-size: 28px;
+        font-weight: 600;
+        line-height: 20px;
+        color: #000000;
+        margin: 0;
+      }
+
+      .content .title-bar span {
+        font-size: 16px;
+        width: auto;
+        height: auto;
+        font-weight: 400;
+        color: #939393;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 16px;
+        table-layout: fixed;
+        background-color: white;
+      }
+
+      table tbody tr {
+        position: relative;
+      }
+
+      table td {
+        padding: 0 12px;
+        border-bottom: 1px solid #e1e1e1;
+        height: 50px;
+        font-size: 18px;
+        line-height: 20px;
+        vertical-align: middle;
+      }
+
+      table td.column {
+        border-left: 16px solid #8bcdf6;
+        padding-left: 12px;
+        text-align: center;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 30px;
+        vertical-align: middle;
+      }
+
+      table th:nth-child(1),
+      table td:nth-child(1) {
+        width: 159.12px;
+        text-align: center;
+        font-weight: 400;
+        vertical-align: middle;
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      table th:nth-child(2),
+      table td:nth-child(2) {
+        font-size: 16px;
+        line-height: 30px;
+      }
+
+      table td.post-title-cell a {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+        display: block;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        padding-left: 0;
+      }
+
+      table td.post-title-cell a:hover {
+        text-decoration: underline;
+      }
+
+      table th:nth-child(3),
+      table td:nth-child(3) {
+        width: 159px;
+      }
+
+      table th:nth-child(4),
+      table td:nth-child(4) {
+        width: 168px;
+      }
+
+      .pagination {
+        margin-top: 50px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12.64px;
+        padding-bottom: 30px;
+      }
+
+      .page-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 29.24px;
+        height: 32.4px;
+        border: 0.24px solid #e1e1e1;
+        border-radius: 3.95px;
+        font-family: "Inter", sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        color: #000;
+        background-color: #fff;
+        cursor: pointer;
+      }
+
+      .page-btn.active {
+        background-color: #e1e1e1;
+      }
+
+      .arrow-btn {
+        width: 0;
+        height: 0;
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+        border-left: 12px solid #247eb6;
+        margin-left: 4px;
+        cursor: pointer;
+      }
+
+      
+      .exam-info {
+        display: none; /* 기본 숨김 */
+        width: 284px;
+        background: #f5fbff;
+        border: 1px solid #cce5ff;
+        border-radius: 12px;
+        padding: 20px;
+        font-size: 16px;
+        font-weight: 400;
+        position: relative;
+        flex-shrink: 0;
+      }
+
+      .exam-info.active {
+        display: block;
+      }
+
+      .exam-info .tags {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 10px;
+      }
+
+      .tag {
+        font-size: 13px;
+        font-weight: 400;
+        color: #ffffff;
+        background: #73c3f4;
+        padding: 4px 10px;
+        border-radius: 10px;
+      }
+
+      .tag.light {
+        background: #73c3f4;
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 18px;
+        background: none;
+        border: none;
+        color: #333;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      .calendar-container {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        padding: 40px;
+        border-radius: 20px;
+        background-color: white;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+      }
+
+      .calendar-box {
+        width: 700px;
+        padding: 20px;
+        background: #f8fcff;
+        border-radius: 20px;
+        margin-right: 30px;
+        flex-shrink: 0;
+      }
+
+      .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 34px;
+        font-weight: 500;
+        margin-bottom: 20px;
+      }
+
+      .calendar-header button {
+        background: none;
+        border: none;
+        font-size: 30px;
+        cursor: pointer;
+      }
+
+      .calendar-box table {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+        text-align: center;
+        font-size: 20px; /* 이건 전체 폰트에 적용되므로 th/td 개별 조정 시 따로 써야 함 */
+      }
+
+      .calendar-box table th,
+      .calendar-box table td {
+        width: 20px;
+        font-size: 25px;
+        font-weight: 700;
+        padding: 0;
+        line-height: 60px;
+        vertical-align: middle;
+      }
+
+
+      .selected {
+        background-color: #b0dcf7;
+        color: white;
+        font-weight: bold;
+        border-radius: 50%;
+      }
+
+      .footer-msg {
+        margin-top: 100px;
+        color: #555;
+        font-size: 27px;
+        font-weight: 400;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="blur-circle blur-circle-1"></div>
+    <div class="blur-circle blur-circle-2"></div>
+    <div class="header">
+      <div class="logo">
+        <img src="./icons/tutti.png" alt="Tutti 로고" />
+      </div>
+      <div class="user-actions">
+        <div class="nav-box">홈</div>
+        <div class="nav-box notification">
+          알림
+          <span class="badge">0</span>
+        </div>
+        <div class="profile-btn">
+          <img id="profileImage" src="./icons/profile.png" alt="프로필" />
+        </div>
+      </div>
+    </div>
+
+    <div class="wrapper">
+      <div class="sidebar">
+        <h2>TOEIC 커뮤니티</h2>
+        <div class="stats">
+          <div class="stat-item">
+            <img src="./icons/user.png" class="user-icon" alt="유저 아이콘" />
+            <span>00명</span>
+          </div>
+          <div class="stat-item">
+            <img
+              src="./icons/calendar-blue.png"
+              class="calendar-icon"
+              alt="달력 아이콘"
+            />
+            <span>0/00</span>
+          </div>
+          <div class="stat-item">
+            <img src="./icons/day.png" class="day-icon" alt="D-day 아이콘" />
+            <span>-61</span>
+          </div>
+        </div>
+
+        <div class="write-button">
+          <img src="./icons/pencil.png" alt="글쓰기 아이콘" />
+          <span>글쓰기</span>
+        </div>
+
+        <ul id="menu-list">
+          <li data-title="전체글" data-icon="all">
+            <a href="all.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+              <img src="./icons/all-gray.png" class="icon-all" />
+              <span>전체글</span>
+            </a>
+          </li>
+          <li data-title="인기글" data-icon="star">
+            <a href="popular.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+              <img src="./icons/star-gray.png" class="icon-star" />
+              <span>인기글</span>
+            </a>
+          </li>
+          <li data-title="정보글" data-icon="info">
+            <a href="info.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+              <img src="./icons/info-gray.png" class="icon-info" />
+              <span>정보글</span>
+            </a>
+          </li>
+          <li data-title="스터디 모집" data-icon="group">
+            <a href="study.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+              <img src="./icons/group-gray.png" class="icon-group" />
+              <span>스터디 모집</span>
+            </a>
+          </li>
+          <li data-title="미션" data-icon="mission">
+            <a href="mission.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+              <img src="./icons/mission-gray.png" class="icon-mission" />
+              <span>미션</span>
+            </a>
+          </li>
+          <li data-title="시험 일정" data-icon="calendar" class="active">
+            <a href="#" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+              <img src="./icons/calendar-blue.png" class="icon-calendar" />
+              <span>시험 일정</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="calendar-container">
+      <div class="calendar-box">
+        <div class="calendar-header">
+          <button onclick="changeMonth(-1)">&lt;</button>
+          <span id="monthYear"></span>
+          <button onclick="changeMonth(1)">&gt;</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>일</th>
+              <th>월</th>
+              <th>화</th>
+              <th>수</th>
+              <th>목</th>
+              <th>금</th>
+              <th>토</th>
+            </tr>
+          </thead>
+          <tbody id="calendar-body"></tbody>
+        </table>
+        <div class="footer-msg">
+          날짜를 클릭하면 시험 정보를 확인할 수 있습니다.
+        </div>
+      </div>
+
+      <div class="exam-info" id="exam-info-box">
+        <button class="close-btn" onclick="closeExamInfo()">X</button>
+        <div class="tags">
+          <div class="tag">정기접수</div>
+          <div class="tag light">접수중</div>
+        </div>
+        <div id="exam-date"><strong>날짜를 선택해주세요</strong></div>
+        <div id="exam-detail"></div>
+      </div>
+    </div>
+
+    <script>
+      const calendarBody = document.getElementById("calendar-body");
+      const monthYear = document.getElementById("monthYear");
+      const examDate = document.getElementById("exam-date");
+      const examDetail = document.getElementById("exam-detail");
+      const examBox = document.getElementById("exam-info-box");
+
+      let today = new Date();
+      let currentMonth = today.getMonth();
+      let currentYear = today.getFullYear();
+
+      const examSchedule = {
+        "2025-08-10": {
+          title: "TOEIC 정기시험",
+          time: "오전 9시 20분",
+          apply: "2025.06.23 (월) ~ 2025.07.28 (월)",
+          result: "2025.08.19 (화) 12:00",
+        },
+        "2025-08-24": {
+          title: "TOEIC Speaking 시험",
+          time: "오전 10시",
+          apply: "2025.07.01 (화) ~ 2025.08.10 (토)",
+          result: "2025.08.31 (일) 10:00",
+        },
+        "2025-08-31": {
+          title: "TOEIC 추가 시험",
+          time: "오전 11시",
+          apply: "2025.07.15 (화) ~ 2025.08.25 (월)",
+          result: "2025.09.08 (월) 10:00",
+        },
+      };
+
+      function renderCalendar(month, year) {
+        calendarBody.innerHTML = "";
+        const firstDay = new Date(year, month).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        monthYear.textContent = `${year}년 ${month + 1}월`;
+
+        let date = 1;
+        for (let i = 0; i < 6; i++) {
+          let row = document.createElement("tr");
+
+          for (let j = 0; j < 7; j++) {
+            let cell = document.createElement("td");
+            if (i === 0 && j < firstDay) {
+              cell.textContent = "";
+            } else if (date > daysInMonth) {
+              cell.textContent = "";
+            } else {
+              cell.textContent = date;
+              let dateStr = `${year}-${String(month + 1).padStart(
+                2,
+                "0"
+              )}-${String(date).padStart(2, "0")}`;
+              if (examSchedule[dateStr]) {
+                cell.classList.add("selected");
+              }
+              cell.addEventListener("click", () => {
+                showExamInfo(dateStr);
+              });
+              date++;
+            }
+            row.appendChild(cell);
+          }
+          calendarBody.appendChild(row);
+        }
+      }
+
+      function changeMonth(offset) {
+        currentMonth += offset;
+        if (currentMonth < 0) {
+          currentMonth = 11;
+          currentYear--;
+        } else if (currentMonth > 11) {
+          currentMonth = 0;
+          currentYear++;
+        }
+        renderCalendar(currentMonth, currentYear);
+      }
+
+      function showExamInfo(dateStr) {
+        const info = examSchedule[dateStr];
+        examBox.classList.add("active");
+        if (info) {
+          examDate.innerHTML = `<strong>${dateStr}</strong> - ${info.title}`;
+          examDetail.innerHTML = `
+            <p>시간: ${info.time}</p>
+            <p>접수기간: ${info.apply}</p>
+            <p>성적발표: ${info.result}</p>
+          `;
+        } else {
+          examDate.innerHTML = `<strong>${dateStr}</strong>`;
+          examDetail.innerHTML = `<p>등록된 시험 정보가 없습니다.</p>`;
+        }
+      }
+
+      function closeExamInfo() {
+        examBox.classList.remove("active");
+      }
+
+      renderCalendar(currentMonth, currentYear);
+    </script>
+  </body>
+</html>
