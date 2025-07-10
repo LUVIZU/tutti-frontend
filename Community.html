@@ -468,27 +468,36 @@
         </div>
 
         <ul id="menu-list">
-          <li data-title="전체글" data-icon="all" class="active">
+          <li
+            data-title="전체글"
+            data-icon="all"
+            data-page="Community.html"
+            class="active"
+          >
             <img src="./icons/all-blue.png" class="icon-all" />
             <span>전체글</span>
           </li>
-          <li data-title="인기글" data-icon="star">
+          <li data-title="인기글" data-icon="star" data-page="hot.html">
             <img src="./icons/star-gray.png" class="icon-star" />
             <span>인기글</span>
           </li>
-          <li data-title="정보글" data-icon="info">
+          <li data-title="정보글" data-icon="info" data-page="info.html">
             <img src="./icons/info-gray.png" class="icon-info" />
             <span>정보글</span>
           </li>
-          <li data-title="스터디 모집" data-icon="group">
+          <li data-title="스터디 모집" data-icon="group" data-page="group.html">
             <img src="./icons/group-gray.png" class="icon-group" />
             <span>스터디 모집</span>
           </li>
-          <li data-title="미션" data-icon="mission">
+          <li data-title="미션" data-icon="mission" data-page="mission.html">
             <img src="./icons/mission-gray.png" class="icon-mission" />
             <span>미션</span>
           </li>
-          <li data-title="시험 일정" data-icon="calendar">
+          <li
+            data-title="시험 일정"
+            data-icon="calendar"
+            data-page="calendar.html"
+          >
             <img src="./icons/calendar-gray.png" class="icon-calendar" />
             <span>시험 일정</span>
           </li>
@@ -665,6 +674,17 @@
       } else {
         profileImage.src = "./icons/profile.png";
       }
+
+      const menuItems = document.querySelectorAll("#menu-list li");
+
+      menuItems.forEach((item) => {
+        item.addEventListener("click", () => {
+          const targetPage = item.getAttribute("data-page");
+          if (targetPage) {
+            window.location.href = targetPage;
+          }
+        });
+      });
     </script>
   </body>
 </html>
