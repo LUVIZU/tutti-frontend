@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>자격증 선택</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        background-color: #f8f9fb;
+      }
+
+      .container {
+        display: flex;
+        width: 300vw;
+        transition: transform 0.4s ease-in-out;
+      }
+
+      .screen {
+        flex: 0 0 100vw;
+        padding: 20px;
+        box-sizing: border-box;
+        height: 100vh;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: white;
+      }
+
+      h1 {
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 16px;
+      }
+
+      .search-box {
+        display: flex;
+        align-items: center;
+        width: 90%;
+        max-width: 400px;
+        margin-bottom: 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 8px;
+        background-color: white;
+      }
+
+      .search-box input {
+        flex: 1;
+        border: none;
+        outline: none;
+        font-size: 14px;
+      }
+
+      .search-box::after {
+        content: "🔍";
+        margin-left: 8px;
+        font-size: 16px;
+        color: #888;
+      }
+
+      .category {
+        width: 90%;
+        max-width: 500px;
+        background: white;
+        border-radius: 12px;
+        margin: 6px 0;
+        padding: 14px;
+        border: 1px solid #ddd;
+      }
+
+      .category.open {
+        background-color: #eaf4ff;
+        border-color: #4da6ff;
+      }
+
+      .category-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .arrow {
+        font-size: 14px;
+        transform: rotate(0deg);
+        transition: transform 0.2s;
+      }
+
+      .category.open .arrow {
+        transform: rotate(90deg);
+      }
+
+      .sub-items {
+        display: none;
+        margin-top: 10px;
+        padding-left: 6px;
+      }
+
+      .category.open .sub-items {
+        display: block;
+      }
+
+      .item-option {
+        padding: 10px;
+        margin-bottom: 6px;
+        border-radius: 6px;
+        background-color: #f4f4f4;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .item-option:hover {
+        background-color: #e0f0ff;
+      }
+
+      .item-option.selected {
+        background-color: #cce6ff;
+        font-weight: bold;
+      }
+
+      .button-box {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        padding: 16px;
+        background-color: white;
+        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+        text-align: center;
+      }
+
+      button.action {
+        width: 90%;
+        max-width: 480px;
+        padding: 12px 0;
+        background-color: #4da6ff;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      ul#selectedList {
+        list-style: none;
+        padding: 0;
+        margin-top: 20px;
+        font-size: 16px;
+      }
+
+      ul#selectedList li {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" id="container">
+      <!-- 화면 1: 카테고리 선택 -->
+      <div class="screen">
+        <h1>자격증 카테고리</h1>
+        <div class="search-box">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="종목명을 입력해주세요."
+            oninput="handleSearch()"
+          />
+        </div>
+
+        <div class="category" onclick="toggleCategory(this)">
+          <div class="category-header">
+            <span>어학</span>
+            <span class="arrow">▶</span>
+          </div>
+          <div class="sub-items">
+            <div class="item-option" onclick="toggleSelect(event)">TOEIC</div>
+            <div class="item-option" onclick="toggleSelect(event)">TOEFL</div>
+            <div class="item-option" onclick="toggleSelect(event)">OPIC</div>
+          </div>
+        </div>
+
+        <div class="category" onclick="toggleCategory(this)">
+          <div class="category-header">
+            <span>IT·정보통신</span>
+            <span class="arrow">▶</span>
+          </div>
+          <div class="sub-items">
+            <div class="item-option" onclick="toggleSelect(event)">
+              정보처리기사
+            </div>
+            <div class="item-option" onclick="toggleSelect(event)">
+              컴퓨터활용능력
+            </div>
+            <div class="item-option" onclick="toggleSelect(event)">SQLD</div>
+          </div>
+        </div>
+
+        <div class="button-box">
+          <button class="action" onclick="goNextScreen()">선택 완료</button>
+        </div>
+      </div>
+
+      <!-- 화면 2: 선택 요약 -->
+      <div class="screen">
+        <h1>선택된 자격증</h1>
+        <ul id="selectedList"></ul>
+        <div class="button-box">
+          <button class="action" onclick="goNextScreen()">다음</button>
+        </div>
+      </div>
+
+      <!-- 화면 3: 완료 -->
+      <div class="screen">
+        <h1>완료되었습니다 🎉</h1>
+      </div>
+    </div>
+
+    <script>
+      let currentScreen = 0;
+
+      function toggleCategory(elem) {
+        elem.classList.toggle("open");
+      }
+
+      function toggleSelect(event) {
+        event.stopPropagation(); // 부모 아코디언 열림 방지
+        const item = event.currentTarget;
+        item.classList.toggle("selected");
+      }
+
+      function goNextScreen() {
+        const container = document.getElementById("container");
+        currentScreen++;
+        container.style.transform = `translateX(-${currentScreen * 100}vw)`;
+
+        if (currentScreen === 1) {
+          const selected = document.querySelectorAll(".item-option.selected");
+          const list = document.getElementById("selectedList");
+          list.innerHTML = "";
+          selected.forEach((el) => {
+            const li = document.createElement("li");
+            li.textContent = el.textContent;
+            list.appendChild(li);
+          });
+        }
+      }
+
+      function handleSearch() {
+        const keyword = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        const categories = document.querySelectorAll(".category");
+
+        categories.forEach((cat) => {
+          const title = cat
+            .querySelector(".category-header span")
+            .textContent.toLowerCase();
+          const items = cat.querySelectorAll(".sub-items .item-option");
+          let match = false;
+
+          items.forEach((item) => {
+            if (item.textContent.toLowerCase().includes(keyword)) {
+              match = true;
+            }
+          });
+
+          cat.style.display =
+            title.includes(keyword) || match ? "block" : "none";
+        });
+      }
+    </script>
+  </body>
+</html>
