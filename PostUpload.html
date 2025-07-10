@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>게시물 작성 페이지</title>
+    <style>
+      /* 기존 CSS 전부 유지 */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      .blur-circle {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .header,
+      .wrapper,
+      .sidebar,
+      .content {
+        position: relative;
+        z-index: 10;
+      }
+      .blur-circle-1 {
+        width: 783px;
+        height: 783px;
+        background: #ddf2ff;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        filter: blur(500px);
+        opacity: 1;
+      }
+      .blur-circle-2 {
+        width: 507px;
+        height: 507px;
+        background: #b0dcf7;
+        top: 240px;
+        left: 60%;
+        transform: translateX(-50%);
+        filter: blur(250px);
+        opacity: 0.2;
+      }
+      .logo img {
+        width: 128px;
+        height: 52px;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        padding-top: 100px;
+      }
+      .wrapper {
+        width: 90vw;
+        max-width: 1280px;
+        padding-top: 20px;
+        display: flex;
+        flex-direction: row;
+        gap: 0;
+      }
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 5vw;
+        z-index: 1000;
+        background-color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+      .header .user-actions {
+        display: flex;
+        align-items: center;
+        width: auto;
+        height: 42px;
+        gap: 14px;
+      }
+      .nav-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 37px;
+        padding: 10px 14px;
+        font-family: "Inter", sans-serif;
+        font-size: 20px;
+        font-weight: 500;
+        border-right: 1px solid #e1e1e1;
+        position: relative;
+        background-color: #f9f9f9;
+      }
+      .notification {
+        position: relative;
+      }
+      .badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        width: 18px;
+        height: 18px;
+        background: #ff3b3b;
+        color: white;
+        font-size: 12px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .profile-btn {
+        width: 37px;
+        height: 37px;
+        border: 1px solid #247eb6;
+        border-radius: 1000px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+      }
+      .profile-btn img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .sidebar {
+        width: 280px;
+        height: auto;
+        padding: 2px;
+        background-color: white;
+        border-top: 5px solid #247eb6;
+        flex-shrink: 0;
+        flex-grow: 0;
+      }
+      .sidebar h2 {
+        color: #247eb6;
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 36px;
+        margin-top: 30px;
+        text-align: center;
+      }
+      .sidebar ul {
+        list-style: none;
+        margin-top: 20px;
+        padding: 0 15px;
+      }
+      .sidebar li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      .sidebar li.active {
+        background-color: #e6f4fd;
+      }
+      .sidebar li.active span {
+        color: #247eb6;
+        font-weight: 600;
+      }
+      .icon-all {
+        width: 26px;
+        height: 26px;
+      }
+      .icon-star {
+        width: 27px;
+        height: 26px;
+      }
+      .icon-info {
+        width: 27px;
+        height: 26px;
+      }
+      .icon-group {
+        width: 37px;
+        height: 26px;
+      }
+      .icon-mission {
+        width: 20.8px;
+        height: 26px;
+      }
+      .icon-calendar {
+        width: 26px;
+        height: 26px;
+      }
+      .content {
+        flex: 1;
+        padding-left: 30px;
+        display: flex;
+        flex-direction: column;
+      }
+      .post-detail {
+        background-color: #ffffff;
+        border-radius: 15px;
+        padding: 25px 40px;
+        width: 100%;
+        min-height: 450px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+      }
+      .post-header {
+        font-size: 16px;
+        color: #a0a0a0;
+        margin-bottom: 15px;
+        padding-bottom: 0px;
+        border-bottom: none;
+      }
+      .post-header a {
+        color: #a0a0a0;
+        text-decoration: none;
+      }
+      .post-header a span {
+        color: #247eb6;
+      }
+      .post-title {
+        font-family: "Inter", sans-serif;
+        font-size: 32px;
+        font-weight: 600;
+        color: #000;
+        margin-bottom: 20px;
+        line-height: 1.4;
+      }
+      .post-meta {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 30px;
+        font-size: 16px;
+        color: #888;
+      }
+      .post-meta .profile-and-text {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .post-meta .text-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+      }
+      .post-meta span#post-writer {
+        font-weight: 600;
+        font-size: 18px;
+        line-height: 1.2;
+      }
+      .post-meta span#post-date {
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 1.2;
+        color: #939393;
+      }
+      .meta-and-line {
+        border-bottom: 2.06px solid #e1e1e1;
+        margin-bottom: 30px;
+      }
+      .profile-img-small {
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        background-color: #b0dcf7;
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+      .profile-img-small img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .post-content {
+        font-size: 23px;
+        font-weight: 400;
+        color: #000;
+        line-height: 1.7;
+        text-align: center;
+        padding-left: 0;
+        padding-right: 0;
+        flex-grow: 1;
+      }
+      .post-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 40px;
+        margin-top: 30px;
+        border-top: 1px solid #e1e1e1;
+      }
+      .post-actions .left-actions {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+      .post-actions .right-actions {
+        display: flex;
+        align-items: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="blur-circle blur-circle-1"></div>
+    <div class="blur-circle blur-circle-2"></div>
+    <div class="header">
+      <div class="logo">
+        <img src="./icons/tutti.png" alt="Tutti 로고" />
+      </div>
+      <div class="user-actions">
+        <a href="CommuForm.html" class="nav-box" style="text-decoration: none; color: inherit">홈</a>
+        <div class="nav-box notification">
+          알림
+          <span class="badge">0</span>
+        </div>
+        <div class="profile-btn">
+          <img id="profileImage" src="icons/profile.png" alt="프로필" />
+        </div>
+      </div>
+    </div>
+
+    <div class="wrapper">
+      <div class="sidebar">
+        <h2>나의 게시물</h2>
+        <ul id="menu-list">
+          <li class="active" data-title="전체글" data-icon="all">
+            <img src="./icons/mail.png" class="icon-all" />
+            <span
+              >RC 시간 부족한 분들께 제...<br />안녕하세요!..<br />2025.06.24</span
+            >
+          </li>
+          <li data-title="전체글" data-icon="all">
+            <img src="./icons/mail.png" class="icon-all" />
+            <span
+              >같이 스터디 하실 분 구해요..<br />일주일에 한 번 비대면으로
+              스터디 ...<br />2025.06.20</span
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div class="content">
+        <div class="post-detail" style="position: relative">
+          <!-- 드롭다운 버튼 -->
+          <div style="position: relative; display: inline-block">
+            <button
+              id="dropdownButton"
+              style="
+                background-color: #b0dcf7;
+                color: rgb(0, 0, 0);
+                border: none;
+                padding: 10px 18px;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: 400;
+                cursor: pointer;
+              "
+            >
+              게시물을 선택해주세요
+            </button>
+
+            <!-- 드롭다운 메뉴 -->
+            <div
+              id="dropdownMenu"
+              style="
+                display: none;
+                position: absolute;
+                background-color: #b0dcf7;
+                min-width: 187px;
+                box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+                border-radius: 8px;
+                margin-top: 5px;
+                z-index: 1;
+              "
+            >
+              <div
+                style="padding-left: 72px; padding-top: 10px; cursor: pointer"
+              >
+                전체글
+              </div>
+              <div
+                style="padding-left: 72px; padding-top: 10px; cursor: pointer"
+              >
+                인기글
+              </div>
+              <div
+                style="padding-left: 72px; padding-top: 10px; cursor: pointer"
+              >
+                정보글
+              </div>
+              <div
+                style="
+                  padding-left: 55px;
+                  padding-top: 10px;
+                  padding-bottom: 10px;
+                  cursor: pointer;
+                "
+              >
+                스터디 모집
+              </div>
+            </div>
+          </div>
+
+          <!-- 기존 오른쪽 버튼 -->
+          <button
+            style="
+              background-color: #b0dcf7;
+              color: white;
+              border: none;
+              padding: 10px 18px;
+              border-radius: 8px;
+              font-size: 16px;
+              font-weight: 400;
+              cursor: pointer;
+              margin-left: 750px;
+              margin-bottom: 50px;
+            "
+          >
+            게시물 올리기
+          </button>
+          <div class="post-title">
+            RC 시간 부족한 분들께 제가 쓴 문제풀이 순서 팁 공유해요
+          </div>
+          <div class="meta-and-line">
+            <div class="post-meta">
+              <div class="profile-and-text">
+                <div class="profile-img-small">
+                  <img src="./icons/profile.png" alt="작성자 프로필" />
+                </div>
+                <div class="text-container">
+                  <span id="post-writer">삼삼옥수</span>
+                  <span id="post-date">2025년 7월 12일 오전 07:31</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="post-content">
+            안녕하세요!<br /><br />
+            요즘 RC 풀다가 늘 시간 모자라서 좌절하시는 분들 많으실 것 같아서,
+            저도 한때 똑같이 고생했던 경험으로 저만의 풀이 순서와 팁
+            공유해봅니다. 특히 파트 7 트리플 지문에서 시간 다 쓰고 멘붕 오는 거
+            진짜 많이 겪었거든요… 😭<br /><br />
+            저도 원래 순서대로 풀다가 항상 시간 부족했는데, 풀이 순서 바꾸고
+            나서 파트 7 트리플지문까지 시간 남기고 마무리 가능해졌어요! 실제로
+            3주 연습했는데 RC 점수 70점 정도 올랐습니다.<br /><br />
+            🕐 제가 추천하는 RC 문제풀이 순서 & 팁<br />
+            ✔️ 1. 파트 5 (문법/어휘 빈칸)<br />
+            가장 빠르고 직관적으로 풀 수 있어서 초반에 시간 아끼기<br />
+            고민되는 문제 바로 체크하고 넘어가기<br /><br />
+            ✔️ 2. 파트 6 (문장 삽입/빈칸)<br />
+            파트 5 흐름 이어서 집중력 살리기<br />
+            지문 길이가 길지 않으니 빠르게 전체 읽고 해결<br /><br />
+            ✔️ 3. 파트 7 - 싱글 지문 먼저 상대적으로 짧고 깔끔한 문제부터 시간
+            단축<br />
+            문제 먼저 읽고 핵심 키워드 위주로 지문 스캔<br />
+            <br />✔️ 4. 파트 7 - 더블 → 트리플 순서<br />
+            지문이 긴 만큼 체력 남았을 때 몰아서 집중 <br />트리플지문은
+            마지막까지 시간이 남을 수 있도록 앞부분 아끼기<br /><br />
+            저는 이렇게 바꾼 후로 파트 7 트리플 지문 풀 때 시간 압박 확 줄었고,
+            집중도도 훨씬 좋아졌어요. 혹시 다른 분들은 어떤 순서로 푸시는지도
+            공유해주시면 좋을 것 같아요 😊 다들 고득점 가즈아!! 💪🔥
+          </div>
+          <!-- 실제 파일 업로드 영역 -->
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              margin-top: 40px;
+              gap: 10px;
+            "
+          >
+            <!-- '출처' 텍스트 박스 -->
+            <div
+              style="
+                background-color: #b0dcf7;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 8px 0 0 8px;
+                font-weight: 500;
+              "
+            >
+              출처
+            </div>
+
+            <!-- 실제 파일 선택 input (숨김) -->
+            <input
+              type="file"
+              id="fileInput"
+              style="display: none"
+              accept=".jpg,.jpeg,.png,.gif"
+            />
+
+            <!-- 파일 이름 표시 input -->
+            <input
+              type="text"
+              id="fileNameDisplay"
+              placeholder="파일을 선택해주세요"
+              readonly
+              style="
+                flex-grow: 1;
+                border: 1px solid #ccc;
+                border-left: none;
+                padding: 10px;
+                border-radius: 0 8px 8px 0;
+                font-size: 16px;
+                color: #333;
+                background-color: #f8f8f8;
+                cursor: pointer;
+              "
+              onclick="document.getElementById('fileInput').click();"
+            />
+
+            <!-- 등록 버튼 -->
+            <button
+              onclick="submitFile()"
+              style="
+                background-color: #eef8fe;
+                border: none;
+                color: #247eb6;
+                padding: 10px 16px;
+                border-radius: 8px;
+                font-weight: 600;
+                font-size: 15px;
+                cursor: pointer;
+              "
+            >
+              등록
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const button = document.getElementById("dropdownButton");
+      const menu = document.getElementById("dropdownMenu");
+
+      button.addEventListener("mouseover", () => {
+        menu.style.display = "block";
+      });
+
+      button.addEventListener("mouseleave", () => {
+        setTimeout(() => {
+          if (!menu.matches(":hover")) {
+            menu.style.display = "none";
+          }
+        }, 200);
+      });
+
+      menu.addEventListener("mouseleave", () => {
+        menu.style.display = "none";
+      });
+
+      menu.addEventListener("mouseover", () => {
+        menu.style.display = "block";
+      });
+        // 파일 선택 시 파일명 표시
+        document.getElementById("fileInput").addEventListener("change", function () {
+          const fileName = this.files[0] ? this.files[0].name : "파일을 선택해주세요";
+          document.getElementById("fileNameDisplay").value = fileName;
+        });
+
+        // 등록 버튼 클릭 시 동작
+        function submitFile() {
+          /*const formData = new FormData();
+          formData.append("upload", file);
+
+          fetch("YOUR_BACKEND_UPLOAD_URL", {
+            method: "POST",
+            body: formData,
+          })
+          .then(response => response.json())
+          .then(result => {
+            alert("업로드 성공!");
+          })
+          .catch(error => {
+            alert("업로드 실패!");
+          });*/
+
+          const fileInput = document.getElementById("fileInput");
+          const file = fileInput.files[0];
+
+          if (!file) {
+            alert("파일을 선택해주세요.");
+            return;
+          }
+
+          // 🔽 여기에 실제 서버 업로드 로직이 들어갈 수 있음
+          // 지금은 콘솔에만 출력 (디버깅용)
+          console.log("업로드된 파일:", file);
+
+          alert("파일 '" + file.name + "' 이(가) 등록되었습니다!");
+        }
+      </script>
+    </script>
+  </body>
+</html>
