@@ -4,12 +4,18 @@
     <meta charset="UTF-8" />
     <title>자격증 선택</title>
     <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
       body {
         margin: 0;
         font-family: "Pretendard", Arial, sans-serif;
         background: linear-gradient(to bottom right, #eaf6ff, #ffffff);
         overflow-x: hidden;
-        overflow-y: hidden; /* ✅ 추가: 스크롤 방지 */
+        overflow-y: hidden;
         min-height: 100vh;
       }
 
@@ -150,10 +156,11 @@
         background: #f8fafd;
         border-radius: 20px;
         padding: 30px;
-        width: 480px;
+        width: 564px;
         height: 930px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         overflow-y: auto;
+        text-align: center; /* ✅ 가운데 정렬 */
       }
 
       .exam-selector h2 {
@@ -247,7 +254,7 @@
       <img src="tutti.png" alt="Tutti Logo" class="logo" />
       <div class="nav-menu">
         <span onclick="window.location.reload()">홈</span>
-        <span onclick="alert('알림 기능은 추후 구현 예정입니다.')">알림</span>
+        <span onclick="alert('추후 구현 예정')">알림</span>
         <span class="profile-icon">
           <img src="icons/profile.png" alt="profile" width="37" />
         </span>
@@ -256,7 +263,8 @@
 
     <div class="top-message" id="top-message">
       <p>
-        <strong>“삼삼옥수”</strong> 님의 버킷리스트가 완성되었습니다!<br />
+        <strong class="nickname-placeholder">“닉네임”</strong> 님의 버킷리스트가
+        완성되었습니다!<br />
         앞으로의 시간, 당신이 주인공이에요.
       </p>
     </div>
@@ -266,11 +274,11 @@
         <div class="intro-box" id="intro-box">
           <img src="icons/profile.png" alt="user" />
           <div class="speech">
-            <strong>“삼삼옥수”</strong>님, 아직 참여한 커뮤니티가 없습니다.<br />
+            <strong class="nickname-placeholder">“닉네임”</strong>님, 아직
+            참여한 커뮤니티가 없습니다.<br />
             관심 있는 자격증을 선택해, 함께 공부할 친구들을 만나보세요!
           </div>
         </div>
-
         <div class="community-list" id="community-list"></div>
       </div>
 
@@ -281,29 +289,93 @@
       </div>
     </div>
 
-    <script>
-      const mockExamData = [
-        { category: "어학", exams: ["TOEIC", "TOEFL", "OPIC"] },
-        {
-          category: "IT·정보통신",
-          exams: ["정보처리기사", "컴퓨터활용능력", "SQLD", "GTQ"],
-        },
-        {
-          category: "경영·사무·금융",
-          exams: ["회계관리", "전산세무", "ERP정보관리사"],
-        },
-        {
-          category: "교육·사회복지·상담",
-          exams: ["보육교사", "사회복지사", "청소년상담사"],
-        },
-        {
-          category: "디자인·문화·미디어",
-          exams: ["GTQ", "멀티미디어콘텐츠제작전문가"],
-        },
+    <script src="./config.js"></script>
+
+    <script type="module">
+      const categoryMap = [
+        { id: 1, name: "이름변경필요" },
+        { id: 2, name: "이름변경필요" },
+        { id: 3, name: "이름변경필요" },
+        { id: 4, name: "이름변경필요" },
+        { id: 5, name: "이름변경필요" },
+        { id: 6, name: "이름변경필요" },
+        { id: 7, name: "이름변경필요" },
       ];
 
-      document.addEventListener("DOMContentLoaded", () => {
-        renderCategories(mockExamData);
+      document.addEventListener("DOMContentLoaded", async () => {
+        const token = localStorage.getItem("accessToken");
+        const loginId = localStorage.getItem("loginId"); // ← 반드시 로그인 시 저장해둘 것
+
+        if (!token || !loginId) {
+          alert("로그인이 필요합니다. 다시 로그인해주세요.");
+          window.location.href = "index.html";
+          return;
+        }
+
+        // ✅ 닉네임 가져오기
+        try {
+          const userRes = await fetch(`${BASE_URL}/api/users/${loginId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!userRes.ok) throw new Error("회원 정보 조회 실패");
+
+          const userData = await userRes.json();
+
+          console.log("실제 응답 데이터:", userData);
+
+          const userInfo =
+            Array.isArray(userData.data) && userData.data.length > 0
+              ? userData.data[0]
+              : null;
+          const nickname = userInfo ? userInfo.nickname : null;
+
+          document.querySelectorAll(".nickname-placeholder").forEach((el) => {
+            el.textContent = nickname ? `“${nickname}”` : "“닉네임 없음”";
+          });
+        } catch (err) {
+          console.error("닉네임 로딩 실패:", err);
+        }
+
+        try {
+          const examData = [];
+
+          for (const category of categoryMap) {
+            const res = await fetch(
+              `${BASE_URL}/api/categories/${category.id}/exams`,
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+
+            if (!res.ok) {
+              if (res.status === 403) {
+                throw new Error(
+                  "403 Forbidden: 토큰이 유효하지 않거나 권한이 없습니다."
+                );
+              }
+              throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+            }
+
+            const data = await res.json();
+            examData.push({
+              category: category.name,
+              exams: data.map((exam) => exam.name),
+            });
+          }
+
+          renderCategories(examData);
+        } catch (err) {
+          console.error("시험 데이터 불러오기 실패:", err);
+          document.getElementById("exam-container").innerHTML =
+            "<p style='color:red;'>자격증 목록을 불러오는 데 실패했습니다.</p>";
+        }
       });
 
       function renderCategories(categories) {
@@ -388,40 +460,40 @@
               const box = document.createElement("div");
               box.className = "community-box";
               box.innerHTML = `
-                <div class="community-header">
-                  <a href="/community/${encodeURIComponent(exam)}">
-                    <div class="community-title">
-                       <img src="icons/award.png" alt="📢" width="42" height="40" />
+              <div class="community-header">
+                <a href="Community.html">
+                  <div class="community-title">
+                    <img src="icons/award.png" alt="📢" width="42" height="40" />
+                    ${exam} 커뮤니티
+                  </div>
+                </a>
+                <span style="font-size: 14px; color: #888;">📅 2025.06.24</span>
+              </div>
+              <div class="community-posts">
+                <a href="/community/${encodeURIComponent(
+                  exam
+                )}/post1">이 자격증의 최신 공부법은?</a>
+                <a href="/community/${encodeURIComponent(
+                  exam
+                )}/post2">실전 대비 꿀팁 나눠요!</a>
+                <a href="/community/${encodeURIComponent(
+                  exam
+                )}/post3">질문 있어요~</a>
+              </div>
+            `;
 
-                      ${exam} 커뮤니티
-                    </div>
-                  </a>
-                  <span style="font-size: 14px; color: #888;">📅 2025.06.24</span>
-                </div>
-                <div class="community-posts">
-                  <a href="/community/${encodeURIComponent(
-                    exam
-                  )}/post1">이 자격증의 최신 공부법은?</a>
-                  <a href="/community/${encodeURIComponent(
-                    exam
-                  )}/post2">실전 대비 꿀팁 나눠요!</a>
-                  <a href="/community/${encodeURIComponent(
-                    exam
-                  )}/post3">질문 있어요~</a>
-                </div>
-              `;
               communityList.appendChild(box);
             });
 
             const heightPerItem = 170;
-            const paddingOffset = 160;
+            const paddingOffset = 280;
             const totalHeight = selectedCount * heightPerItem + paddingOffset;
             leftPanel.style.height = `${totalHeight}px`;
           } else {
             introBox.style.display = "flex";
             communityList.style.display = "none";
             topMessage.style.display = "none";
-            leftPanel.style.height = "680px";
+            leftPanel.style.height = "786px";
           }
         }
 

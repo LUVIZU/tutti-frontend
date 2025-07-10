@@ -181,9 +181,11 @@
           }
 
           const data = await res.json();
+          console.log("로그인 응답:", data); // 응답 구조 확인
 
           // 예시: 토큰 저장
           localStorage.setItem("accessToken", data.accessToken);
+          localStorage.setItem("loginId", username); // <-- 이것 추가
 
           alert("로그인 성공!");
           window.location.href = "CommuForm.html"; // 👉 로그인 성공 후 이동할 페이지로 변경
