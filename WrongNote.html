@@ -6,6 +6,7 @@
 
     <title>미션</title>
     <style>
+      /* 기존 CSS 스타일은 변경 없이 유지됩니다. */
       * {
         box-sizing: border-box;
         margin: 0;
@@ -403,17 +404,8 @@
         padding: 30px 40px 0;
       }
 
-      .question-text {
-        font-size: 20px;
-        line-height: 1.5;
-        margin-bottom: 30px;
-      }
-
       .answer-options {
-        display: flex;
-        flex-direction: column;
         padding-bottom: 30px;
-        gap: 15px;
       }
 
       .answer-option {
@@ -423,6 +415,19 @@
         font-size: 18px;
         cursor: pointer;
         transition: background-color 0.2s;
+        margin-bottom: 5px;
+      }
+
+      .answer-option.correct {
+        background-color: #e6ffe6;
+        border-color: #4caf50;
+        font-weight: bold;
+      }
+
+      .answer-option.incorrect {
+        background-color: #ffe6e6;
+        border-color: #f44336;
+        font-weight: bold;
       }
 
       .answer-option:hover {
@@ -460,48 +465,39 @@
         background-color: #e6f4fd;
       }
 
-      #mission-submenu {
-        padding-left: 0;
-        list-style: none;
-        display: none;
-        margin-top: 5px;
-        width: 100%;
+      /* 새롭게 추가된 오답카드 스타일 */
+      .wrong-question-card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        background-color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
       }
 
-      #mission-submenu li {
+      .wrong-question-card .question-content {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .wrong-question-card .explanation {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px dashed #eee;
+      }
+      .wrong-question-card .explanation strong {
         display: block;
-        padding: 0;
         margin-bottom: 5px;
-        border-radius: 0;
       }
 
-      #mission-submenu li a {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        text-decoration: none;
-        color: black;
-        width: 100%;
-        padding: 8px 15px 8px 30px;
-        border-radius: 8px;
-        transition: background-color 0.2s, color 0.2s, border 0.2s;
-        white-space: nowrap;
+      .wrong-question-card .answer-info {
+        margin-top: 10px;
+        font-size: 16px;
       }
 
-      #mission-submenu li a img {
-        width: 16px;
-        height: 16px;
-      }
-
-      #mission-submenu li a.active {
-        background-color: #e6f4fd;
+      .wrong-question-card .answer-info strong {
         color: #247eb6;
-        font-weight: 600;
-        border: 1px solid #247eb6;
-      }
-
-      #mission-submenu li:last-child {
-        margin-bottom: 0;
       }
     </style>
   </head>
@@ -595,7 +591,7 @@
             class="menu-item"
           >
             <a href="Mission.html" class="mission-main-link">
-              <img src="./icons/mission-gray.png" class="icon-mission" />
+              <img src="./icons/mission-blue.png" class="icon-mission" />
               <span>미션</span>
             </a>
             <ul id="mission-submenu">
@@ -638,27 +634,13 @@
             </div>
           </div>
           <div class="question-body">
-            <div class="question-text">
-              102. The chief financial officer ------- firm's budget before it
-              was approved a the board meeting last Friday.
-            </div>
-            <div class="answer-options">
-              <div class="answer-option" data-choice="A">(A) will revise</div>
-              <div class="answer-option" data-choice="B">(B) revises</div>
-              <div class="answer-option" data-choice="C">(C) revised</div>
-              <div class="answer-option" data-choice="D">(D) is revising</div>
-            </div>
-            <div class="choice-buttons">
-              <div class="choice-button" data-choice="A">A</div>
-              <div class="choice-button" data-choice="B">B</div>
-              <div class="choice-button" data-choice="C">C</div>
-              <div class="choice-button" data-choice="D">D</div>
-            </div>
+            <p>오답 문제를 불러오는 중...</p>
           </div>
         </div>
       </div>
     </div>
 
+    <script src="./config.js"></script>
     <script>
       const missionMenu = document.getElementById("mission-menu");
       const subMenu = document.getElementById("mission-submenu");
@@ -667,11 +649,7 @@
 
       function updateIconSrc(imgElement, isActive, defaultSrc, activeSrc) {
         if (!imgElement) return;
-        if (isActive) {
-          imgElement.src = activeSrc;
-        } else {
-          imgElement.src = defaultSrc;
-        }
+        imgElement.src = isActive ? activeSrc : defaultSrc;
       }
 
       if (missionMenu) {
@@ -704,7 +682,6 @@
             });
 
             clickedLink.classList.add("active");
-
             mainMissionLink.classList.remove("active");
             updateIconSrc(
               mainMissionIcon,
@@ -724,47 +701,27 @@
           const linksInItem = item.querySelectorAll(
             "a.menu-item-link, a.mission-main-link, #mission-submenu a"
           );
-          let isActiveMenuItem = false;
 
           linksInItem.forEach((link) => {
             if (link.getAttribute("href") === currentPath) {
               link.classList.add("active");
-              isActiveMenuItem = true;
 
               const img = link.querySelector("img");
-              if (img) {
-                if (
-                  link.classList.contains("menu-item-link") &&
-                  !link.classList.contains("mission-main-link")
-                ) {
-                  updateIconSrc(
-                    img,
-                    true,
-                    img.src.replace("-blue", "-gray"),
-                    img.src.replace("-gray", "-blue")
-                  );
-                } else if (subMenu.contains(link)) {
-                } else if (link.classList.contains("mission-main-link")) {
-                  updateIconSrc(
-                    img,
-                    false,
-                    "./icons/mission-gray.png",
-                    "./icons/mission-blue.png"
-                  );
-                  link.classList.remove("active");
-                }
+              if (img && link.classList.contains("menu-item-link")) {
+                updateIconSrc(
+                  img,
+                  true,
+                  img.src.replace("-blue", "-gray"),
+                  img.src.replace("-gray", "-blue")
+                );
               }
             } else {
-              if (
-                !subMenu.contains(link) &&
-                !link.classList.contains("mission-main-link")
-              ) {
-                const img = link.querySelector("img");
-                if (img && img.src.includes("-blue")) {
-                  img.src = img.src.replace("-blue", "-gray");
-                }
-              }
               link.classList.remove("active");
+
+              const img = link.querySelector("img");
+              if (img && img.src.includes("-blue")) {
+                img.src = img.src.replace("-blue", "-gray");
+              }
             }
           });
 
@@ -772,62 +729,111 @@
             const subMenu = item.querySelector("#mission-submenu");
             if (subMenu) {
               if (
-                currentPath === "Mission.html" ||
-                currentPath === "MissionSolve.html" ||
-                currentPath === "WrongNote.html"
+                [
+                  "Mission.html",
+                  "MissionSolve.html",
+                  "WrongNote.html",
+                ].includes(currentPath)
               ) {
                 subMenu.style.display = "block";
-
-                const mainMissionLink =
-                  item.querySelector(".mission-main-link");
-                if (mainMissionLink) {
-                  mainMissionLink.classList.remove("active");
-                  updateIconSrc(
-                    mainMissionIcon,
-                    false,
-                    "./icons/mission-gray.png",
-                    "./icons/mission-blue.png"
-                  );
-                }
+                updateIconSrc(
+                  mainMissionIcon,
+                  false,
+                  "./icons/mission-gray.png",
+                  "./icons/mission-blue.png"
+                );
               } else {
                 subMenu.style.display = "none";
-                const mainMissionLink =
-                  item.querySelector(".mission-main-link");
-                if (mainMissionLink) {
-                  mainMissionLink.classList.remove("active");
-                  updateIconSrc(
-                    mainMissionIcon,
-                    false,
-                    "./icons/mission-gray.png",
-                    "./icons/mission-blue.png"
-                  );
-                }
+                updateIconSrc(
+                  mainMissionIcon,
+                  false,
+                  "./icons/mission-gray.png",
+                  "./icons/mission-blue.png"
+                );
               }
             }
           }
         });
 
-        const answerOptions = document.querySelectorAll(".answer-option");
-        const choiceButtons = document.querySelectorAll(".choice-button");
+        const questionBodyContainer = document.querySelector(".question-body");
 
-        answerOptions.forEach((option) => {
-          option.addEventListener("click", () => {
-            answerOptions.forEach((opt) => opt.classList.remove("selected"));
-            option.classList.add("selected");
-          });
-        });
-
-        choiceButtons.forEach((button) => {
-          button.addEventListener("click", () => {
-            answerOptions.forEach((opt) => opt.classList.remove("selected"));
-            const selectedOption = document.querySelector(
-              `.answer-option[data-choice="${button.dataset.choice}"]`
+        // API로부터 오답 문제들을 불러오는 함수
+        const fetchWrongQuestionsFromAPI = async () => {
+          questionBodyContainer.innerHTML = "<p>오답 문제를 불러오는 중...</p>"; // 로딩 메시지
+          try {
+            const response = await fetch(
+              "/api/users/me/missions/wrong-questions"
             );
-            if (selectedOption) {
-              selectedOption.classList.add("selected");
+            if (!response.ok) {
+              // 404 에러를 포함한 모든 HTTP 에러를 처리
+              throw new Error(`HTTP error! status: ${response.status}`);
             }
-          });
-        });
+            const apiData = await response.json();
+
+            // API 응답에서 실제 오답 문제 데이터 배열을 추출
+            const wrongQuestions = apiData.data;
+
+            if (!Array.isArray(wrongQuestions) || wrongQuestions.length === 0) {
+              questionBodyContainer.innerHTML = "<p>오답 문제가 없습니다.</p>";
+              return;
+            }
+
+            questionBodyContainer.innerHTML = ""; // 기존 내용 비우기
+
+            wrongQuestions.forEach((wrongQuestion, index) => {
+              const correct = wrongQuestion.correctAnswer;
+              const userChoice = wrongQuestion.selectedAnswer;
+              const explanation =
+                wrongQuestion.explanation || "해설이 없습니다.";
+
+              const card = document.createElement("div");
+              card.classList.add("wrong-question-card");
+
+              // 문제 내용
+              const questionContent = document.createElement("div");
+              questionContent.classList.add("question-content");
+              questionContent.textContent = `Q${index + 1}. ${
+                wrongQuestion.content
+              }`;
+              card.appendChild(questionContent);
+
+              // 보기 옵션 대신 정답과 내가 고른 답을 직접 표시
+              const answerInfoDiv = document.createElement("div");
+              answerInfoDiv.classList.add("answer-info");
+
+              // 내가 고른 답
+              const selectedAnswerP = document.createElement("p");
+              selectedAnswerP.innerHTML = `<strong>내가 고른 답:</strong> <span style="${
+                userChoice !== correct ? "color: red;" : ""
+              }">${userChoice}</span>`;
+              answerInfoDiv.appendChild(selectedAnswerP);
+
+              // 정답
+              const correctAnswerP = document.createElement("p");
+              correctAnswerP.innerHTML = `<strong>정답:</strong> <span style="color: green;">${correct}</span>`;
+              answerInfoDiv.appendChild(correctAnswerP);
+
+              card.appendChild(answerInfoDiv);
+
+              // 해설
+              const explanationDiv = document.createElement("div");
+              explanationDiv.classList.add("explanation");
+              explanationDiv.innerHTML = `<strong>해설:</strong><br>${explanation}`;
+              card.appendChild(explanationDiv);
+
+              questionBodyContainer.appendChild(card);
+            });
+          } catch (error) {
+            console.error("오답 문제 불러오기 실패:", error);
+            questionBodyContainer.innerHTML =
+              "<p>오답 문제를 불러오는 데 실패했습니다. 다시 시도해 주세요.</p>";
+          }
+        };
+
+        // 페이지 로드 시 API로부터 오답 문제 불러오기
+        if (currentPath === "WrongNote.html") {
+          fetchWrongQuestionsFromAPI();
+        }
       });
     </script>
   </body>
