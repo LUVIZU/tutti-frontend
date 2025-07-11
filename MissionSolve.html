@@ -6,6 +6,7 @@
 
     <title>미션</title>
     <style>
+      /* 기존 CSS는 유지됩니다 */
       * {
         box-sizing: border-box;
         margin: 0;
@@ -345,6 +346,7 @@
         padding: 0 40px;
         display: flex;
         padding-top: 30px;
+        padding-left: 40px;
         flex-direction: column;
         margin-left: 22px;
       }
@@ -400,11 +402,13 @@
       }
 
       .question-body {
-        padding: 30px 40px 0;
+        padding-left: 80px;
+        padding-right: 80px;
+        padding-top: 40px;
       }
 
       .question-text {
-        font-size: 20px;
+        font-size: 25px;
         line-height: 1.5;
         margin-bottom: 30px;
       }
@@ -412,26 +416,13 @@
       .answer-options {
         display: flex;
         flex-direction: column;
-        padding-bottom: 30px;
-        gap: 15px;
+        padding-bottom: 10px;
+        gap: 5px;
       }
 
       .answer-option {
-        padding: 15px 20px;
-        border: 1px solid #e1e1e1;
-        border-radius: 10px;
-        font-size: 18px;
-        cursor: pointer;
-        transition: background-color 0.2s;
-      }
-
-      .answer-option:hover {
-        background-color: #f0f8ff;
-      }
-
-      .answer-option.selected {
-        background-color: #e6f4fd;
-        border-color: #247eb6;
+        font-size: 23px;
+        margin-bottom: 20px;
       }
 
       .choice-buttons {
@@ -460,48 +451,75 @@
         background-color: #e6f4fd;
       }
 
-      #mission-submenu {
-        padding-left: 0;
-        list-style: none;
+      .answer-result {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: bold;
+        text-align: left;
+        background-color: #f8fafd;
+        border: 1px solid #e1e1e1;
         display: none;
-        margin-top: 5px;
+      }
+
+      .answer-result h1,
+      .answer-result h2 {
+        text-align: center;
+      }
+
+      .answer-result .center-text {
+        text-align: center;
+      }
+
+      .answer-result h3 {
+        text-align: left;
+        margin-left: 0;
+        padding-left: 0;
+      }
+
+      .choice-button.correct {
+        background-color: #28a745 !important; /* 초록색 */
+        color: white;
+        border-color: #28a745;
+      }
+
+      .choice-button.wrong {
+        background-color: #dc3545 !important; /* 빨간색 */
+        color: white;
+        border-color: #dc3545;
+      }
+
+      /* 문제 답변 제출 로딩 오버레이 */
+      .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
-      }
-
-      #mission-submenu li {
-        display: block;
-        padding: 0;
-        margin-bottom: 5px;
-        border-radius: 0;
-      }
-
-      #mission-submenu li a {
+        height: 100%;
+        background: rgba(255, 255, 255, 0.7);
         display: flex;
+        justify-content: center;
         align-items: center;
-        gap: 6px;
-        text-decoration: none;
-        color: black;
-        width: 100%;
-        padding: 8px 15px 8px 30px;
-        border-radius: 8px;
-        transition: background-color 0.2s, color 0.2s, border 0.2s;
-        white-space: nowrap;
-      }
-
-      #mission-submenu li a img {
-        width: 16px;
-        height: 16px;
-      }
-
-      #mission-submenu li a.active {
-        background-color: #e6f4fd;
+        z-index: 20;
+        font-size: 24px;
         color: #247eb6;
-        font-weight: 600;
-        border: 1px solid #247eb6;
+        flex-direction: column;
+        gap: 15px;
+        display: none; /* 초기에는 숨김 */
       }
-
-      #mission-submenu li:last-child {
-        margin-bottom: 0;
+      .loading-overlay img {
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
     </style>
   </head>
@@ -621,6 +639,11 @@
 
       <div class="content">
         <div class="mission-container">
+          <div class="loading-overlay" id="loadingOverlay">
+            <img src="./icons/loading.png" alt="Loading..." />
+            <span>문제 로드 중...</span>
+          </div>
+
           <div class="mission-top-bar">
             <div class="gray-triangle"></div>
 
@@ -637,6 +660,7 @@
             <div class="question-text">문제를 로드 중입니다...</div>
             <div class="answer-options"></div>
             <div class="choice-buttons"></div>
+            <div id="answerResult" class="answer-result"></div>
           </div>
         </div>
       </div>
@@ -645,10 +669,15 @@
     <script src="./config.js"></script>
 
     <script>
+      let currentProblem = null;
+
       const missionMenu = document.getElementById("mission-menu");
       const subMenu = document.getElementById("mission-submenu");
       const mainMissionLink = missionMenu.querySelector(".mission-main-link");
       const mainMissionIcon = mainMissionLink.querySelector(".icon-mission");
+
+      // 현재 로드된 문제 데이터를 저장할 변수
+      let originalQuestionText = ""; // 문제 본문의 원본 텍스트를 저장할 변수
 
       function updateIconSrc(imgElement, isActive, defaultSrc, activeSrc) {
         if (!imgElement) return;
@@ -804,7 +833,6 @@
 
         // ====================================================================
         // 이 아래부터 백엔드 API 연동 및 문제 로딩 로직입니다.
-        // 기존의 하드코딩된 answerOptions, choiceButtons 이벤트 리스너는 제거합니다.
         // ====================================================================
 
         const questionTextElement = document.querySelector(".question-text");
@@ -812,12 +840,20 @@
           document.querySelector(".answer-options");
         const choiceButtonsContainer =
           document.querySelector(".choice-buttons");
+        const answerResultDiv = document.getElementById("answerResult");
+        const loadingOverlay = document.getElementById("loadingOverlay");
 
         // 미션 문제 데이터를 가져오는 함수
         async function fetchMissionQuestion(communityId) {
+          loadingOverlay.style.display = "flex"; // 로딩 오버레이 표시
           try {
-            // 확인된 Swagger 명세에 따른 API URL
             const token = localStorage.getItem("accessToken");
+            if (!token) {
+              console.error("인증 토큰이 없습니다. 로그인해주세요.");
+              alert("로그인이 필요합니다.");
+              window.location.href = "index.html"; // 로그인 페이지로 리다이렉트
+              return null;
+            }
 
             const response = await fetch(
               `${window.BASE_URL}/api/communities/${communityId}/missions/problem`,
@@ -829,16 +865,26 @@
               }
             );
             if (!response.ok) {
+              if (response.status === 404) {
+                questionTextElement.textContent =
+                  "오늘의 미션 문제가 없습니다.";
+                answerOptionsContainer.innerHTML = "";
+                choiceButtonsContainer.innerHTML = "";
+                answerResultDiv.style.display = "none";
+                currentProblem = null; // 문제 없음 상태
+                return null;
+              }
               throw new Error(`HTTP error! status: ${response.status}`);
             }
-            const responseData = await response.json(); // 전체 응답 객체
+            const responseData = await response.json();
             if (responseData.status === "success" && responseData.data) {
-              return responseData.data; // 실제 문제 데이터는 'data' 필드 안에 있음
+              return responseData.data;
             } else {
               console.error(
                 "API 응답에서 문제 데이터를 찾을 수 없습니다:",
                 responseData.message
               );
+              currentProblem = null; // 문제 없음 상태
               return null;
             }
           } catch (error) {
@@ -847,43 +893,64 @@
               "문제를 불러오는 데 실패했습니다. 잠시 후 다시 시도해주세요.";
             answerOptionsContainer.innerHTML = "";
             choiceButtonsContainer.innerHTML = "";
+            answerResultDiv.style.display = "none";
+            currentProblem = null; // 문제 없음 상태
             return null;
+          } finally {
+            loadingOverlay.style.display = "none"; // 로딩 오버레이 숨김
           }
         }
 
         // 문제를 렌더링하는 함수
         function renderQuestion(problem) {
+          currentProblem = problem; // 현재 문제 데이터 저장
+          originalQuestionText = problem ? problem.content : ""; // 원본 문제 텍스트 저장
+
           if (!problem) {
             questionTextElement.textContent = "문제를 표시할 수 없습니다.";
             answerOptionsContainer.innerHTML = "";
             choiceButtonsContainer.innerHTML = "";
+            answerResultDiv.style.display = "none";
             return;
           }
 
-          // 문제 텍스트 설정: problem.content 사용
-          questionTextElement.textContent = problem.content;
+          // 1. 문제 텍스트 설정: problem.content 사용 (원본 텍스트로 초기화)
+          questionTextElement.textContent = originalQuestionText;
           answerOptionsContainer.innerHTML = ""; // 기존 보기들을 비웁니다.
           choiceButtonsContainer.innerHTML = ""; // 기존 선택 버튼들을 비웁니다.
+          answerResultDiv.style.display = "none"; // 결과 영역 초기화 및 숨김
+          answerResultDiv.classList.remove("correct", "wrong"); // 클래스 제거
 
           // 보기에 사용할 알파벳 레이블 (A, B, C, D) 생성
           const choiceLabels = ["A", "B", "C", "D", "E", "F"]; // 최대 보기 개수에 맞게 확장 가능
 
           problem.options.forEach((optionText, index) => {
-            // problem.options는 문자열 배열이므로 직접 사용
-            const choiceLabel = choiceLabels[index]; // 'A', 'B', 'C' 등
-
-            // 보기 렌더링
+            // 2. 보기 렌더링 (보기 텍스트만, 직접 선택 불가)
             const answerOptionDiv = document.createElement("div");
             answerOptionDiv.classList.add("answer-option");
-            answerOptionDiv.dataset.choice = optionText; // data-choice에 보기 텍스트 자체를 저장
-            answerOptionDiv.textContent = `(${choiceLabel}) ${optionText}`; // (A) diligent
+            answerOptionDiv.textContent = optionText; // (A), (B), (C), (D) 레이블 없이 텍스트만 표시
             answerOptionsContainer.appendChild(answerOptionDiv);
 
-            // 선택 버튼 렌더링
+            // 3. 선택 버튼 렌더링 (A, B, C, D 버튼)
             const choiceButtonDiv = document.createElement("div");
             choiceButtonDiv.classList.add("choice-button");
-            choiceButtonDiv.dataset.choice = optionText; // 선택 버튼도 보기 텍스트 자체를 data-choice로 가짐
-            choiceButtonDiv.textContent = choiceLabel; // 버튼에는 A, B, C, D 표시
+            choiceButtonDiv.dataset.choice = optionText; // 선택 버튼에 보기 텍스트 저장
+            choiceButtonDiv.textContent = choiceLabels[index]; // 버튼에는 A, B, C, D 표시
+
+            // ✅ 선택 버튼 클릭 시 해당 보기를 'selected' 상태로 만들고 즉시 제출
+            choiceButtonDiv.addEventListener("click", () => {
+              // 모든 answer-option에서 'selected' 클래스 제거
+              document
+                .querySelectorAll(".answer-option")
+                .forEach((opt) => opt.classList.remove("selected"));
+              // 클릭된 버튼에 해당하는 answer-option에 'selected' 클래스 추가
+              const targetOption = answerOptionsContainer.children[index];
+              if (targetOption) {
+                targetOption.classList.add("selected");
+              }
+              submitAnswer(problem.problemId, optionText); // 실제 제출은 보기 텍스트로
+            });
+
             choiceButtonsContainer.appendChild(choiceButtonDiv);
           });
 
@@ -897,55 +964,180 @@
             document.body.appendChild(hiddenProblemIdInput); // body에 추가
           }
           hiddenProblemIdInput.value = problem.problemId;
-
-          // 렌더링 후 이벤트 리스너 다시 연결
-          addAnswerOptionListeners();
-          addChoiceButtonListeners();
         }
 
-        // 보기 선택 이벤트 리스너 함수
-        function addAnswerOptionListeners() {
-          const currentAnswerOptions =
-            document.querySelectorAll(".answer-option");
-          currentAnswerOptions.forEach((option) => {
-            option.addEventListener("click", () => {
-              currentAnswerOptions.forEach((opt) =>
-                opt.classList.remove("selected")
-              );
-              option.classList.add("selected");
+        // 답변 제출 함수 (선택 버튼 클릭 시 호출)
+        async function submitAnswer(problemId, selectedAnswerValue) {
+          const token = localStorage.getItem("accessToken");
+          if (!token) {
+            alert("로그인이 필요합니다.");
+            window.location.href = "index.html";
+            return;
+          }
+
+          // 현재 선택된 보기의 인덱스를 찾아 해당 버튼을 식별합니다.
+          let selectedButtonIndex = -1;
+          if (currentProblem && currentProblem.options) {
+            selectedButtonIndex = currentProblem.options.findIndex(
+              (text) => text.trim() === selectedAnswerValue.trim()
+            );
+          }
+
+          const allButtons = document.querySelectorAll(".choice-button");
+          const selectedButton = allButtons?.[selectedButtonIndex];
+          const answerOptions = document.querySelectorAll(".answer-option");
+          const selectedOptionElement = answerOptions?.[selectedButtonIndex];
+          const questionTextElement = document.querySelector(".question-text");
+
+          // 모든 보기 및 선택 버튼 비활성화 (답변 제출 중 중복 클릭 방지)
+          document
+            .querySelectorAll(".answer-option, .choice-button")
+            .forEach((el) => {
+              el.style.pointerEvents = "none";
+              el.style.cursor = "default";
             });
-          });
-        }
 
-        // 선택 버튼 이벤트 리스너 함수
-        function addChoiceButtonListeners() {
-          const currentChoiceButtons =
-            document.querySelectorAll(".choice-button");
-          const currentAnswerOptions =
-            document.querySelectorAll(".answer-option");
-          currentChoiceButtons.forEach((button) => {
-            button.addEventListener("click", () => {
-              currentAnswerOptions.forEach((opt) =>
-                opt.classList.remove("selected")
-              );
-              const selectedOption = document.querySelector(
-                `.answer-option[data-choice="${button.dataset.choice}"]`
-              );
-              if (selectedOption) {
-                selectedOption.classList.add("selected");
+          loadingOverlay.style.display = "flex";
+
+          try {
+            const response = await fetch(
+              `${window.BASE_URL}/api/problem/${problemId}/submit`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ selectedAnswer: selectedAnswerValue }),
               }
+            );
+
+            // HTTP 오류가 발생했을 경우 (예: 4xx, 5xx)
+            if (!response.ok) {
+              let errorData = {};
+              try {
+                errorData = await response.json();
+              } catch (e) {
+                console.warn("Error parsing error response:", e);
+              }
+              throw new Error(
+                `HTTP error! status: ${response.status}, message: ${
+                  errorData.message || response.statusText
+                }`
+              );
+            }
+
+            const result = await response.json();
+            console.log("🎯 응답 결과:", result);
+            console.log("✅ 서버 응답에서 정답:", result.data?.correctAnswer);
+            console.log("✅ 서버 응답에서 해설:", result.data?.explanation);
+
+            const isCorrect = result.data?.correct === true;
+            const correctAnswer = result.data?.correctAnswer;
+
+            // 결과 메시지 표시
+            answerResultDiv.style.display = "block";
+            answerResultDiv.classList.remove("correct", "wrong");
+            answerResultDiv.classList.add(isCorrect ? "correct" : "wrong");
+
+            if (isCorrect) {
+              if (selectedButton) {
+                selectedButton.classList.add("correct");
+              }
+              answerResultDiv.innerHTML = `
+                <h1>🥳</h1>
+    <br><h2>정답입니다!</h2><br>
+    <p class="center-text">계속 물어볼까요?</p><br>
+    <br>
+    <h3>해설</h3><br> ${result.data?.explanation || "설명이 없습니다."}<br>
+              `;
+            } else {
+              if (selectedButton) {
+                selectedButton.classList.add("wrong");
+              }
+              if (selectedOptionElement) {
+                selectedOptionElement.classList.add("wrong"); // 오답으로 선택한 보기 빨간색으로 변경 (클래스 사용)
+              }
+              answerResultDiv.innerHTML = `
+    <h1>🤔</h1>
+    <br><h2>오답입니다! 하지만 걱정마세요!</h2><br>
+    <p class="center-text">다른 문제를 더 풀 기회가 있으니까요!</p><br>
+    <h3>정답</h3>
+    <br> '${correctAnswer}' <br>
+    <br>
+    <h3>해설</h3><br> ${result.data?.explanation || "설명이 없습니다."}<br>
+`;
+
+              // 문제 본문에서 정답 단어 빨간색으로 표시
+              if (
+                correctAnswer &&
+                questionTextElement &&
+                originalQuestionText
+              ) {
+                // 원본 텍스트에서 정답 단어를 찾아 강조
+                const regex = new RegExp(`\\b${correctAnswer}\\b`, "gi");
+                questionTextElement.innerHTML = originalQuestionText.replace(
+                  regex,
+                  `<span class="highlight-wrong-answer">${correctAnswer}</span>`
+                );
+              }
+            }
+
+            // 2초 후 다음 문제 로드 또는 상태 초기화
+            setTimeout(async () => {
+              const nextProblemData = await fetchMissionQuestion(communityId);
+              if (nextProblemData) {
+                renderQuestion(nextProblemData);
+              } else {
+                questionTextElement.textContent =
+                  "오늘의 미션을 모두 완료했습니다!";
+                answerOptionsContainer.innerHTML = "";
+                choiceButtonsContainer.innerHTML = "";
+                answerResultDiv.style.display = "none";
+                currentProblem = null; // 문제 없음 상태 초기화
+              }
+
+              // 모든 보기 및 선택 버튼 클릭 다시 활성화 및 상태 초기화
+              document.querySelectorAll(".answer-option").forEach((option) => {
+                option.style.pointerEvents = "auto";
+                option.style.cursor = "default";
+                option.classList.remove("selected", "wrong"); // 선택 및 오답 클래스 제거
+              });
+              document.querySelectorAll(".choice-button").forEach((button) => {
+                button.classList.remove("correct", "wrong");
+                button.style.pointerEvents = "auto";
+                button.style.cursor = "pointer";
+              });
+              loadingOverlay.style.display = "none";
+            }, 2000);
+          } catch (error) {
+            console.error("❌ 답변 제출 중 오류 발생:", error);
+            if (selectedButton) {
+              selectedButton.classList.add("wrong");
+            }
+            answerResultDiv.style.display = "block";
+            answerResultDiv.classList.add("wrong");
+            answerResultDiv.textContent = `답변 제출 중 오류가 발생했습니다: ${error.message}`;
+
+            // 오류 발생 시 버튼 다시 활성화
+            document.querySelectorAll(".answer-option").forEach((option) => {
+              option.style.pointerEvents = "auto";
+              option.style.cursor = "default";
             });
-          });
+            document.querySelectorAll(".choice-button").forEach((button) => {
+              button.classList.remove("correct", "wrong");
+              button.style.pointerEvents = "auto";
+              button.style.cursor = "pointer";
+            });
+            loadingOverlay.style.display = "none";
+          }
         }
 
         // 페이지 로드 시 미션 문제 가져오기
-        // communityId를 URL에서 가져오는 대신, 무조건 '1'로 설정합니다.
-        const communityId = "1"; // 커뮤니티 ID를 1로 고정
+        const communityId = "1"; // 예시: 커뮤니티 ID를 1로 고정. 실제 사용 시 동적으로 받아와야 함.
 
         if (communityId) {
-          // fetch 요청을 보내기 전에 communityId 값 확인
           console.log("요청할 communityId:", communityId);
-
           fetchMissionQuestion(communityId).then((problemData) => {
             renderQuestion(problemData);
           });
@@ -957,89 +1149,7 @@
             "커뮤니티 ID가 없어 문제를 불러올 수 없습니다. 미션 목록에서 미션을 선택해주세요.";
           answerOptionsContainer.innerHTML = "";
           choiceButtonsContainer.innerHTML = "";
-        }
-
-        // **새롭게 추가: 답변 제출 로직**
-        // 실제 제출 버튼 HTML 요소를 만들어 연결하는 것이 더 좋음.
-        // 여기서는 임시로 JavaScript로 버튼을 생성하여 연결합니다.
-        const submitButton = document.createElement("button");
-        submitButton.textContent = "답변 제출";
-        submitButton.style.marginTop = "20px";
-        submitButton.style.padding = "10px 20px";
-        submitButton.style.backgroundColor = "#247eb6";
-        submitButton.style.color = "white";
-        submitButton.style.border = "none";
-        submitButton.style.borderRadius = "5px";
-        submitButton.style.cursor = "pointer";
-        submitButton.onclick = async () => {
-          const selectedOption = document.querySelector(
-            ".answer-option.selected"
-          );
-          const currentProblemId =
-            document.getElementById("currentProblemId").value;
-
-          if (!selectedOption) {
-            alert("답변을 선택해주세요!");
-            return;
-          }
-          if (!currentProblemId) {
-            alert("문제 ID를 찾을 수 없습니다. 다시 로드해주세요.");
-            return;
-          }
-
-          const selectedAnswerValue = selectedOption.dataset.choice; // 선택된 보기의 data-choice 값
-
-          try {
-            const response = await fetch(
-              `/api/problem/${currentProblemId}/submit`,
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ selectedAnswer: selectedAnswerValue }),
-              }
-            );
-
-            if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const result = await response.json();
-            console.log("제출 결과:", result);
-
-            // 사용자에게 결과 피드백
-            if (result.status === "success") {
-              // Swagger 응답 스키마와 일치하도록 result.data.correct/explanation 사용
-              if (result.data && typeof result.data.correct !== "undefined") {
-                if (result.data.correct) {
-                  alert("정답입니다!\n" + (result.data.explanation || ""));
-                } else {
-                  alert("오답입니다. ㅠㅠ\n" + (result.data.explanation || ""));
-                }
-              } else {
-                alert("답변이 제출되었습니다. 결과 데이터가 불완전합니다.");
-              }
-
-              // 다음 문제 로드 로직
-              // alert 창이 닫힌 후 다음 문제를 로드하도록 setTimeout 추가 (UX 개선)
-              setTimeout(async () => {
-                const nextProblemData = await fetchMissionQuestion(communityId);
-                renderQuestion(nextProblemData);
-              }, 100); // 0.1초 후에 다음 문제 로드
-            } else {
-              alert("답변 제출 실패: " + result.message);
-            }
-          } catch (error) {
-            console.error("답변 제출 중 오류 발생:", error);
-            alert("답변 제출 중 네트워크 오류가 발생했습니다.");
-          }
-        };
-
-        // 제출 버튼을 question-body 내부에 추가 (또는 원하는 위치에)
-        const questionBody = document.querySelector(".question-body");
-        if (questionBody) {
-          questionBody.appendChild(submitButton);
+          answerResultDiv.style.display = "none";
         }
       });
     </script>
