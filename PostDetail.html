@@ -889,6 +889,7 @@
         </div>
       </div>
     </div>
+    <script src="./config.js"></script>
 
     <script>
       const currentUserName = sessionStorage.getItem("userName") || "익명";
@@ -992,15 +993,50 @@
         },
       };
 
-      const params = new URLSearchParams(window.location.search);
-      const id = params.get("id");
+      // post_id를 무조건 3으로 고정하고 백엔드에서 API로 데이터 불러오기
+      const postId = 2;
+      const communityId = 1;
       let currentPost;
       let commentLikes = {};
+      const token = localStorage.getItem("accessToken");
+
+      fetch(
+        `${window.BASE_URL}/api/communities/${communityId}/posts/${postId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((response) => {
+          const data = response.data;
+          currentPost = data;
+
+          document.getElementById("post-title").innerText = data.title;
+          document.getElementById("post-writer").innerText = data.writer;
+          document.getElementById("post-date").innerText = "작성일 정보 없음";
+          document.getElementById("post-content").innerHTML =
+            data.content.replace(/\n/g, "<br>");
+
+          updateActionCounts(data);
+          renderComments(data.comments || []);
+
+          setupLikeButton();
+          setupBookmarkButton();
+          setupCommentInput();
+        })
+        .catch((err) => {
+          console.error("게시글을 불러오는 중 오류 발생:", err);
+          alert("게시글을 불러올 수 없습니다.");
+        });
 
       function updateActionCounts(post) {
-        document.getElementById("like-count").innerText = post.likes;
-        document.getElementById("comment-count").innerText =
-          post.comments.length;
+        document.getElementById("like-count").innerText = post.likes || 0;
+        document.getElementById("comment-count").innerText = (
+          post.comments || []
+        ).length;
       }
 
       function renderComments(comments) {
@@ -1010,18 +1046,14 @@
         const topLevelComments = comments.filter((c) => c.parentId === null);
 
         topLevelComments.forEach((mainComment) => {
-          // 🔵 1. 댓글 그룹 박스
           const commentGroup = document.createElement("div");
           commentGroup.classList.add("comment-group");
 
-          // 🔵 2. 댓글 요소 생성
           const mainCommentItem = document.createElement("div");
           mainCommentItem.classList.add("comment-item");
           mainCommentItem.dataset.commentId = mainComment.id;
 
-          const isMainCommentLiked = commentLikes.hasOwnProperty(mainComment.id)
-            ? commentLikes[mainComment.id]
-            : false;
+          const isMainCommentLiked = commentLikes[mainComment.id] || false;
           const mainLikeIconSrc = isMainCommentLiked
             ? "./icons/heart-blue.png"
             : "./icons/heart-gray.png";
@@ -1047,17 +1079,15 @@
           "<br>"
         )}</div>
         <div class="comment-info-actions">
-          <span class="comment-date">${mainComment.date}</span>
+          <span class="comment-date">${mainComment.date || "날짜 없음"}</span>
           <button class="reply-button" data-comment-id="${
             mainComment.id
           }">답글달기</button>
         </div>
-      </div>
-    `;
+      </div>`;
 
           commentGroup.appendChild(mainCommentItem);
 
-          // 🔵 3. 답글들 추가
           comments
             .filter((c) => c.parentId === mainComment.id)
             .forEach((reply) => {
@@ -1065,42 +1095,38 @@
               replyItem.classList.add("comment-item", "reply-comment-item");
               replyItem.dataset.commentId = reply.id;
 
-              const isReplyLiked = commentLikes.hasOwnProperty(reply.id)
-                ? commentLikes[reply.id]
-                : false;
+              const isReplyLiked = commentLikes[reply.id] || false;
               const replyLikeIconSrc = isReplyLiked
                 ? "./icons/heart-blue.png"
                 : "./icons/heart-gray.png";
 
               replyItem.innerHTML = `
-  <img src="./icons/point.png" alt="답글 화살표" class="reply-arrow-image">
-  <div class="profile-img-small">
-    <img src="./icons/profile.png" alt="프로필" />
-  </div>
-  <div class="comment-content-area">
-    <div class="comment-meta">
-      <div class="user-info">
-        <span class="comment-author">${reply.author}</span>
-      </div>
-      <button class="comment-like-button" data-comment-id="${reply.id}">
-        <img src="${replyLikeIconSrc}" alt="좋아요" class="comment-like-icon" />
-        <span class="comment-like-count">${reply.likes || 0}</span>
-      </button>
-    </div>
-    <div class="comment-text">${reply.text.replace(/\n/g, "<br>")}</div>
-    <div class="comment-info-actions">
-      <span class="comment-date">${reply.date}</span>
-      <button class="reply-button" data-comment-id="${
-        reply.id
-      }">답글달기</button>
-    </div>
-  </div>
-`;
+        <img src="./icons/point.png" alt="답글 화살표" class="reply-arrow-image">
+        <div class="profile-img-small">
+          <img src="./icons/profile.png" alt="프로필" />
+        </div>
+        <div class="comment-content-area">
+          <div class="comment-meta">
+            <div class="user-info">
+              <span class="comment-author">${reply.author}</span>
+            </div>
+            <button class="comment-like-button" data-comment-id="${reply.id}">
+              <img src="${replyLikeIconSrc}" alt="좋아요" class="comment-like-icon" />
+              <span class="comment-like-count">${reply.likes || 0}</span>
+            </button>
+          </div>
+          <div class="comment-text">${reply.text.replace(/\n/g, "<br>")}</div>
+          <div class="comment-info-actions">
+            <span class="comment-date">${reply.date || "날짜 없음"}</span>
+            <button class="reply-button" data-comment-id="${
+              reply.id
+            }">답글달기</button>
+          </div>
+        </div>`;
 
               commentGroup.appendChild(replyItem);
             });
 
-          // 🔵 4. 전체 comment-group 추가
           commentsList.appendChild(commentGroup);
         });
 
@@ -1112,9 +1138,7 @@
           button.onclick = null;
           button.addEventListener("click", function () {
             const commentId = parseInt(this.dataset.commentId);
-            const isCurrentlyLiked = commentLikes.hasOwnProperty(commentId)
-              ? commentLikes[commentId]
-              : false;
+            const isCurrentlyLiked = commentLikes[commentId] || false;
 
             commentLikes[commentId] = !isCurrentlyLiked;
 
@@ -1145,49 +1169,35 @@
 
             const existingReplyArea =
               document.querySelector(".reply-input-area");
-            if (existingReplyArea) {
-              existingReplyArea.remove();
-            }
+            if (existingReplyArea) existingReplyArea.remove();
 
             const replyInputArea = document.createElement("div");
             replyInputArea.classList.add("reply-input-area");
             replyInputArea.innerHTML = `
-              <div class="profile-img-small">
-                <img id="myReplyProfileImage" src="./icons/profile.png" alt="내 프로필" />
-              </div>
-              <div class="reply-input-content">
-                <input type="text" placeholder="답글을 남겨주세요..." data-parent-comment-id="${commentId}" />
-                <div class="reply-buttons">
-                  <button class="cancel-reply">취소</button>
-                  <button class="submit-reply">등록</button>
-                </div>
-              </div>
-            `;
+        <div class="profile-img-small">
+          <img id="myReplyProfileImage" src="./icons/profile.png" alt="내 프로필" />
+        </div>
+        <div class="reply-input-content">
+          <input type="text" placeholder="답글을 남겨주세요..." data-parent-comment-id="${commentId}" />
+          <div class="reply-buttons">
+            <button class="cancel-reply">취소</button>
+            <button class="submit-reply">등록</button>
+          </div>
+        </div>`;
 
-            // Insert reply input area right after the comment group or reply item
-            // Find the correct insertion point: either the parent's commentGroup or the replyItem itself
-            const targetElement =
-              parentCommentItem.closest(".comment-group") || parentCommentItem;
-            targetElement.after(replyInputArea);
+            parentCommentItem.after(replyInputArea);
 
-            const myProfileImageReply = replyInputArea.querySelector(
+            const profileImg = replyInputArea.querySelector(
               "#myReplyProfileImage"
             );
-            const isLoggedIn = true;
-            if (isLoggedIn) {
-              myProfileImageReply.src = "./user/profile123.jpg";
-            } else {
-              myProfileImageReply.src = "./icons/profile.png";
-            }
+            profileImg.src = "./icons/profile123.png";
 
-            const submitReplyButton =
-              replyInputArea.querySelector(".submit-reply");
-            const cancelReplyButton =
-              replyInputArea.querySelector(".cancel-reply");
-            const replyInputField = replyInputArea.querySelector("input");
+            const submitBtn = replyInputArea.querySelector(".submit-reply");
+            const cancelBtn = replyInputArea.querySelector(".cancel-reply");
+            const inputField = replyInputArea.querySelector("input");
 
-            submitReplyButton.addEventListener("click", () => {
-              const replyText = replyInputField.value.trim();
+            submitBtn.addEventListener("click", () => {
+              const replyText = inputField.value.trim();
               if (replyText) {
                 const now = new Date();
                 const dateString = `${now.getFullYear()}년 ${
@@ -1196,17 +1206,14 @@
                   .getMinutes()
                   .toString()
                   .padStart(2, "0")}`;
-
-                const newCommentId = Date.now();
                 const newReply = {
-                  id: newCommentId,
-                  author: currentUserName,
+                  id: Date.now(),
+                  author: sessionStorage.getItem("userName") || "익명",
                   text: replyText,
                   date: dateString,
                   likes: 0,
                   parentId: parseInt(commentId),
                 };
-
                 currentPost.comments.push(newReply);
                 renderComments(currentPost.comments);
                 updateActionCounts(currentPost);
@@ -1214,77 +1221,50 @@
               replyInputArea.remove();
             });
 
-            cancelReplyButton.addEventListener("click", () => {
-              replyInputArea.remove();
-            });
-
-            replyInputField.focus();
+            cancelBtn.addEventListener("click", () => replyInputArea.remove());
+            inputField.focus();
           });
         });
       }
 
-      if (postData[id]) {
-        currentPost = postData[id];
-        document.getElementById("post-title").innerText = currentPost.title;
-        document.getElementById(
-          "post-writer"
-        ).innerText = `${currentPost.writer}`;
-        document.getElementById("post-date").innerText = `${currentPost.date}`;
-        document.getElementById("post-content").innerHTML =
-          currentPost.content.replace(/\n/g, "<br>");
-
-        const postTypeElement = document.getElementById("post-type");
-        const postTypeLinkElement = document.getElementById("post-type-link");
-
-        const categoryName = currentPost.category || "최신글";
-        postTypeElement.innerText = categoryName;
-
-        postTypeLinkElement.href = `community.html?category=${encodeURIComponent(
-          categoryName
-        )}`;
-
-        updateActionCounts(currentPost);
-        renderComments(currentPost.comments);
-
+      function setupLikeButton() {
         let isPostLiked = false;
         const likeButton = document.getElementById("like-button");
         const likeIcon = document.getElementById("like-icon");
 
         likeButton.addEventListener("click", () => {
-          if (!isPostLiked) {
-            likeIcon.src = "./icons/heart-blue.png";
-            currentPost.likes++;
-            isPostLiked = true;
-          } else {
-            likeIcon.src = "./icons/heart-gray.png";
-            currentPost.likes--;
-            isPostLiked = false;
-          }
+          isPostLiked = !isPostLiked;
+          likeIcon.src = isPostLiked
+            ? "./icons/heart-blue.png"
+            : "./icons/heart-gray.png";
+          currentPost.likes += isPostLiked ? 1 : -1;
           document.getElementById("like-count").innerText = currentPost.likes;
         });
+      }
 
+      function setupBookmarkButton() {
+        let isBookmarked = false;
         const bookmarkButton = document.getElementById("bookmark-button");
         const bookmarkIcon = document.getElementById("bookmark-icon");
-        let isBookmarked = false;
-
         bookmarkIcon.src = "./icons/saved-white.png";
 
-        if (bookmarkButton) {
-          bookmarkButton.addEventListener("click", () => {
-            if (!isBookmarked) {
-              bookmarkIcon.src = "./icons/saved-blue.png";
-              console.log("게시물이 스크랩되었습니다.");
-              isBookmarked = true;
-            } else {
-              bookmarkIcon.src = "./icons/saved-white.png";
-              console.log("게시물 스크랩이 해제되었습니다.");
-              isBookmarked = false;
-            }
-          });
-        }
+        bookmarkButton.addEventListener("click", () => {
+          isBookmarked = !isBookmarked;
+          bookmarkIcon.src = isBookmarked
+            ? "./icons/saved-blue.png"
+            : "./icons/saved-white.png";
+          console.log(
+            isBookmarked
+              ? "게시물이 스크랩되었습니다."
+              : "게시물 스크랩이 해제되었습니다."
+          );
+        });
+      }
 
+      function setupCommentInput() {
         const commentInput = document.getElementById("comment-input");
         const submitCommentButton = document.getElementById("submit-comment");
+        const userName = sessionStorage.getItem("userName") || "익명";
 
         submitCommentButton.addEventListener("click", () => {
           const commentText = commentInput.value.trim();
@@ -1296,66 +1276,18 @@
               .getMinutes()
               .toString()
               .padStart(2, "0")}`;
-
-            const newCommentId = Date.now();
             const newComment = {
-              id: newCommentId,
-              author: currentUserName,
+              id: Date.now(),
+              author: userName,
               text: commentText,
               date: dateString,
               likes: 0,
               parentId: null,
             };
-
             currentPost.comments.push(newComment);
             renderComments(currentPost.comments);
             updateActionCounts(currentPost);
             commentInput.value = "";
-          }
-        });
-      } else {
-        document.getElementById("post-title").innerText =
-          "게시물을 찾을 수 없습니다.";
-        document.getElementById("post-writer").innerText = "";
-        document.getElementById("post-date").innerText = "";
-        document.getElementById("post-content").innerText =
-          "존재하지 않는 게시물 ID입니다.";
-        document.getElementById("post-type").innerText = "오류";
-        document.getElementById("post-type-link").href = "#";
-      }
-
-      const isLoggedIn = true;
-      const profileImageHeader = document.getElementById("profileImage");
-      const myProfileImageComment = document.getElementById("myProfileImage");
-
-      if (isLoggedIn) {
-        profileImageHeader.src = "./user/profile123.jpg";
-        myProfileImageComment.src = "./user/profile123.jpg";
-      } else {
-        profileImageHeader.src = "./icons/profile.png";
-        myProfileImageComment.src = "./icons/profile.png";
-      }
-
-      if (!id) {
-        window.history.pushState({}, "", "?id=1");
-        location.reload();
-      }
-
-      const menuList = document.getElementById("menu-list");
-      const currentCategory = currentPost ? currentPost.category : null;
-
-      if (currentCategory) {
-        Array.from(menuList.children).forEach((item) => {
-          item.classList.remove("active");
-          const icon = item.querySelector("img");
-          if (icon) {
-            icon.src = icon.src.replace("-blue.png", "-gray.png");
-          }
-          if (item.dataset.title === currentCategory) {
-            item.classList.add("active");
-            if (icon) {
-              icon.src = icon.src.replace("-gray.png", "-blue.png");
-            }
           }
         });
       }
