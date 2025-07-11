@@ -642,6 +642,8 @@
       </div>
     </div>
 
+    <script src="./config.js"></script>
+
     <script>
       const missionMenu = document.getElementById("mission-menu");
       const subMenu = document.getElementById("mission-submenu");
@@ -815,8 +817,16 @@
         async function fetchMissionQuestion(communityId) {
           try {
             // 확인된 Swagger 명세에 따른 API URL
+            const token = localStorage.getItem("accessToken");
+
             const response = await fetch(
-              `/api/communities/${communityId}/missions/problem`
+              `${window.BASE_URL}/api/communities/${communityId}/missions/problem`,
+              {
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
             );
             if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`);
