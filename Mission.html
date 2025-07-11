@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>미션 달성 순위</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      .blur-circle {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .header,
+      .wrapper,
+      .sidebar,
+      .content {
+        position: relative;
+        z-index: 10;
+      }
+
+      .blur-circle-1 {
+        width: 783px;
+        height: 783px;
+        background: #ddf2ff;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        filter: blur(500px);
+        opacity: 1;
+      }
+
+      .blur-circle-2 {
+        width: 507px;
+        height: 507px;
+        background: #b0dcf7;
+        top: 240px;
+        left: 60%;
+        transform: translateX(-50%);
+        filter: blur(250px);
+        opacity: 0.2;
+      }
+
+      .logo img {
+        width: 128px;
+        height: 52px;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        padding-top: 100px;
+      }
+
+      .wrapper {
+        width: 90vw;
+        max-width: 1280px;
+        margin: 0 auto;
+        padding-top: 20px;
+        display: flex;
+        flex-direction: row;
+        gap: 0;
+      }
+
+      .header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 5vw;
+        z-index: 1000;
+      }
+
+      .header .user-actions {
+        display: flex;
+        align-items: center;
+        width: auto;
+        height: 42px;
+        gap: 14px;
+      }
+
+      .nav-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 37px;
+        padding: 10px 14px;
+        font-size: 20px;
+        font-weight: 500;
+        border-right: 1px solid #e1e1e1;
+        position: relative;
+      }
+
+      .notification {
+        position: relative;
+      }
+
+      .badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        width: 18px;
+        height: 18px;
+        background: #ff3b3b;
+        color: white;
+        font-size: 12px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .profile-btn {
+        width: 37px;
+        height: 37px;
+        border: 1px solid #247eb6;
+        border-radius: 1000px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+      }
+
+      .profile-btn img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .sidebar {
+        width: 280px;
+        height: auto;
+        padding: 2px;
+        background-color: white;
+        border-top: 5px solid #247eb6;
+        flex-shrink: 0;
+        flex-grow: 0;
+      }
+
+      .sidebar h2 {
+        color: #247eb6;
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 36px;
+        margin-top: 30px;
+        text-align: center;
+      }
+
+      .stats {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10.67px;
+        margin-top: 15px;
+      }
+
+      .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 16px;
+        color: #000;
+      }
+
+      .stat-item img.user-icon {
+        width: 26.27px;
+        height: 20.3px;
+      }
+
+      .stat-item img.calendar-icon {
+        width: 18.67px;
+        height: 18.67px;
+      }
+
+      .stat-item img.day-icon {
+        width: 13.33px;
+        height: 17px;
+      }
+
+      .write-button {
+        margin: 20px auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 200px;
+        height: 40px;
+        background-color: #b0dcf7;
+        border-radius: 21.02px;
+        gap: 7.01px;
+        color: white;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .write-button img {
+        width: 18px;
+        height: 18px;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        margin-top: 20px;
+        padding: 0 15px;
+        flex-direction: column;
+      }
+      .sidebar li {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .sidebar li .menu-item-link,
+      .sidebar li .mission-main-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        color: inherit;
+        width: 100%;
+        padding: 10px; /* 여기에 패딩을 적용 */
+        border-radius: 8px; /* 여기에 border-radius 적용 */
+      }
+
+      /* active 클래스를 a 태그에 적용하도록 변경 */
+      .sidebar li .menu-item-link.active,
+      .sidebar li .mission-main-link.active {
+        background-color: #e6f4fd;
+      }
+
+      /* active 클래스가 적용된 a 태그 내의 span에만 색상 및 폰트 굵기 변경 */
+      .sidebar li .menu-item-link.active span,
+      .sidebar li .mission-main-link.active span {
+        color: #247eb6;
+        font-weight: 600;
+      }
+
+      .sidebar li[data-icon="group"] {
+        border-bottom: 1px solid #e1e1e1;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+      }
+      .sidebar li[data-icon="mission"] {
+        border-bottom: 1px solid #e1e1e1;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+      }
+      .sidebar li[data-icon="calendar"] {
+        border-bottom: 1px solid #e1e1e1;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+      }
+
+      .icon-all {
+        width: 26px;
+        height: 26px;
+      }
+      .icon-star {
+        width: 27px;
+        height: 26px;
+      }
+      .icon-info {
+        width: 27px;
+        height: 26px;
+      }
+      .icon-group {
+        width: 37px;
+        height: 26px;
+      }
+      .icon-mission {
+        width: 20.8px;
+        height: 26px;
+      }
+      .icon-calendar {
+        width: 26px;
+        height: 26px;
+      }
+
+      .content {
+        flex: 1;
+        padding: 0 40px;
+        display: flex;
+        padding-top: 30px;
+        flex-direction: column;
+        margin-left: 22px;
+      }
+
+      .rank-container {
+        background-color: white;
+        width: 50%;
+        padding: 20px 35px 30px;
+        padding-bottom: 10px;
+        margin-left: 450px;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .rank-header {
+        display: flex;
+        align-items: baseline;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+
+      .main-rank-icon {
+        width: 30px;
+        height: 30px;
+        flex-shrink: 0;
+        margin-right: 8px;
+      }
+
+      .rank-title {
+        font-size: 22px;
+        font-weight: bold;
+        color: #333;
+        white-space: nowrap;
+        flex-shrink: 0;
+        margin-right: 20px;
+      }
+
+      .rank-meta {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
+        color: #666;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .meta-people-icon {
+        width: 18px;
+        height: 18px;
+        vertical-align: middle;
+      }
+
+      .meta-time-icon {
+        width: 16px;
+        height: 16px;
+        vertical-align: middle;
+      }
+
+      .rank-list {
+        width: 640px;
+        margin: 0 auto;
+      }
+
+      .rank-box {
+        background-color: #0000000d;
+        padding-left: 130px;
+        padding-right: 130px;
+        padding-top: 30px;
+        padding-bottom: 15px;
+        align-items: center;
+      }
+
+      .rank-item {
+        display: flex;
+        align-items: center;
+        background-color: #f3faff;
+        border-radius: 10px;
+        padding: 12px 20px;
+        margin-bottom: 10px;
+        height: 60px;
+      }
+
+      .rank-display-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        width: 80px;
+        height: 32px;
+        flex-shrink: 0;
+      }
+
+      .rank-wing {
+        width: 32px;
+        height: auto;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 0;
+      }
+
+      .rank-wing.left {
+        left: 0;
+        transform: scaleX(-1) translateY(-50%);
+      }
+
+      .rank-wing.right {
+        right: 0;
+      }
+
+      .rank-text.top-rank {
+        font-size: 20px;
+        font-weight: 550;
+        color: black;
+        z-index: 1;
+        position: relative;
+        text-shadow: none;
+      }
+
+      .rank-display-container .rank-number {
+        font-size: 18px;
+        font-weight: bold;
+        color: #555;
+      }
+
+      .rank-display-container.rank-1st .rank-wing,
+      .rank-display-container.rank-2nd .rank-wing,
+      .rank-display-container.rank-3rd .rank-wing {
+        filter: none;
+      }
+
+      .rank-display-container.rank-1st .rank-text {
+        color: black;
+        font-size: 20px;
+        font-weight: 550;
+        text-shadow: none;
+      }
+
+      .rank-display-container.rank-2nd .rank-text {
+        color: black;
+        font-size: 20px;
+        font-weight: 550;
+        text-shadow: none;
+      }
+
+      .rank-display-container.rank-3rd .rank-text {
+        color: black;
+        font-size: 20px;
+        font-weight: 550;
+        text-shadow: none;
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-grow: 1;
+        padding-left: 150px;
+      }
+
+      .user-profile {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        overflow: hidden;
+      }
+
+      .user-profile img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .user-profile.big-profile {
+        width: 40px;
+        height: 40px;
+      }
+
+      .username.big-username {
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .username {
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      .mission-count {
+        color: #333;
+        font-size: 14px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        margin-left: auto;
+      }
+
+      #mission-submenu {
+        padding-left: 30px;
+        list-style: none;
+        display: none; /* JavaScript로 제어되므로 기본값은 none으로 유지 */
+        margin-top: 5px;
+      }
+
+      #mission-submenu li {
+        display: block; /* 각 항목을 블록으로 만들어 세로로 쌓이게 */
+        padding: 6px 0;
+        margin-bottom: 5px; /* 항목별 하단 간격 */
+        border-radius: 0; /* 필요 없으므로 제거 */
+      }
+
+      #mission-submenu li img {
+        width: 16px;
+        height: 16px;
+      }
+
+      #mission-submenu li:last-child {
+        margin-bottom: 0; /* 마지막 항목의 하단 마진 제거 */
+      }
+
+      #mission-submenu li a {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+        color: black;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="blur-circle blur-circle-1"></div>
+    <div class="blur-circle blur-circle-2"></div>
+    <div class="header">
+      <div class="logo">
+        <img src="./icons/tutti.png" alt="Tutti 로고" />
+      </div>
+      <div class="user-actions">
+        <div class="nav-box" onclick="location.href='CommuForm.html'">홈</div>
+        <div
+          class="nav-box notification"
+          onclick="location.href='MyPageAlerts'"
+        >
+          알림
+          <span class="badge">0</span>
+        </div>
+        <div class="profile-btn" onclick="location.href='MyPage.html'">
+          <img id="profileImage" src="./icons/profile.png" alt="프로필" />
+        </div>
+      </div>
+    </div>
+
+    <div class="wrapper">
+      <div class="sidebar">
+        <h2>TOEIC 커뮤니티</h2>
+        <div class="stats">
+          <div class="stat-item">
+            <img src="./icons/user.png" class="user-icon" alt="유저 아이콘" />
+            <span>00명</span>
+          </div>
+          <div class="stat-item">
+            <img
+              src="./icons/calendar-blue.png"
+              class="calendar-icon"
+              alt="달력 아이콘"
+            />
+            <span>0/00</span>
+          </div>
+          <div class="stat-item">
+            <img src="./icons/day.png" class="day-icon" alt="D-day 아이콘" />
+            <span>-61</span>
+          </div>
+        </div>
+
+        <div class="write-button">
+          <img src="./icons/pencil.png" alt="글쓰기 아이콘" />
+          <span>글쓰기</span>
+        </div>
+
+        <ul id="menu-list">
+          <li data-title="전체글" data-icon="all" class="menu-item">
+            <a href="Community.html" class="menu-item-link">
+              <img src="./icons/all-gray.png" class="icon-all" />
+              <span>전체글</span>
+            </a>
+          </li>
+
+          <li data-title="인기글" data-icon="star" class="menu-item">
+            <a href="Popular.html" class="menu-item-link">
+              <img src="./icons/star-gray.png" class="icon-star" />
+              <span>인기글</span>
+            </a>
+          </li>
+
+          <li data-title="정보글" data-icon="info" class="menu-item">
+            <a href="Info.html" class="menu-item-link">
+              <img src="./icons/info-gray.png" class="icon-info" />
+              <span>정보글</span>
+            </a>
+          </li>
+
+          <li data-title="스터디 모집" data-icon="group" class="menu-item">
+            <a href="Study.html" class="menu-item-link">
+              <img src="./icons/group-gray.png" class="icon-group" />
+              <span>스터디 모집</span>
+            </a>
+          </li>
+
+          <li
+            id="mission-menu"
+            data-title="미션"
+            data-icon="mission"
+            class="menu-item"
+          >
+            <a href="Mission.html" class="mission-main-link">
+              <img src="./icons/mission-blue.png" class="icon-mission" />
+              <span>미션</span>
+            </a>
+            <ul id="mission-submenu">
+              <li>
+                <a href="MissionSolve.html">
+                  <img src="./icons/question.png" alt="•" />
+                  <span>미션풀기</span>
+                </a>
+              </li>
+              <li>
+                <a href="WrongNote.html">
+                  <img src="./icons/question.png" alt="•" />
+                  <span>오답노트</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <li data-title="시험 일정" data-icon="calendar" class="menu-item">
+            <a href="Calendar.html" class="menu-item-link">
+              <img src="./icons/calendar-gray.png" class="icon-calendar" />
+              <span>시험 일정</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="content">
+        <div class="rank-container">
+          <div class="rank-header">
+            <img
+              src="./icons/rank.png"
+              alt="미션"
+              class="rank-icon main-rank-icon"
+            />
+            <span class="rank-title">미션 달성 순위</span>
+            <div class="rank-meta">
+              <img
+                src="./icons/people.png"
+                alt="사람 수"
+                class="meta-people-icon"
+              />
+              <span>85명</span>
+              <img src="./icons/time.png" alt="시간" class="meta-time-icon" />
+              <span>8.24 업데이트</span>
+            </div>
+          </div>
+        </div>
+        <div class="rank-box">
+          <div class="rank-list" id="rankList"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const rankData = [
+        { name: "삼삼옥수", count: 101 },
+        { name: "햄토리", count: 99 },
+        { name: "장금2", count: 98 },
+        { name: "홍길동", count: 97 },
+        { name: "할수있다", count: 95 },
+        { name: "토잘알", count: 94 },
+        { name: "진이", count: 94 },
+        { name: "아이캔두잇", count: 94 },
+        { name: "독해장인", count: 90 },
+      ];
+
+      const rankList = document.getElementById("rankList");
+
+      rankData.forEach((user, index) => {
+        const rank = index + 1;
+        const isTop3 = rank <= 3;
+
+        let rankDisplayHtml = "";
+        if (isTop3) {
+          rankDisplayHtml = `
+                                  <div class="rank-display-container rank-${rank}st"> <img class="rank-wing left" src="./icons/wing.png" alt="left-wing" />
+                                    <span class="rank-text top-rank">${rank}</span>
+                                    <img class="rank-wing right" src="./icons/wing.png" alt="right-wing" />
+                                  </div>
+                                `;
+        } else {
+          rankDisplayHtml = `
+                                  <div class="rank-display-container">
+                                    <div class="rank-number">${rank}</div>
+                                  </div>
+                                `;
+        }
+
+        const rankItem = `
+                                <div class="rank-item">
+                                  ${rankDisplayHtml}
+                                  <div class="user-info">
+                                    <div class="user-profile ${
+                                      isTop3 ? "big-profile" : ""
+                                    }">
+                                      <img src="./icons/profile-default-gray.png" alt="Profile Default" />
+                                    </div>
+                                    <div class="username ${
+                                      isTop3 ? "big-username" : ""
+                                    }">${user.name}</div>
+                                  </div>
+                                  <div class="mission-count">미션 ${
+                                    user.count
+                                  }문제 달성!</div>
+                                </div>
+                              `;
+        rankList.innerHTML += rankItem;
+      });
+
+      const missionMenu = document.getElementById("mission-menu");
+      const subMenu = document.getElementById("mission-submenu");
+
+      if (missionMenu) {
+        missionMenu.addEventListener("click", (event) => {
+          // 클릭된 요소가 a 태그인지 확인
+          const clickedLink = event.target.closest("a");
+
+          // 미션 메인 링크가 클릭된 경우에만 active 클래스 토글
+          if (
+            clickedLink &&
+            clickedLink.classList.contains("mission-main-link")
+          ) {
+            clickedLink.classList.toggle("active"); // 미션 메인 링크에 active 토글
+            const isVisible = subMenu.style.display === "block";
+            subMenu.style.display = isVisible ? "none" : "block";
+
+            // 아이콘 색상 변경
+            const missionIcon = clickedLink.querySelector(".icon-mission");
+            if (missionIcon) {
+              if (clickedLink.classList.contains("active")) {
+                missionIcon.src = missionIcon.src.replace("-gray", "-blue");
+              } else {
+                missionIcon.src = missionIcon.src.replace("-blue", "-gray");
+              }
+            }
+
+            // 미션 풀기/오답노트 링크에서 active 클래스 제거 (선택적)
+            subMenu.querySelectorAll("a").forEach((subLink) => {
+              subLink.classList.remove("active");
+              const subIcon = subLink.querySelector("img");
+              if (subIcon && subIcon.src.includes("-blue")) {
+                subIcon.src = subIcon.src.replace("-blue", "-gray");
+              }
+            });
+          } else if (clickedLink && subMenu.contains(clickedLink)) {
+            // 미션 풀기 또는 오답노트 링크가 클릭된 경우
+            // 모든 서브메뉴 링크에서 active 제거
+            subMenu.querySelectorAll("a").forEach((subLink) => {
+              subLink.classList.remove("active");
+            });
+            // 클릭된 서브메뉴 링크에 active 추가
+            clickedLink.classList.add("active");
+
+            // 미션 메인 링크는 항상 활성화 (하위 메뉴가 열려있으므로)
+            const mainMissionLink =
+              missionMenu.querySelector(".mission-main-link");
+            if (mainMissionLink) {
+              mainMissionLink.classList.add("active");
+              const mainMissionIcon =
+                mainMissionLink.querySelector(".icon-mission");
+              if (mainMissionIcon && mainMissionIcon.src.includes("-gray")) {
+                mainMissionIcon.src = mainMissionIcon.src.replace(
+                  "-gray",
+                  "-blue"
+                );
+              }
+            }
+          }
+        });
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        const menuItems = document.querySelectorAll(".menu-item");
+        const currentPath = window.location.pathname.split("/").pop(); // ex: Mission.html
+
+        menuItems.forEach((item) => {
+          // li 내부의 모든 a 태그를 확인
+          const linksInItem = item.querySelectorAll(
+            "a.menu-item-link, a.mission-main-link, #mission-submenu a"
+          );
+          let isActiveMenuItem = false; // 현재 메뉴 아이템이 활성화되었는지 여부
+
+          linksInItem.forEach((link) => {
+            if (link.getAttribute("href") === currentPath) {
+              link.classList.add("active"); // 해당 링크에 active 클래스 추가
+              isActiveMenuItem = true; // 메뉴 아이템 활성화로 표시
+
+              const img = link.querySelector("img");
+              if (img && img.src.includes("-gray")) {
+                img.src = img.src.replace("-gray", "-blue");
+              }
+
+              // '미션' 메뉴이면서 하위 링크가 활성화된 경우, 메인 '미션' 링크도 활성화
+              if (
+                item.id === "mission-menu" &&
+                !link.classList.contains("mission-main-link")
+              ) {
+                const mainMissionLink =
+                  item.querySelector(".mission-main-link");
+                if (mainMissionLink) {
+                  mainMissionLink.classList.add("active");
+                  const mainMissionIcon =
+                    mainMissionLink.querySelector(".icon-mission");
+                  if (
+                    mainMissionIcon &&
+                    mainMissionIcon.src.includes("-gray")
+                  ) {
+                    mainMissionIcon.src = mainMissionIcon.src.replace(
+                      "-gray",
+                      "-blue"
+                    );
+                  }
+                }
+              }
+            } else {
+              link.classList.remove("active"); // 다른 링크는 active 제거
+            }
+          });
+
+          // '미션' 메뉴일 경우, 어떤 하위 링크라도 활성화되어 있으면 서브메뉴를 보이게
+          if (item.id === "mission-menu") {
+            const subMenu = item.querySelector("#mission-submenu");
+            if (subMenu) {
+              // 현재 경로가 미션 메인 페이지이거나, 하위 메뉴 페이지인 경우 서브메뉴를 보여줌
+              if (
+                currentPath === "Mission.html" ||
+                currentPath === "MissionSolve.html" ||
+                currentPath === "WrongNote.html"
+              ) {
+                subMenu.style.display = "block";
+                // 미션 메인 링크가 active가 아니면 active 추가
+                const mainMissionLink =
+                  item.querySelector(".mission-main-link");
+                if (
+                  mainMissionLink &&
+                  !mainMissionLink.classList.contains("active")
+                ) {
+                  mainMissionLink.classList.add("active");
+                  const mainMissionIcon =
+                    mainMissionLink.querySelector(".icon-mission");
+                  if (
+                    mainMissionIcon &&
+                    mainMissionIcon.src.includes("-gray")
+                  ) {
+                    mainMissionIcon.src = mainMissionIcon.src.replace(
+                      "-gray",
+                      "-blue"
+                    );
+                  }
+                }
+              } else {
+                subMenu.style.display = "none";
+              }
+            }
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

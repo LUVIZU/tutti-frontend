@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>자격증 선택</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Pretendard", Arial, sans-serif;
+        background: linear-gradient(to bottom right, #eaf6ff, #ffffff);
+        overflow-x: hidden;
+        overflow-y: hidden;
+        min-height: 100vh;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 40px;
+      }
+
+      .logo {
+        height: 52px;
+      }
+
+      .nav-menu {
+        display: flex;
+        gap: 2px;
+        align-items: center;
+        font-weight: 500;
+        font-size: 18px;
+        color: #1e1e1e;
+      }
+
+      .nav-menu span,
+      .nav-menu .profile-icon {
+        padding: 0 16px;
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .nav-menu span:not(:first-child)::before,
+      .nav-menu .profile-icon::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1px;
+        height: 24px;
+        background-color: #ccc;
+      }
+
+      .top-message {
+        display: none;
+        padding: 30px 60px 0 60px;
+        font-size: 24px;
+        font-weight: 500;
+        color: #000000;
+        line-height: 1.6;
+      }
+
+      .top-message strong {
+        color: #007aff;
+      }
+
+      .main-wrapper {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        padding: 40px 40px 60px;
+      }
+
+      .left-panel {
+        background: linear-gradient(180deg, #f8fbfe 0%, #f1f6fa 100%);
+        border-radius: 20px;
+        padding: 40px;
+        width: 1151px;
+        min-height: 400px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        transition: height 0.3s ease;
+      }
+
+      .intro-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        text-align: center;
+        gap: 20px;
+      }
+
+      .intro-box img {
+        width: 120px;
+      }
+
+      .speech {
+        background: #fff;
+        padding: 24px;
+        border-radius: 15px;
+        font-size: 30px;
+        font-weight: 400;
+        line-height: 1.6;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05);
+      }
+
+      .community-list {
+        display: none;
+        flex-direction: column;
+        gap: 30px;
+      }
+
+      .community-box {
+        background: #fff;
+        border-radius: 10px;
+        padding: 24px;
+        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .community-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 20px;
+        font-weight: 600;
+        color: #222;
+        margin-bottom: 12px;
+      }
+
+      .community-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 36px;
+        font-weight: 600;
+      }
+
+      .community-posts {
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #444;
+        margin-left: 34px;
+      }
+
+      .exam-selector {
+        background: #f8fafd;
+        border-radius: 20px;
+        padding: 30px;
+        width: 564px;
+        height: 930px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        overflow-y: auto;
+        text-align: center; /* ✅ 가운데 정렬 */
+      }
+
+      .exam-selector h2 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1e3a8a;
+        margin-bottom: 4px;
+      }
+
+      .exam-selector small {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 20px;
+        color: #666;
+      }
+
+      details {
+        margin-top: 10px;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #ffffff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border-left: 8px solid #007aff;
+      }
+
+      summary {
+        font-size: 18px;
+        font-weight: 600;
+        background: #ffffff;
+        padding: 16px 20px;
+        cursor: pointer;
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      summary::-webkit-details-marker {
+        display: none;
+      }
+
+      summary::after {
+        content: "▾";
+        font-size: 16px;
+        color: #007aff;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0 20px 10px 20px;
+        margin: 0;
+      }
+
+      li {
+        padding: 10px;
+        border-radius: 8px;
+        transition: background 0.2s;
+        display: flex;
+        align-items: center;
+      }
+
+      li:hover {
+        background-color: #f0f7ff;
+      }
+
+      input[type="checkbox"] {
+        accent-color: #007aff;
+        margin-right: 8px;
+      }
+
+      .community-header a,
+      .community-posts a {
+        color: #444;
+        text-decoration: none;
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .community-posts a:last-child {
+        margin-bottom: 0;
+      }
+
+      .community-header a:hover,
+      .community-posts a:hover {
+        text-decoration: underline;
+      }
+      .nav-menu a {
+        color: inherit;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        height: 100%;
+      }
+      .nav-menu a:hover {
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img src="tutti.png" alt="Tutti Logo" class="logo" />
+      <div class="nav-menu">
+        <a href="CommuForm.html"><span>홈</span></a>
+        <a href="notifications.html"><span>알림</span></a>
+        <a href="MyPage.html" class="profile-icon">
+          <img src="icons/profile.png" alt="profile" width="37" />
+        </a>
+      </div>
+    </header>
+
+    <div class="top-message" id="top-message">
+      <p>
+        <strong class="nickname-placeholder">“닉네임”</strong> 님의 버킷리스트가
+        완성되었습니다!<br />
+        앞으로의 시간, 당신이 주인공이에요.
+      </p>
+    </div>
+
+    <div class="main-wrapper">
+      <div class="left-panel" id="left-panel">
+        <div class="intro-box" id="intro-box">
+          <img src="icons/profile.png" alt="user" />
+          <div class="speech">
+            <strong class="nickname-placeholder">“닉네임”</strong>님, 아직
+            참여한 커뮤니티가 없습니다.<br />
+            관심 있는 자격증을 선택해, 함께 공부할 친구들을 만나보세요!
+          </div>
+        </div>
+        <div class="community-list" id="community-list"></div>
+      </div>
+
+      <div class="exam-selector">
+        <h2>✔ 공부할 자격증을 선택해주세요!</h2>
+        <small>자격증은 3개까지 선택할 수 있어요.</small>
+        <div id="exam-container"></div>
+      </div>
+    </div>
+
+    <script src="./config.js"></script>
+
+    <script type="module">
+      const categoryMap = [
+        { id: 1, name: "어학" },
+        { id: 2, name: "IT • 정보통신" },
+        { id: 3, name: "경영" },
+        { id: 4, name: "공학  " },
+        { id: 7, name: "통계" },
+        { id: 6, name: "역사" },
+        { id: 5, name: "기타" },
+      ];
+      let token = null;
+      let loginId = null;
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        token = localStorage.getItem("accessToken");
+        loginId = localStorage.getItem("loginId"); // ← 반드시 로그인 시 저장해둘 것
+
+        if (!token || !loginId) {
+          alert("로그인이 필요합니다. 다시 로그인해주세요.");
+          window.location.href = "index.html";
+          return;
+        }
+
+        // ✅ 닉네임 가져오기
+        try {
+          const userRes = await fetch(`${BASE_URL}/api/users/${loginId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!userRes.ok) throw new Error("회원 정보 조회 실패");
+
+          const userData = await userRes.json();
+
+          console.log("실제 응답 데이터:", userData);
+
+          const userInfo =
+            Array.isArray(userData.data) && userData.data.length > 0
+              ? userData.data[0]
+              : null;
+          const nickname = userInfo ? userInfo.nickname : null;
+
+          document.querySelectorAll(".nickname-placeholder").forEach((el) => {
+            el.textContent = nickname ? `“${nickname}”` : "“닉네임 없음”";
+          });
+        } catch (err) {
+          console.error("닉네임 로딩 실패:", err);
+        }
+
+        try {
+          const examData = [];
+
+          for (const category of categoryMap) {
+            const res = await fetch(
+              `${BASE_URL}/api/categories/${category.id}/exams`,
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+
+            if (!res.ok) {
+              if (res.status === 403) {
+                throw new Error(
+                  "403 Forbidden: 토큰이 유효하지 않거나 권한이 없습니다."
+                );
+              }
+              throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+            }
+
+            const data = await res.json();
+            examData.push({
+              category: category.name,
+              exams: data.map((exam) => ({ id: exam.id, name: exam.name })),
+            });
+          }
+
+          renderCategories(examData);
+        } catch (err) {
+          console.error("시험 데이터 불러오기 실패:", err);
+          document.getElementById("exam-container").innerHTML =
+            "<p style='color:red;'>자격증 목록을 불러오는 데 실패했습니다.</p>";
+        }
+      });
+
+      function renderCategories(categories) {
+        const container = document.getElementById("exam-container");
+        const communityList = document.getElementById("community-list");
+        const introBox = document.getElementById("intro-box");
+        const topMessage = document.getElementById("top-message");
+        const leftPanel = document.getElementById("left-panel");
+
+        container.innerHTML = "";
+        let selected = JSON.parse(localStorage.getItem("selectedExams")) || [];
+
+        categories.forEach((cat) => {
+          const details = document.createElement("details");
+          const summary = document.createElement("summary");
+          summary.textContent = cat.category;
+          details.appendChild(summary);
+
+          const ul = document.createElement("ul");
+
+          cat.exams.forEach((examObj) => {
+            const { id, name } = examObj;
+            const li = document.createElement("li");
+            const label = document.createElement("label");
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.value = id;
+            checkbox.dataset.name = name; // 이름도 보관
+
+            if (selected.includes(name)) {
+              checkbox.checked = true;
+            }
+            const examId = examObj.id; // 이미 이 정보가 있음
+
+            checkbox.addEventListener("change", async () => {
+              if (checkbox.checked) {
+                if (selected.length >= 3) {
+                  checkbox.checked = false;
+                  alert("최대 3개까지 선택할 수 있습니다.");
+                  return;
+                } else {
+                  selected.push(name);
+                  try {
+                    const res = await fetch(
+                      `${BASE_URL}/api/communities/${examId}/join`,
+                      {
+                        method: "POST",
+                        headers: {
+                          Authorization: `Bearer ${token}`,
+                          "Content-Type": "application/json",
+                        },
+                      }
+                    );
+
+                    const result = await res.json().catch(() => ({})); // JSON 파싱 실패도 대비
+
+                    if (!res.ok)
+                      throw new Error(`참여 실패: ${res.statusText}`);
+                    const json = await res.json();
+                    console.log("커뮤니티 참여 성공:", json);
+                  } catch (err) {
+                    console.error("커뮤니티 참여 오류:", err);
+                    alert("서버에 커뮤니티 참여를 등록하지 못했습니다.");
+                  }
+                }
+              } else {
+                selected = selected.filter((e) => e !== name);
+                // ❌ 커뮤니티 나가기 API가 없다면 그냥 로컬에서 제거만
+              }
+
+              localStorage.setItem("selectedExams", JSON.stringify(selected));
+              updateDisabling();
+              updateCommunityUI();
+            });
+
+            label.appendChild(checkbox);
+            label.append(" " + name);
+            li.appendChild(label);
+            ul.appendChild(li);
+          });
+
+          details.appendChild(ul);
+          container.appendChild(details);
+        });
+
+        function updateDisabling() {
+          const allCheckboxes = document.querySelectorAll(
+            "input[type=checkbox]"
+          );
+          allCheckboxes.forEach((cb) => {
+            if (!cb.checked && selected.length >= 3) {
+              cb.disabled = true;
+            } else {
+              cb.disabled = false;
+            }
+          });
+        }
+
+        function updateCommunityUI() {
+          const selectedCount = selected.length;
+
+          if (selectedCount > 0) {
+            introBox.style.display = "none";
+            communityList.style.display = "flex";
+            topMessage.style.display = "block";
+            communityList.innerHTML = "";
+
+            selected.forEach((exam) => {
+              const box = document.createElement("div");
+              box.className = "community-box";
+              box.innerHTML = `
+              <div class="community-header">
+                <a href="Community.html">
+                  <div class="community-title">
+                    <img src="icons/award.png" alt="📢" width="42" height="40" />
+                    ${exam} 커뮤니티
+                  </div>
+                </a>
+                <span style="font-size: 14px; color: #888;">📅 2025.06.24</span>
+              </div>
+              <div class="community-posts">
+                <a href="/community/${encodeURIComponent(
+                  exam
+                )}/post1">이 자격증의 최신 공부법은?</a>
+                <a href="/community/${encodeURIComponent(
+                  exam
+                )}/post2">실전 대비 꿀팁 나눠요!</a>
+                <a href="/community/${encodeURIComponent(
+                  exam
+                )}/post3">질문 있어요~</a>
+              </div>
+            `;
+
+              communityList.appendChild(box);
+            });
+
+            const heightPerItem = 170;
+            const paddingOffset = 280;
+            const totalHeight = selectedCount * heightPerItem + paddingOffset;
+            leftPanel.style.height = `${totalHeight}px`;
+          } else {
+            introBox.style.display = "flex";
+            communityList.style.display = "none";
+            topMessage.style.display = "none";
+            leftPanel.style.height = "786px";
+          }
+        }
+
+        updateDisabling();
+        updateCommunityUI();
+      }
+    </script>
+  </body>
+</html>
