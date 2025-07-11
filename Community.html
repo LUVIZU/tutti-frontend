@@ -222,31 +222,34 @@
         gap: 10px;
         padding: 10px;
         margin-bottom: 10px;
-        border-radius: 8px;
         cursor: pointer;
       }
 
       .sidebar li[data-icon="group"] {
         border-bottom: 1px solid #e1e1e1;
-        padding-bottom: 10px;
+        padding-bottom: 20px;
         margin-bottom: 10px;
       }
+
       .sidebar li[data-icon="mission"] {
         border-bottom: 1px solid #e1e1e1;
-        padding-bottom: 10px;
+        padding-bottom: 20px;
         margin-bottom: 10px;
       }
       .sidebar li[data-icon="calendar"] {
         border-bottom: 1px solid #e1e1e1;
-        padding-bottom: 10px;
+        padding-bottom: 20px;
         margin-bottom: 10px;
       }
 
       .sidebar li.active {
         background-color: #e6f4fd;
+        border: 1px solid #247eb6;
+        border-radius: 10px;
       }
 
       .sidebar li.active span {
+        background-color: #e6f4fd;
         color: #247eb6;
         font-weight: 600;
       }
@@ -426,7 +429,11 @@
     <div class="blur-circle blur-circle-2"></div>
     <div class="header">
       <div class="logo">
-        <img src="./icons/tutti.png" alt="Tutti 로고" />
+        <img
+          src="./icons/tutti.png"
+          alt="Tutti 로고"
+          data-page="Community.html"
+        />
       </div>
       <div class="user-actions">
         <div class="nav-box">홈</div>
