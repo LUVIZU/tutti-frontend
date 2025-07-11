@@ -158,6 +158,54 @@
         text-align: center;
       }
 
+      .sidebar ul {
+        list-style: none;
+        margin-top: 20px;
+        padding: 0 15px;
+      }
+
+      .sidebar li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+      }
+
+      /* 여기부터 사이드바 메뉴 하단 줄 스타일 */
+      .sidebar li[data-icon="group"] {
+        /* 스터디 모집에 해당하는 줄 */
+        border-bottom: 1px solid #e1e1e1;
+        padding-bottom: 20px;
+        margin-bottom: 10px;
+      }
+
+      .sidebar li[data-icon="mission"] {
+        /* 미션에 해당하는 줄 */
+        border-bottom: 1px solid #e1e1e1;
+        padding-bottom: 20px;
+        margin-bottom: 10px;
+      }
+      .sidebar li[data-icon="calendar"] {
+        /* 시험 일정에 해당하는 줄 */
+        border-bottom: 1px solid #e1e1e1;
+        padding-bottom: 20px;
+        margin-bottom: 10px;
+      }
+
+      .sidebar li.active {
+        background-color: #e6f4fd;
+        border: 1px solid #247eb6;
+        border-radius: 10px;
+      }
+
+      .sidebar li.active span {
+        background-color: #e6f4fd;
+        color: #247eb6;
+        font-weight: 600;
+      }
+
       .stats {
         display: flex;
         justify-content: center;
@@ -208,47 +256,6 @@
       .write-button img {
         width: 18px;
         height: 18px;
-      }
-
-      .sidebar ul {
-        list-style: none;
-        margin-top: 20px;
-        padding: 0 15px;
-      }
-
-      .sidebar li {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 8px;
-        cursor: pointer;
-      }
-
-      .sidebar li[data-icon="group"] {
-        border-bottom: 1px solid #e1e1e1;
-        padding-bottom: 10px;
-        margin-bottom: 10px;
-      }
-      .sidebar li[data-icon="mission"] {
-        border-bottom: 1px solid #e1e1e1;
-        padding-bottom: 10px;
-        margin-bottom: 10px;
-      }
-      .sidebar li[data-icon="calendar"] {
-        border-bottom: 1px solid #e1e1e1;
-        padding-bottom: 10px;
-        margin-bottom: 10px;
-      }
-
-      .sidebar li.active {
-        background-color: #e6f4fd;
-      }
-
-      .sidebar li.active span {
-        color: #247eb6;
-        font-weight: 600;
       }
 
       .icon-all {
@@ -468,36 +475,38 @@
         </div>
 
         <ul id="menu-list">
-          <li data-title="전체글" data-icon="star" data-page="Community.html">
+          <li data-title="전체글" data-icon="all" data-page="Community.html">
             <img src="./icons/all-gray.png" class="icon-star" />
             <span>전체글</span>
           </li>
 
-          <li data-title="인기글" data-icon=hot" data-page="hot.html">
+          <li data-title="인기글" data-icon="hot" data-page="hot.html">
             <img src="./icons/star-gray.png" class="icon-star" />
             <span>인기글</span>
           </li>
-          <li data-title="정보글" data-icon="info" data-page="PostDetail.html">
+
+          <li data-title="정보글" data-icon="info" data-page="info.html">
             <img src="./icons/info-gray.png" class="icon-info" />
             <span>정보글</span>
           </li>
+
           <li
-            data-title="인기글"
-            data-icon="all"
+            data-title="스터디 모집"
+            data-icon="group"
             data-page="group.html"
             class="active"
           >
             <img src="./icons/group-blue.png" class="icon-group" />
             <span>스터디 모집</span>
           </li>
-          <li data-title="미션" data-icon="mission" data-page="mission.html">
+          <li data-title="미션" data-icon="mission" data-page="Mission.html">
             <img src="./icons/mission-gray.png" class="icon-mission" />
             <span>미션</span>
           </li>
           <li
             data-title="시험 일정"
             data-icon="calendar"
-            data-page="calendar.html"
+            data-page="Calendar.html"
           >
             <img src="./icons/calendar-gray.png" class="icon-calendar" />
             <span>시험 일정</span>
@@ -507,7 +516,7 @@
 
       <div class="content">
         <div class="title-bar">
-          <h3>인기글</h3>
+          <h3>스터디 모집</h3>
           <span>(22)</span>
         </div>
         <table>
@@ -520,72 +529,21 @@
     <script>
       const posts = [
         {
-          category: "최신글",
-          title: "토익 LC만 올리는 법 아시는 분 계신가요?ㅠㅠ",
-          author: "엘비에프",
-          date: "2025.06.24",
-        },
-        {
-          category: "스터디",
+          category: "스터디 모집",
           title: "850 목표인데 7월부터 제대로 달릴분?",
           author: "별토리",
           date: "2025.06.24",
         },
         {
-          category: "정보글",
-          title: "RC 시간 부족한분들께 제가 쓴 문제풀이 순서 팁 공유해요",
-          author: "장금2",
-          date: "2025.06.24",
-        },
-        {
-          category: "정보글",
-          title: "토익 2개월 공부 루틴 공유합니다 (850 달성 후기)",
-          author: "할수있다",
-          date: "2025.06.24",
-        },
-        {
-          category: "정보글",
-          title: "3주 만에 LC +100 오른 비법 정리했어요",
-          author: "영어뽀개기",
-          date: "2025.06.24",
-        },
-        {
-          category: "최신글",
-          title: "하루 2시간 공부 루틴 괜찮은지 봐주세요",
-          author: "미미앤두잇",
-          date: "2025.06.24",
-        },
-        {
-          category: "최신글",
-          title: "단어장 추천 좀 해주세요 (왕기초)",
-          author: "일본어못하면",
-          date: "2025.06.24",
-        },
-        {
-          category: "정보글",
-          title: "해커스 교재별 난이도 비교 (정리표 포함)",
-          author: "엘리1116",
-          date: "2025.06.24",
-        },
-        {
-          category: "최신글",
-          title: "공부할 때 배경음악 들으세요?",
-          author: "김열공",
-          date: "2025.06.24",
-        },
-        {
-          category: "스터디",
+          category: "스터디 모집",
           title: "같이 공부할 분 구해요~!!!",
           author: "취업해야만",
           date: "2025.06.24",
         },
-        {
-          category: "최신글",
-          title: "이 문제 알려주실 분 ㅠㅠㅠ 예상 정답이 모르겠어요",
-          author: "고수님",
-          date: "2025.06.24",
-        },
 
+        // 이 부분에서 "스터디 모집" 카테고리를 명확히 지정해주는 것이 좋습니다.
+        // 현재 코드에서는 i % 3 === 2 일 때 "스터디 모집"이 됩니다.
+        // 예를 들어, 아래와 같이 2개만 추가된 뒤 나머지는 다양한 카테고리로 섞여있습니다.
         ...Array.from({ length: 11 }, (_, i) => {
           const cat =
             i % 3 === 0 ? "최신글" : i % 3 === 1 ? "정보글" : "스터디 모집";
@@ -598,6 +556,11 @@
         }),
       ];
 
+      // **** 이 부분을 수정합니다. '스터디 모집' 카테고리만 필터링합니다. ****
+      const filteredPosts = posts.filter(
+        (post) => post.category === "스터디 모집" || post.category === "스터디" // "스터디"도 포함할 경우
+      );
+
       const postsPerPage = 11;
       let currentPage = 1;
       const tableBody = document.querySelector("table tbody");
@@ -607,7 +570,8 @@
       function renderPosts(page) {
         tableBody.innerHTML = "";
         const start = (page - 1) * postsPerPage;
-        const pagePosts = posts.slice(start, start + postsPerPage);
+        // **** 필터링된 posts를 사용하도록 수정합니다. ****
+        const pagePosts = filteredPosts.slice(start, start + postsPerPage);
 
         pagePosts.forEach((post) => {
           const row = document.createElement("tr");
@@ -623,7 +587,8 @@
 
       function renderPagination() {
         pagination.innerHTML = "";
-        const totalPages = Math.ceil(posts.length / postsPerPage);
+        // **** 총 페이지 수도 필터링된 posts의 길이를 기준으로 계산합니다. ****
+        const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
 
         // Previous button
         if (currentPage > 1) {
@@ -663,7 +628,8 @@
         }
       }
 
-      totalPostsSpan.textContent = `(${posts.length})`;
+      // **** 표시되는 게시물 수도 필터링된 posts의 길이를 사용합니다. ****
+      totalPostsSpan.textContent = `(${filteredPosts.length})`;
       renderPosts(currentPage);
       renderPagination();
 
@@ -671,7 +637,7 @@
       const profileImage = document.getElementById("profileImage");
 
       if (isLoggedIn) {
-        profileImage.src = "./user/profile123.jpg";
+        profileImage.src = "./icons/profile123.png";
       } else {
         profileImage.src = "./icons/profile.png";
       }

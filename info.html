@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TUTTI 일정</title>
+    <title>정보글 모음</title>
     <style>
       * {
         box-sizing: border-box;
@@ -100,6 +100,8 @@
         font-weight: 500;
         border-right: 1px solid #e1e1e1;
         position: relative;
+        text-decoration: none; /* 밑줄 제거 */
+        color: inherit; /* 부모 요소 색상 상속 */
       }
 
       .notification {
@@ -280,11 +282,11 @@
       }
 
       .content {
-       flex: 1;
-       padding-top: 40px;
-       display: flex;
-       justify-content: center; /* 수평 중앙 정렬 */
-       align-items: flex-start; /* 수직 정렬 유지 */
+        flex: 1;
+        padding-top: 40px;
+        padding-left: 30px;
+        display: flex;
+        flex-direction: column;
       }
 
       .content .title-bar {
@@ -422,127 +424,6 @@
         margin-left: 4px;
         cursor: pointer;
       }
-
-      
-      .exam-info {
-        display: none; /* 기본 숨김 */
-        width: 284px;
-        background: #f5fbff;
-        border: 1px solid #cce5ff;
-        border-radius: 12px;
-        padding: 20px;
-        font-size: 16px;
-        font-weight: 400;
-        position: relative;
-        flex-shrink: 0;
-      }
-
-      .exam-info.active {
-        display: block;
-      }
-
-      .exam-info .tags {
-        display: flex;
-        gap: 6px;
-        margin-bottom: 10px;
-      }
-
-      .tag {
-        font-size: 13px;
-        font-weight: 400;
-        color: #ffffff;
-        background: #73c3f4;
-        padding: 4px 10px;
-        border-radius: 10px;
-      }
-
-      .tag.light {
-        background: #73c3f4;
-      }
-
-      .close-btn {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 18px;
-        background: none;
-        border: none;
-        color: #333;
-        cursor: pointer;
-        font-weight: bold;
-      }
-
-      .calendar-container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 40px;
-  border-radius: 20px;
-  background-color: white;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-  max-width: fit-content;
-}
-
-
-      .calendar-box {
-        width: 700px;
-        padding: 20px;
-        background: #f8fcff;
-        border-radius: 20px;
-        flex-shrink: 0;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .calendar-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 34px;
-        font-weight: 500;
-        margin-bottom: 20px;
-      }
-
-      .calendar-header button {
-        background: none;
-        border: none;
-        font-size: 30px;
-        cursor: pointer;
-      }
-
-      .calendar-box table {
-        width: 100%;
-        table-layout: fixed;
-        border-collapse: collapse;
-        text-align: center;
-        font-size: 20px; /* 이건 전체 폰트에 적용되므로 th/td 개별 조정 시 따로 써야 함 */
-      }
-
-      .calendar-box table th,
-      .calendar-box table td {
-        width: 20px;
-        font-size: 25px;
-        font-weight: 700;
-        padding: 0;
-        line-height: 60px;
-        vertical-align: middle;
-      }
-
-
-      .selected {
-        background-color: #b0dcf7;
-        color: white;
-        font-weight: bold;
-        border-radius: 50%;
-      }
-
-      .footer-msg {
-        margin-top: 100px;
-        color: #555;
-        font-size: 27px;
-        font-weight: 400;
-        text-align: center;
-      }
     </style>
   </head>
   <body>
@@ -553,18 +434,15 @@
         <img src="./icons/tutti.png" alt="Tutti 로고" />
       </div>
       <div class="user-actions">
-        <a href="CommuForm.html" class="nav-box" style="text-decoration: none; color: inherit">홈</a>
-
+        <a href="CommuForm.html" class="nav-box">홈</a>
         <div class="nav-box notification">
           알림
           <span class="badge">0</span>
         </div>
-
         <a href="MyPage.html" class="profile-btn">
           <img id="profileImage" src="./icons/profile.png" alt="프로필" />
         </a>
-    </div>
-
+      </div>
     </div>
 
     <div class="wrapper">
@@ -590,187 +468,206 @@
         </div>
 
         <div class="write-button">
-          <a href="PostUpload.html" class="nav-box" style="text-decoration: none; color: inherit">글쓰기</a>
+          <img src="./icons/pencil.png" alt="글쓰기 아이콘" />
+          <span>글쓰기</span>
         </div>
 
         <ul id="menu-list">
-          <li data-title="전체글" data-icon="all">
-            <a href="Community.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
-              <img src="./icons/all-gray.png" class="icon-all" />
-              <span>전체글</span>
-            </a>
+          <li data-title="전체글" data-icon="all" data-page="Community.html">
+            <img src="./icons/all-gray.png" class="icon-star" />
+            <span>전체글</span>
           </li>
-          <li data-title="인기글" data-icon="star">
-            <a href="hot.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
-              <img src="./icons/star-gray.png" class="icon-star" />
-              <span>인기글</span>
-            </a>
+
+          <li data-title="인기글" data-icon="hot" data-page="hot.html">
+            <img src="./icons/star-gray.png" class="icon-star" />
+            <span>인기글</span>
           </li>
-          <li data-title="정보글" data-icon="info">
-            <a href="info.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
-              <img src="./icons/info-gray.png" class="icon-info" />
-              <span>정보글</span>
-            </a>
+
+          <li
+            data-title="정보글"
+            data-icon="all"
+            data-page="info.html"
+            class="active"
+          >
+            <img
+              src="./icons/info-blue.png"
+              class="icon-info"
+              data-page="info.html"
+            />
+            <span>정보글</span>
           </li>
-          <li data-title="스터디 모집" data-icon="group">
-            <a href="group.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
-              <img src="./icons/group-gray.png" class="icon-group" />
-              <span>스터디 모집</span>
-            </a>
+
+          <li data-title="스터디 모집" data-icon="group" data-page="group.html">
+            <img
+              src="./icons/group-gray.png"
+              class="icon-group"
+              data-page="group.html
+            "
+            />
+            <span>스터디 모집</span>
           </li>
-          <li data-title="미션" data-icon="mission">
-            <a href="Mission.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
-              <img src="./icons/mission-gray.png" class="icon-mission" />
-              <span>미션</span>
-            </a>
+          <li data-title="미션" data-icon="mission" data-page="Mission.html">
+            <img src="./icons/mission-gray.png" class="icon-mission" />
+            <span>미션</span>
           </li>
-          <li data-title="시험 일정" data-icon="calendar" class="active">
-            <a href="#" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
-              <img src="./icons/calendar-blue.png" class="icon-calendar" />
-              <span>시험 일정</span>
-            </a>
+          <li
+            data-title="시험 일정"
+            data-icon="calendar"
+            data-page="calendar.html"
+          >
+            <img src="./icons/calendar-gray.png" class="icon-calendar" />
+            <span>시험 일정</span>
           </li>
         </ul>
       </div>
-      
-      <div class="calendar-container">
-      <div class="calendar-box">
-        <div class="calendar-header">
-          <button onclick="changeMonth(-1)">&lt;</button>
-          <span id="monthYear"></span>
-          <button onclick="changeMonth(1)">&gt;</button>
+
+      <div class="content">
+        <div class="title-bar">
+          <h3>정보글</h3>
+          <span>(22)</span>
         </div>
         <table>
-          <thead>
-            <tr>
-              <th>일</th>
-              <th>월</th>
-              <th>화</th>
-              <th>수</th>
-              <th>목</th>
-              <th>금</th>
-              <th>토</th>
-            </tr>
-          </thead>
-          <tbody id="calendar-body"></tbody>
+          <thead></thead>
+          <tbody></tbody>
         </table>
-        <div class="footer-msg">
-          날짜를 클릭하면 시험 정보를 확인할 수 있습니다.
-        </div>
-      </div>
-
-      <div class="exam-info" id="exam-info-box">
-        <button class="close-btn" onclick="closeExamInfo()">X</button>
-        <div class="tags">
-          <div class="tag">정기접수</div>
-          <div class="tag light">접수중</div>
-        </div>
-        <div id="exam-date"><strong>날짜를 선택해주세요</strong></div>
-        <div id="exam-detail"></div>
+        <div class="pagination"></div>
       </div>
     </div>
-
     <script>
-      const calendarBody = document.getElementById("calendar-body");
-      const monthYear = document.getElementById("monthYear");
-      const examDate = document.getElementById("exam-date");
-      const examDetail = document.getElementById("exam-detail");
-      const examBox = document.getElementById("exam-info-box");
-
-      let today = new Date();
-      let currentMonth = today.getMonth();
-      let currentYear = today.getFullYear();
-
-      const examSchedule = {
-        "2025-08-10": {
-          title: "TOEIC 정기시험",
-          time: "오전 9시 20분",
-          apply: "2025.06.23 (월) ~ 2025.07.28 (월)",
-          result: "2025.08.19 (화) 12:00",
+      const posts = [
+        {
+          category: "정보글",
+          title: "RC 시간 부족한분들께 제가 쓴 문제풀이 순서 팁 공유해요",
+          author: "장금2",
+          date: "2025.06.24",
         },
-        "2025-08-24": {
-          title: "TOEIC Speaking 시험",
-          time: "오전 10시",
-          apply: "2025.07.01 (화) ~ 2025.08.10 (토)",
-          result: "2025.08.31 (일) 10:00",
+        {
+          category: "정보글",
+          title: "토익 2개월 공부 루틴 공유합니다 (850 달성 후기)",
+          author: "할수있다",
+          date: "2025.06.24",
         },
-        "2025-08-31": {
-          title: "TOEIC 추가 시험",
-          time: "오전 11시",
-          apply: "2025.07.15 (화) ~ 2025.08.25 (월)",
-          result: "2025.09.08 (월) 10:00",
+        {
+          category: "정보글",
+          title: "3주 만에 LC +100 오른 비법 정리했어요",
+          author: "영어뽀개기",
+          date: "2025.06.24",
         },
-      };
 
-      function renderCalendar(month, year) {
-        calendarBody.innerHTML = "";
-        const firstDay = new Date(year, month).getDay();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        monthYear.textContent = `${year}년 ${month + 1}월`;
+        {
+          category: "정보글",
+          title: "해커스 교재별 난이도 비교 (정리표 포함)",
+          author: "엘리1116",
+          date: "2025.06.24",
+        },
 
-        let date = 1;
-        for (let i = 0; i < 6; i++) {
-          let row = document.createElement("tr");
+        ...Array.from({ length: 11 }, (_, i) => {
+          const cat =
+            i % 3 === 0 ? "최신글" : i % 3 === 1 ? "정보글" : "스터디 모집";
+          return {
+            category: cat,
+            title: `추가 게시글 제목 ${i + 1}`,
+            author: `추가 작성자 ${i + 1}`,
+            date: `2025.06.${(23 - i).toString().padStart(2, "0")}`,
+          };
+        }),
+      ];
 
-          for (let j = 0; j < 7; j++) {
-            let cell = document.createElement("td");
-            if (i === 0 && j < firstDay) {
-              cell.textContent = "";
-            } else if (date > daysInMonth) {
-              cell.textContent = "";
-            } else {
-              cell.textContent = date;
-              let dateStr = `${year}-${String(month + 1).padStart(
-                2,
-                "0"
-              )}-${String(date).padStart(2, "0")}`;
-              if (examSchedule[dateStr]) {
-                cell.classList.add("selected");
-              }
-              cell.addEventListener("click", () => {
-                showExamInfo(dateStr);
-              });
-              date++;
-            }
-            row.appendChild(cell);
-          }
-          calendarBody.appendChild(row);
-        }
-      }
+      const informationPosts = posts.filter(
+        (post) => post.category === "정보글"
+      );
 
-      function changeMonth(offset) {
-        currentMonth += offset;
-        if (currentMonth < 0) {
-          currentMonth = 11;
-          currentYear--;
-        } else if (currentMonth > 11) {
-          currentMonth = 0;
-          currentYear++;
-        }
-        renderCalendar(currentMonth, currentYear);
-      }
+      const postsPerPage = 11;
+      let currentPage = 1;
+      const tableBody = document.querySelector("table tbody");
+      const pagination = document.querySelector(".pagination");
+      const totalPostsSpan = document.querySelector(".title-bar span");
 
-      function showExamInfo(dateStr) {
-        const info = examSchedule[dateStr];
-        examBox.classList.add("active");
-        if (info) {
-          examDate.innerHTML = `<strong>${dateStr}</strong> - ${info.title}`;
-          examDetail.innerHTML = `
-            <p>시간: ${info.time}</p>
-            <p>접수기간: ${info.apply}</p>
-            <p>성적발표: ${info.result}</p>
+      function renderPosts(page) {
+        tableBody.innerHTML = "";
+        const start = (page - 1) * postsPerPage;
+        // posts 대신 informationPosts를 사용합니다.
+        const pagePosts = informationPosts.slice(start, start + postsPerPage);
+
+        pagePosts.forEach((post) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td class="column">${post.category}</td>
+            <td class="post-title-cell"><a href="PostDetail.html?id=${post.title}">${post.title}</a></td>
+            <td>${post.author}</td>
+            <td>${post.date}</td>
           `;
-        } else {
-          examDate.innerHTML = `<strong>${dateStr}</strong>`;
-          examDetail.innerHTML = `<p>등록된 시험 정보가 없습니다.</p>`;
+          tableBody.appendChild(row);
+        });
+      }
+
+      function renderPagination() {
+        pagination.innerHTML = "";
+        // 총 페이지 수도 informationPosts의 길이를 기준으로 계산합니다.
+        const totalPages = Math.ceil(informationPosts.length / postsPerPage);
+
+        // Previous button
+        if (currentPage > 1) {
+          const prevArrow = document.createElement("span");
+          prevArrow.className = "arrow-btn";
+          prevArrow.style.transform = "rotate(180deg)";
+          prevArrow.addEventListener("click", () => {
+            currentPage--;
+            renderPosts(currentPage);
+            renderPagination();
+          });
+          pagination.appendChild(prevArrow);
+        }
+
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement("span");
+          btn.className = "page-btn" + (i === currentPage ? " active" : "");
+          btn.textContent = i;
+          btn.addEventListener("click", () => {
+            currentPage = i;
+            renderPosts(currentPage);
+            renderPagination();
+          });
+          pagination.appendChild(btn);
+        }
+
+        // Next button
+        if (currentPage < totalPages) {
+          const nextArrow = document.createElement("span");
+          nextArrow.className = "arrow-btn";
+          nextArrow.addEventListener("click", () => {
+            currentPage++;
+            renderPosts(currentPage);
+            renderPagination();
+          });
+          pagination.appendChild(nextArrow);
         }
       }
 
-      function closeExamInfo() {
-        examBox.classList.remove("active");
+      // 표시되는 게시물 수도 informationPosts의 길이를 사용합니다.
+      totalPostsSpan.textContent = `(${informationPosts.length})`;
+      renderPosts(currentPage);
+      renderPagination();
+
+      const isLoggedIn = true;
+      const profileImage = document.getElementById("profileImage");
+
+      if (isLoggedIn) {
+        profileImage.src = "./icons/profile123.png";
+      } else {
+        profileImage.src = "./icons/profile.png";
       }
 
-      renderCalendar(currentMonth, currentYear);
+      const menuItems = document.querySelectorAll("#menu-list li");
+
+      menuItems.forEach((item) => {
+        item.addEventListener("click", () => {
+          const targetPage = item.getAttribute("data-page");
+          if (targetPage) {
+            window.location.href = targetPage;
+          }
+        });
+      });
     </script>
   </body>
 </html>

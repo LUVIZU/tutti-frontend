@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TUTTI 커뮤니티</title>
+    <title>인기글 모음</title>
     <style>
       * {
         box-sizing: border-box;
@@ -224,31 +224,34 @@
         gap: 10px;
         padding: 10px;
         margin-bottom: 10px;
-        border-radius: 8px;
         cursor: pointer;
       }
 
       .sidebar li[data-icon="group"] {
         border-bottom: 1px solid #e1e1e1;
-        padding-bottom: 10px;
+        padding-bottom: 20px;
         margin-bottom: 10px;
       }
+
       .sidebar li[data-icon="mission"] {
         border-bottom: 1px solid #e1e1e1;
-        padding-bottom: 10px;
+        padding-bottom: 20px;
         margin-bottom: 10px;
       }
       .sidebar li[data-icon="calendar"] {
         border-bottom: 1px solid #e1e1e1;
-        padding-bottom: 10px;
+        padding-bottom: 20px;
         margin-bottom: 10px;
       }
 
       .sidebar li.active {
         background-color: #e6f4fd;
+        border: 1px solid #247eb6;
+        border-radius: 10px;
       }
 
       .sidebar li.active span {
+        background-color: #e6f4fd;
         color: #247eb6;
         font-weight: 600;
       }
@@ -477,14 +480,14 @@
           <li
             data-title="인기글"
             data-icon="all"
-            data-page="Community.html"
+            data-page="hot.html"
             class="active"
           >
             <img src="./icons/star-blue.png" class="icon-star" />
             <span>인기글</span>
           </li>
 
-          <li data-title="정보글" data-icon="info" data-page="PostDetail.html">
+          <li data-title="정보글" data-icon="info" data-page="info.html">
             <img src="./icons/info-gray.png" class="icon-info" />
             <span>정보글</span>
           </li>
@@ -492,14 +495,14 @@
             <img src="./icons/group-gray.png" class="icon-group" />
             <span>스터디 모집</span>
           </li>
-          <li data-title="미션" data-icon="mission" data-page="mission.html">
+          <li data-title="미션" data-icon="mission" data-page="Mission.html">
             <img src="./icons/mission-gray.png" class="icon-mission" />
             <span>미션</span>
           </li>
           <li
             data-title="시험 일정"
             data-icon="calendar"
-            data-page="calendar.html"
+            data-page="Calendar.html"
           >
             <img src="./icons/calendar-gray.png" class="icon-calendar" />
             <span>시험 일정</span>
@@ -673,7 +676,7 @@
       const profileImage = document.getElementById("profileImage");
 
       if (isLoggedIn) {
-        profileImage.src = "./user/profile123.jpg";
+        profileImage.src = "./icons/profile123.png";
       } else {
         profileImage.src = "./icons/profile.png";
       }
