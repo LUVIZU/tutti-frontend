@@ -247,17 +247,27 @@
       .community-posts a:hover {
         text-decoration: underline;
       }
+      .nav-menu a {
+        color: inherit;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        height: 100%;
+      }
+      .nav-menu a:hover {
+        text-decoration: none;
+      }
     </style>
   </head>
   <body>
     <header>
       <img src="tutti.png" alt="Tutti Logo" class="logo" />
       <div class="nav-menu">
-        <span onclick="window.location.reload()">홈</span>
-        <span onclick="alert('추후 구현 예정')">알림</span>
-        <span class="profile-icon">
+        <a href="CommuForm.html"><span>홈</span></a>
+        <a href="notifications.html"><span>알림</span></a>
+        <a href="MyPage.html" class="profile-icon">
           <img src="icons/profile.png" alt="profile" width="37" />
-        </span>
+        </a>
       </div>
     </header>
 
@@ -293,18 +303,20 @@
 
     <script type="module">
       const categoryMap = [
-        { id: 1, name: "이름변경필요" },
-        { id: 2, name: "이름변경필요" },
-        { id: 3, name: "이름변경필요" },
-        { id: 4, name: "이름변경필요" },
-        { id: 5, name: "이름변경필요" },
-        { id: 6, name: "이름변경필요" },
-        { id: 7, name: "이름변경필요" },
+        { id: 1, name: "어학" },
+        { id: 2, name: "IT • 정보통신" },
+        { id: 3, name: "경영" },
+        { id: 4, name: "공학  " },
+        { id: 7, name: "통계" },
+        { id: 6, name: "역사" },
+        { id: 5, name: "기타" },
       ];
+      let token = null;
+      let loginId = null;
 
       document.addEventListener("DOMContentLoaded", async () => {
-        const token = localStorage.getItem("accessToken");
-        const loginId = localStorage.getItem("loginId"); // ← 반드시 로그인 시 저장해둘 것
+        token = localStorage.getItem("accessToken");
+        loginId = localStorage.getItem("loginId"); // ← 반드시 로그인 시 저장해둘 것
 
         if (!token || !loginId) {
           alert("로그인이 필요합니다. 다시 로그인해주세요.");
@@ -366,7 +378,7 @@
             const data = await res.json();
             examData.push({
               category: category.name,
-              exams: data.map((exam) => exam.name),
+              exams: data.map((exam) => ({ id: exam.id, name: exam.name })),
             });
           }
 
@@ -396,27 +408,54 @@
 
           const ul = document.createElement("ul");
 
-          cat.exams.forEach((exam) => {
+          cat.exams.forEach((examObj) => {
+            const { id, name } = examObj;
             const li = document.createElement("li");
             const label = document.createElement("label");
             const checkbox = document.createElement("input");
             checkbox.type = "checkbox";
-            checkbox.value = exam;
+            checkbox.value = id;
+            checkbox.dataset.name = name; // 이름도 보관
 
-            if (selected.includes(exam)) {
+            if (selected.includes(name)) {
               checkbox.checked = true;
             }
+            const examId = examObj.id; // 이미 이 정보가 있음
 
-            checkbox.addEventListener("change", () => {
+            checkbox.addEventListener("change", async () => {
               if (checkbox.checked) {
                 if (selected.length >= 3) {
                   checkbox.checked = false;
                   alert("최대 3개까지 선택할 수 있습니다.");
+                  return;
                 } else {
-                  selected.push(exam);
+                  selected.push(name);
+                  try {
+                    const res = await fetch(
+                      `${BASE_URL}/api/communities/${examId}/join`,
+                      {
+                        method: "POST",
+                        headers: {
+                          Authorization: `Bearer ${token}`,
+                          "Content-Type": "application/json",
+                        },
+                      }
+                    );
+
+                    const result = await res.json().catch(() => ({})); // JSON 파싱 실패도 대비
+
+                    if (!res.ok)
+                      throw new Error(`참여 실패: ${res.statusText}`);
+                    const json = await res.json();
+                    console.log("커뮤니티 참여 성공:", json);
+                  } catch (err) {
+                    console.error("커뮤니티 참여 오류:", err);
+                    alert("서버에 커뮤니티 참여를 등록하지 못했습니다.");
+                  }
                 }
               } else {
-                selected = selected.filter((e) => e !== exam);
+                selected = selected.filter((e) => e !== name);
+                // ❌ 커뮤니티 나가기 API가 없다면 그냥 로컬에서 제거만
               }
 
               localStorage.setItem("selectedExams", JSON.stringify(selected));
@@ -425,7 +464,7 @@
             });
 
             label.appendChild(checkbox);
-            label.append(" " + exam);
+            label.append(" " + name);
             li.appendChild(label);
             ul.appendChild(li);
           });
