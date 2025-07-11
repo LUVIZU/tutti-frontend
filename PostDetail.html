@@ -762,12 +762,10 @@
           </div>
         </div>
 
-        <a href="PostUpload.html">
-          <div class="write-button">
-            <img src="./icons/pencil.png" alt="글쓰기 아이콘" />
-            <span>글쓰기</span>
-          </div>
-        </a>
+        <div class="write-button" onclick="location.href='PostUpload.html'">
+          <img src="./icons/pencil.png" alt="글쓰기 아이콘" />
+          <span>글쓰기</span>
+        </div>
 
         <ul id="menu-list">
           <a href="Community.html"
@@ -782,7 +780,7 @@
               <span>인기글</span>
             </li></a
           >
-          <a href="info.html?category=정보글"
+          <a href="information.html?category=정보글"
             ><li data-title="정보글" data-icon="info" class="active">
               <img src="./icons/info-blue.png" class="icon-info" />
               <span>정보글</span>
@@ -894,106 +892,6 @@
     <script>
       const currentUserName = sessionStorage.getItem("userName") || "익명";
 
-      const postData = {
-        1: {
-          title: "토익 LC만 올리는 법 아시는 분 계신가요ㅠㅠ",
-          writer: "엘비에프",
-          date: "2025년 6월 24일 오후 12:31",
-          content:
-            "LC만 따로 올리는 방법에 대해 고민이 많았는데 혹시 아시는 분 계시면 공유해주세요.\\n정확한 방법이 있다면 도움이 될 것 같아요!\\n감사합니다.",
-          category: "정보글",
-          likes: 5,
-          comments: [
-            {
-              id: 101,
-              author: "햄토리",
-              text: "트리플지문까지 시간 남기는 게 제 꿈인데... 순서 바꿔서 꼭 해볼게요 감사합니다!",
-              date: "2025년 6월 24일 오후 1:00",
-              likes: 3,
-              parentId: null,
-            },
-            {
-              id: 102,
-              author: "삼삼옥수",
-              text: "진짜 공감돼요ㅠㅠ 저도 맨날 트리플에서 시간 부족했는데 이 순서 꾸준히 연습하니까 점수 많이 올라가더라고요! 꼭 해보세요🙏",
-              date: "2025년 6월 24일 오후 1:30",
-              likes: 1,
-              parentId: null,
-            },
-            {
-              id: 103,
-              author: "진이",
-              text: "파트 5, 6 바로 연결하는 거 꿀팁... 저 그거 안 하다가 한번 흐름 끊겼었어요 ㅋㅋㅋ",
-              date: "2025년 6월 24일 오후 2:00",
-              likes: 0,
-              parentId: null,
-            },
-            {
-              id: 104,
-              author: "삼삼옥수",
-              text: "맞아요! 파트 5 끝내고 바로 6 연결해야 집중 잘 유지되는 듯... 중간에 파트 7 갔다가 다시 돌아오면 더 헷갈리더라고요 ㅋㅋㅋ",
-              date: "2025년 6월 24일 오후 2:30",
-              likes: 1,
-              parentId: null,
-            },
-          ],
-        },
-        2: {
-          title: "RC 시간 부족한분들께 제가 쓴 문제풀이 순서 팁 공유해요",
-          writer: "삼삼옥수",
-          date: "2025년 6월 24일 오후 12:31",
-          content:
-            "안녕하세요!\\n\\n요즘 RC 풀다가 늘 시간모자라서 좌절하시는분들 많으실것같아, 저도 한때 똑같이 고생했던 경험으로 저만의 풀이 순서와 팁 공유해봅니다. 특히 파트 7 트리플 지문에서 시간 다 쓰고 멘붕 오는 거 진짜 많았었거든요...🥲\\n\\n저도 원래 순서대로 풀다가 항상 시간 부족했는데, 풀이 순서 바꾸고 나서 파트 7 트리플 지문까지 시간 남기고 마무리 가능해졌어요! 실제로 3주 연습했는데 RC 점수 70점 정도 올랐습니다.\\n\\n🕐 제가 추천하는 RC 문제 풀이 순서 & 팁\\n✔️ 1. 파트 5 (문법/어휘 빈칸)\\n가장 빠르고 직관적으로 풀 수 있어서 초반에 시간 아끼기\\n고민되는 문제 바로 체크하고 넘어가기\\n\\n✔️ 2. 파트 6 (문장 삽입/빈칸)\\n파트 5 흐름 이어서 집중력 살리기\\n지문 길이가 길지 않으니 빠르게 전체 읽고 해결\\n\\n✔️ 3. 파트 7 - 싱글 지문 먼저)\\n상대적으로 짧고 깔끔한 문제부터 시간 단축\\n문제 먼저 읽고 핵심 키워드 위주로 지문 스캔\\n\\n✔️ 4. 파트 7 - 더블 → 트리플 순서)\\n지문이 긴 만큼 체력 남았을 때 몰아서 집중\\n트리플 지문은 마지막까지 시간이 남을 수 있도록 앞부분 아끼기\\n\\n\\n저는 이렇게 바꾼 후로 파트 7 트리플 지문 풀 때 시간 압박 확 줄었고, 집중도도 훨씬 좋아졌어요. 혹시 다른 분들은 어떤 순서로 푸시는지도 공유해주시면 좋을 것 같아요 😊\\n다들 고득점 가즈아!! 💪🔥",
-          category: "정보글",
-          likes: 12,
-          comments: [
-            {
-              id: 201,
-              author: "미니미니",
-              text: "저도 이 방법 써봐야겠어요! 감사합니다.",
-              date: "2025년 6월 24일 오후 1:05",
-              likes: 2,
-              parentId: null,
-            },
-            {
-              id: 202,
-              author: "토린이",
-              text: "꿀팁 감사합니다 ㅠㅠ",
-              date: "2025년 6월 24일 오후 1:10",
-              likes: 0,
-              parentId: null,
-            },
-            {
-              id: 203,
-              author: "댓글의 답글",
-              text: "저도 그렇게 생각해요!",
-              date: "2025년 6월 24일 오후 1:15",
-              likes: 0,
-              parentId: 201,
-            },
-            {
-              id: 204,
-              author: "댓글의 답글 2",
-              text: "네 정말 유용합니다.",
-              date: "2025년 6월 24일 오후 1:20",
-              likes: 0,
-              parentId: 201,
-            },
-          ],
-        },
-        3: {
-          title: "스터디원 모집합니다! 800점대 목표",
-          writer: "스터디장",
-          date: "2025년 7월 5일 오후 3:00",
-          content:
-            "800점대 목표로 주 2회 스터디 하실 분 모집합니다. 장소는 강남역 인근 스터디룸입니다.",
-          category: "스터디 모집",
-          likes: 3,
-          comments: [],
-        },
-      };
-
-      // post_id를 무조건 3으로 고정하고 백엔드에서 API로 데이터 불러오기
       const postId = 2;
       const communityId = 1;
       let currentPost;

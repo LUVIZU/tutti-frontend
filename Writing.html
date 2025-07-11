@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>새 게시물 작성</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      .blur-circle {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .header,
+      .wrapper,
+      .sidebar,
+      .content {
+        position: relative;
+        z-index: 10;
+      }
+
+      .blur-circle-1 {
+        width: 783px;
+        height: 783px;
+        background: #ddf2ff;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        filter: blur(500px);
+        opacity: 1;
+      }
+
+      .blur-circle-2 {
+        width: 507px;
+        height: 507px;
+        background: #b0dcf7;
+        top: 240px;
+        left: 60%;
+        transform: translateX(-50%);
+        filter: blur(250px);
+        opacity: 0.2;
+      }
+
+      .logo img {
+        width: 128px;
+        height: 52px;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        padding-top: 100px;
+      }
+
+      .wrapper {
+        width: 90vw;
+        max-width: 1280px;
+        padding-top: 20px;
+        display: flex;
+        flex-direction: row;
+        gap: 0;
+      }
+
+      .header {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        width: 100%;
+        height: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 5vw;
+        z-index: 1000;
+      }
+
+      .header .user-actions {
+        display: flex;
+        align-items: center;
+        width: auto;
+        height: 42px;
+        gap: 14px;
+      }
+
+      .nav-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 37px;
+        padding: 10px 14px;
+        font-size: 20px;
+        font-weight: 500;
+        border-right: 1px solid #e1e1e1;
+        position: relative;
+      }
+
+      .notification {
+        position: relative;
+      }
+
+      .badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        width: 18px;
+        height: 18px;
+        background: #ff3b3b;
+        color: white;
+        font-size: 12px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .profile-btn {
+        width: 37px;
+        height: 37px;
+        border: 1px solid #247eb6;
+        border-radius: 1000px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+      }
+
+      .profile-btn img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .sidebar {
+        width: 280px;
+        height: auto;
+        padding: 2px;
+        background-color: white;
+        border-top: 5px solid #247eb6;
+        flex-shrink: 0;
+        flex-grow: 0;
+      }
+
+      .sidebar h2 {
+        color: #247eb6;
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 36px;
+        margin-top: 30px;
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .stats {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10.67px;
+        margin-top: 15px;
+      }
+
+      .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 16px;
+        color: #000;
+      }
+
+      .stat-item img.user-icon {
+        width: 26.27px;
+        height: 20.3px;
+      }
+
+      .stat-item img.calendar-icon {
+        width: 18.67px;
+        height: 18.67px;
+      }
+
+      .stat-item img.day-icon {
+        width: 13.33px;
+        height: 17px;
+      }
+
+      .write-button {
+        margin: 20px auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 200px;
+        height: 40px;
+        background-color: #b0dcf7;
+        border-radius: 21.02px;
+        gap: 7.01px;
+        color: white;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .write-button img {
+        width: 18px;
+        height: 18px;
+      }
+      /* 나의 게시물 섹션 스타일 */
+      .my-posts-section {
+        margin-top: 30px;
+        padding: 0 15px; /* ul과 동일한 패딩 유지 */
+      }
+
+      .my-posts-section h3 {
+        color: #247eb6;
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 28px; /* 이미지에 맞춰 조절 */
+        margin-bottom: 20px;
+        text-align: left; /* 왼쪽 정렬 */
+      }
+
+      .my-post-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px; /* 카드 간 간격 */
+      }
+
+      .my-post-card {
+        background-color: #dde5f299;
+        border: 1px solid #e1e1e1;
+        border-radius: 12px;
+        padding: 15px;
+        position: relative;
+        overflow: hidden;
+        height: 80px;
+      }
+
+      .my-post-card .post-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+
+      .my-post-card .mail-icon {
+        width: 18px;
+        height: 18px;
+        margin-right: 8px;
+        align-items: first baseline;
+      }
+
+      .my-post-card .close-btn {
+        background: none;
+        border: none;
+        font-size: 20px;
+        color: #999;
+        cursor: pointer;
+        position: absolute;
+        top: 8px;
+        right: 10px;
+        padding: 0 5px;
+        line-height: 1; /* x 버튼 세로 가운데 정렬 */
+      }
+
+      .my-post-card .close-btn:hover {
+        color: #555;
+      }
+
+      .my-post-card .post-preview {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .my-post-card .post-date {
+        font-size: 12px;
+        color: #999;
+        text-align: right;
+        display: block; /* 줄바꿈을 위해 블록 요소로 */
+      }
+
+      /* 기존 사이드바 메뉴 항목과 나의 게시물 섹션 사이에 구분선이 있다면 추가 */
+      .my-posts-section + ul {
+        border-top: 1px solid #e1e1e1; /* 나의 게시물 섹션과 메뉴 ul 사이에 구분선 */
+        padding-top: 20px;
+        margin-top: 20px;
+      }
+
+      .commu-form-container {
+        flex: 1;
+        padding-top: 40px;
+        padding-left: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 가운데 정렬 */
+      }
+
+      .post-form-box {
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        padding: 30px;
+        width: 800px; /* 이미지에 맞춰 조절 */
+        min-height: 500px; /* 내용에 따라 유동적으로 늘어나도록 */
+      }
+
+      .form-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .category-select-wrapper {
+        position: relative;
+        display: inline-block;
+      }
+
+      .category-select {
+        appearance: none; /* 기본 select 스타일 제거 */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        padding: 10px 30px 10px 15px;
+        border: 1px solid #b0dcf7;
+        border-radius: 40px;
+        background-color: #b0dcf7;
+        font-size: 14px;
+        text-align: center;
+        cursor: pointer;
+        width: 200px; /* 드롭다운 너비 조절 */
+      }
+
+      .category-select-wrapper::after {
+        content: "▼";
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: #b0dcf7;
+      }
+
+      .upload-button {
+        background-color: #247eb6;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .upload-button img {
+        width: 16px;
+        height: 16px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      .form-group input[type="text"] {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #e1e1e1;
+        border-radius: 8px;
+        font-size: 16px;
+        background-color: #fcfcfc;
+      }
+
+      .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #e1e1e1;
+        border-radius: 8px;
+        font-size: 16px;
+        min-height: 300px; /* 내용 입력창 높이 */
+        resize: vertical; /* 수직 크기 조절 가능 */
+        background-color: #fcfcfc;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="blur-circle blur-circle-1"></div>
+    <div class="blur-circle blur-circle-2"></div>
+    <div class="header">
+      <div class="logo">
+        <img
+          src="./icons/tutti.png"
+          alt="Tutti 로고"
+          data-page="Community.html"
+          onclick="location.href='Community.html'"
+        />
+      </div>
+      <div class="user-actions">
+        <div class="nav-box" onclick="location.href='CommuForm.html'">홈</div>
+        <div
+          class="nav-box notification"
+          onclick="location.href='MyPageAlerts.html'"
+        >
+          알림
+          <span class="badge">0</span>
+        </div>
+        <div class="profile-btn" onclick="location.href='MyPage.html'">
+          <img id="profileImage" src="./icons/profile.png" alt="프로필" />
+        </div>
+      </div>
+    </div>
+
+    <div class="wrapper">
+      <div class="sidebar">
+        <div class="my-posts-section">
+          <h2>나의 게시물</h2>
+          <div class="my-post-list">
+            <div class="my-post-card">
+              <div class="post-header">
+                <img
+                  src="./icons/mail.png"
+                  alt="메일 아이콘"
+                  class="mail-icon"
+                />
+                <span class="post-title">RC 시간 부족한 분께 제...</span>
+
+                <button class="close-btn">&times;</button>
+              </div>
+              <p class="post-preview">안녕하세요!...</p>
+              <span class="post-date">2025.06.24</span>
+            </div>
+            <div class="my-post-card">
+              <div class="post-header">
+                <img
+                  src="./icons/mail.png"
+                  alt="메일 아이콘"
+                  class="mail-icon"
+                />
+                <span class="post-title">같이 스터디 하실 분 구해요...</span>
+
+                <button class="close-btn">&times;</button>
+              </div>
+              <p class="post-preview">일주일 에 한 번 비대면으로 스터디 ...</p>
+              <span class="post-date">2025.06.20</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="commu-form-container">
+        <div class="post-form-box">
+          <div class="form-header">
+            <div class="category-select-wrapper">
+              <select id="post-category" class="category-select">
+                <option value="">게시물을 선택해 주세요.</option>
+                <option value="최신글">최신글</option>
+                <option value="인기글">인기글</option>
+                <option value="정보글">정보글</option>
+                <option value="스터디 모집">스터디 모집</option>
+              </select>
+            </div>
+            <button class="upload-button">
+              <img src="./icons/upload.png" alt="업로드 아이콘" />
+              게시물 올리기
+            </button>
+          </div>
+          <div class="form-group">
+            <label for="post-title">제목</label>
+            <input
+              type="text"
+              id="post-title"
+              name="post-title"
+              placeholder="제목을 입력하세요"
+            />
+          </div>
+          <div class="form-group">
+            <label for="post-content">내용</label>
+            <textarea
+              id="post-content"
+              name="post-content"
+              placeholder="내용을 입력하세요"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // 기존 Community.html 및 WrongNote.html에서 사용된 스크립트 로직을 재활용합니다.
+
+      // 사이드바 메뉴 활성화 및 아이콘 변경 로직
+      const missionMenu = document.getElementById("mission-menu");
+      const subMenu = document.getElementById("mission-submenu");
+      const mainMissionLink = missionMenu
+        ? missionMenu.querySelector(".mission-main-link")
+        : null;
+      const mainMissionIcon = mainMissionLink
+        ? mainMissionLink.querySelector(".icon-mission")
+        : null;
+
+      function updateIconSrc(imgElement, isActive, defaultSrc, activeSrc) {
+        if (!imgElement) return;
+        imgElement.src = isActive ? activeSrc : defaultSrc;
+      }
+
+      if (missionMenu) {
+        missionMenu.addEventListener("click", (event) => {
+          const clickedLink = event.target.closest("a");
+
+          if (
+            clickedLink &&
+            clickedLink.classList.contains("mission-main-link")
+          ) {
+            const isVisible = subMenu.style.display === "block";
+            subMenu.style.display = isVisible ? "none" : "block";
+
+            updateIconSrc(
+              mainMissionIcon,
+              false,
+              "./icons/mission-gray.png",
+              "./icons/mission-blue.png"
+            );
+            mainMissionLink.classList.remove("active");
+
+            subMenu.querySelectorAll("a").forEach((subLink) => {
+              subLink.classList.remove("active");
+              subLink.querySelector("img").src = "./icons/question.png";
+            });
+          } else if (clickedLink && subMenu.contains(clickedLink)) {
+            subMenu.querySelectorAll("a").forEach((subLink) => {
+              subLink.classList.remove("active");
+              subLink.querySelector("img").src = "./icons/question.png";
+            });
+
+            clickedLink.classList.add("active");
+            mainMissionLink.classList.remove("active");
+            updateIconSrc(
+              mainMissionIcon,
+              false,
+              "./icons/mission-gray.png",
+              "./icons/mission-blue.png"
+            );
+          }
+        });
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        const menuItems = document.querySelectorAll(".menu-item");
+        const currentPath = window.location.pathname.split("/").pop();
+
+        menuItems.forEach((item) => {
+          const linksInItem = item.querySelectorAll(
+            "a.menu-item-link, a.mission-main-link, #mission-submenu a"
+          );
+
+          let isActiveMenuItem = false;
+          linksInItem.forEach((link) => {
+            if (link.getAttribute("href") === currentPath) {
+              link.classList.add("active");
+              isActiveMenuItem = true;
+
+              const img = link.querySelector("img");
+              if (img && link.classList.contains("menu-item-link")) {
+                // 일반 메뉴 아이템의 활성화 상태에 따라 이미지 변경
+                const graySrc = img.src.replace("-blue", "-gray");
+                const blueSrc = img.src.replace("-gray", "-blue");
+                img.src = blueSrc;
+              }
+            } else {
+              link.classList.remove("active");
+              const img = link.querySelector("img");
+              if (
+                img &&
+                img.src.includes("-blue") &&
+                !link.classList.contains("mission-main-link")
+              ) {
+                // 비활성화될 때 다시 gray 이미지로 변경
+                img.src = img.src.replace("-blue", "-gray");
+              }
+            }
+          });
+
+          // 미션 메뉴의 경우 서브메뉴가 열려있을 때만 메인 아이콘 색상을 유지
+          if (item.id === "mission-menu") {
+            const subMenu = item.querySelector("#mission-submenu");
+            if (subMenu) {
+              const isSubMenuActive = Array.from(
+                subMenu.querySelectorAll("a")
+              ).some((subLink) => subLink.classList.contains("active"));
+              if (
+                [
+                  "Mission.html",
+                  "MissionSolve.html",
+                  "WrongNote.html",
+                ].includes(currentPath) ||
+                isSubMenuActive
+              ) {
+                subMenu.style.display = "block";
+                updateIconSrc(
+                  mainMissionIcon,
+                  true, // 메인 미션 아이콘은 서브메뉴가 열려있거나 관련 페이지일 때 파란색
+                  "./icons/mission-gray.png",
+                  "./icons/mission-blue.png"
+                );
+              } else {
+                subMenu.style.display = "none";
+                updateIconSrc(
+                  mainMissionIcon,
+                  false,
+                  "./icons/mission-gray.png",
+                  "./icons/mission-blue.png"
+                );
+              }
+            }
+          }
+          // '글쓰기' 버튼 클릭 시 현재 페이지(CommuForm.html)에 맞춰 사이드바 '전체글'을 활성화하지 않도록 함.
+          if (currentPath === "CommuForm.html") {
+            const allPostsLink = document.querySelector(
+              'li[data-page="Community.html"]'
+            );
+            if (allPostsLink) {
+              allPostsLink.classList.remove("active");
+              const img = allPostsLink.querySelector("img");
+              if (img) img.src = "./icons/all-gray.png";
+            }
+          }
+        });
+
+        // 현재 페이지가 'CommuForm.html'일 때 '글쓰기' 버튼에 active 스타일 적용 (선택적)
+        const writeButton = document.querySelector(".write-button");
+        if (writeButton) {
+          // writeButton이 존재할 경우에만 접근
+          if (currentPath === "CommuForm.html") {
+            writeButton.style.backgroundColor = "#247eb6"; // 파란색으로 변경
+          } else {
+            writeButton.style.backgroundColor = "#b0dcf7"; // 기본색
+          }
+        }
+
+        // 프로필 이미지 변경 (기존 로직)
+        const isLoggedIn = true; // 실제 로그인 상태에 따라 변경되어야 함
+        const profileImage = document.getElementById("profileImage");
+        if (isLoggedIn) {
+          profileImage.src = "./icons/profile123.png"; // 로그인 시 이미지
+        } else {
+          profileImage.src = "./icons/profile.png"; // 기본 이미지
+        }
+      });
+    </script>
+  </body>
+</html>

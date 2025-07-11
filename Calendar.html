@@ -5,545 +5,599 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TUTTI 일정</title>
     <style>
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 
-      .blur-circle {
-        position: absolute;
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 0;
-      }
+  .blur-circle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
 
-      .header,
-      .wrapper,
-      .sidebar,
-      .content {
-        position: relative;
-        z-index: 10;
-      }
+  .header,
+  .wrapper,
+  .sidebar,
+  .content {
+    position: relative;
+    z-index: 10;
+  }
 
-      .blur-circle-1 {
-        width: 783px;
-        height: 783px;
-        background: #ddf2ff;
-        top: 100px;
-        left: 50%;
-        transform: translateX(-50%);
-        filter: blur(500px);
-        opacity: 1;
-      }
+  .blur-circle-1 {
+    width: 783px;
+    height: 783px;
+    background: #ddf2ff;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    filter: blur(500px);
+    opacity: 1;
+  }
 
-      .blur-circle-2 {
-        width: 507px;
-        height: 507px;
-        background: #b0dcf7;
-        top: 240px;
-        left: 60%;
-        transform: translateX(-50%);
-        filter: blur(250px);
-        opacity: 0.2;
-      }
+  .blur-circle-2 {
+    width: 507px;
+    height: 507px;
+    background: #b0dcf7;
+    top: 240px;
+    left: 60%;
+    transform: translateX(-50%);
+    filter: blur(250px);
+    opacity: 0.2;
+  }
 
-      .logo img {
-        width: 128px;
-        height: 52px;
-      }
+  .logo img {
+    width: 128px;
+    height: 52px;
+  }
 
-      body {
-        font-family: Arial, sans-serif;
-        display: flex;
-        justify-content: center;
-        padding-top: 100px;
-      }
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    padding-top: 100px;
+  }
 
-      .wrapper {
-        width: 90vw;
-        max-width: 1280px;
-        padding-top: 20px;
-        display: flex;
-        flex-direction: row;
-        gap: 0;
-      }
+  .wrapper {
+    width: 90vw;
+    max-width: 1280px;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+  }
 
-      .header {
-        position: absolute;
-        top: 10px;
-        left: 0;
-        width: 100%;
-        height: 80px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 5vw;
-        z-index: 1000;
-      }
+  .header {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5vw;
+    z-index: 1000;
+  }
 
-      .header .user-actions {
-        display: flex;
-        align-items: center;
-        width: auto;
-        height: 42px;
-        gap: 14px;
-      }
+  .header .user-actions {
+    display: flex;
+    align-items: center;
+    width: auto;
+    height: 42px;
+    gap: 14px;
+  }
 
-      .nav-box {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 37px;
-        padding: 10px 14px;
-        font-size: 20px;
-        font-weight: 500;
-        border-right: 1px solid #e1e1e1;
-        position: relative;
-      }
+  .nav-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 37px;
+    padding: 10px 14px;
+    font-size: 20px;
+    font-weight: 500;
+    border-right: 1px solid #e1e1e1;
+    position: relative;
+  }
 
-      .notification {
-        position: relative;
-      }
+  .notification {
+    position: relative;
+  }
 
-      .badge {
-        position: absolute;
-        top: -6px;
-        right: -6px;
-        width: 18px;
-        height: 18px;
-        background: #ff3b3b;
-        color: white;
-        font-size: 12px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
+  .badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 18px;
+    height: 18px;
+    background: #ff3b3b;
+    color: white;
+    font-size: 12px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-      .profile-btn {
-        width: 37px;
-        height: 37px;
-        border: 1px solid #247eb6;
-        border-radius: 1000px;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: white;
-      }
+  .profile-btn {
+    width: 37px;
+    height: 37px;
+    border: 1px solid #247eb6;
+    border-radius: 1000px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+  }
 
-      .profile-btn img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
+  .profile-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
-      .sidebar {
-        width: 280px;
-        height: auto;
-        padding: 2px;
-        background-color: white;
-        border-top: 5px solid #247eb6;
-        flex-shrink: 0;
-        flex-grow: 0;
-      }
+  .sidebar {
+    width: 280px;
+    height: auto;
+    padding: 2px;
+    background-color: white;
+    border-top: 5px solid #247eb6;
+    flex-shrink: 0;
+    flex-grow: 0;
+  }
 
-      .sidebar h2 {
-        color: #247eb6;
-        font-family: "Inter", sans-serif;
-        font-weight: 700;
-        font-size: 36px;
-        margin-top: 30px;
-        text-align: center;
-      }
+  .sidebar h2 {
+    color: #247eb6;
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 36px;
+    margin-top: 30px;
+    text-align: center;
+  }
 
-      .stats {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10.67px;
-        margin-top: 15px;
-      }
+  .stats {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10.67px;
+    margin-top: 15px;
+  }
 
-      .stat-item {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        font-size: 16px;
-        color: #000;
-      }
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 16px;
+    color: #000;
+  }
 
-      .stat-item img.user-icon {
-        width: 26.27px;
-        height: 20.3px;
-      }
+  .stat-item img.user-icon {
+    width: 26.27px;
+    height: 20.3px;
+  }
 
-      .stat-item img.calendar-icon {
-        width: 18.67px;
-        height: 18.67px;
-      }
+  .stat-item img.calendar-icon {
+    width: 18.67px;
+    height: 18.67px;
+  }
 
-      .stat-item img.day-icon {
-        width: 13.33px;
-        height: 17px;
-      }
+  .stat-item img.day-icon {
+    width: 13.33px;
+    height: 17px;
+  }
 
-      .write-button {
-        margin: 20px auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 200px;
-        height: 40px;
-        background-color: #b0dcf7;
-        border-radius: 21.02px;
-        gap: 7.01px;
-        color: white;
-        font-size: 18px;
-        font-weight: 600;
-        cursor: pointer;
-      }
+  .write-button {
+    margin: 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 40px;
+    background-color: #b0dcf7;
+    border-radius: 21.02px;
+    gap: 7.01px;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+  }
 
-      .write-button img {
-        width: 18px;
-        height: 18px;
-      }
+  .write-button img {
+    width: 18px;
+    height: 18px;
+  }
 
-      .sidebar ul {
-        list-style: none;
-        margin-top: 20px;
-        padding: 0 15px;
-      }
+  .sidebar ul {
+    list-style: none;
+    margin-top: 20px;
+    padding: 0 15px;
+  }
 
-      .sidebar li {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px;
-        margin-bottom: 10px;
-        cursor: pointer;
-      }
+  .sidebar li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+  }
 
-      .sidebar li[data-icon="group"] {
-        border-bottom: 1px solid #e1e1e1;
-        padding-bottom: 20px;
-        margin-bottom: 10px;
-      }
+  .sidebar li.active {
+    background-color: #e6f4fd;
+    border: 1px solid #247eb6;
+    border-radius: 10px;
+  }
 
-      .sidebar li[data-icon="mission"] {
-        border-bottom: 1px solid #e1e1e1;
-        padding-bottom: 20px;
-        margin-bottom: 10px;
-      }
-      .sidebar li[data-icon="calendar"] {
-        border-bottom: 1px solid #e1e1e1;
-        padding-bottom: 20px;
-        margin-bottom: 10px;
-      }
+  .sidebar li.active span {
+    background-color: #e6f4fd;
+    color: #247eb6;
+    font-weight: 600;
+  }
 
-      .sidebar li.active {
-        background-color: #e6f4fd;
-        border: 1px solid #247eb6;
-        border-radius: 10px;
-      }
+  .icon-all {
+    width: 26px;
+    height: 26px;
+  }
+  .icon-star {
+    width: 27px;
+    height: 26px;
+  }
+  .icon-info {
+    width: 27px;
+    height: 26px;
+  }
+  .icon-group {
+    width: 37px;
+    height: 26px;
+  }
+  .icon-mission {
+    width: 20.8px;
+    height: 26px;
+  }
+  .icon-calendar {
+    width: 26px;
+    height: 26px;
+  }
 
-      .sidebar li.active span {
-        background-color: #e6f4fd;
-        color: #247eb6;
-        font-weight: 600;
-      }
+  .content {
+    flex: 1;
+    padding-top: 40px;
+    display: flex;
+    flex-direction: column; /* 내부 요소들을 세로로 배치 */
+    align-items: center; /* 가운데 정렬 */
+  }
 
-      .icon-all {
-        width: 26px;
-        height: 26px;
-      }
-      .icon-star {
-        width: 27px;
-        height: 26px;
-      }
-      .icon-info {
-        width: 27px;
-        height: 26px;
-      }
-      .icon-group {
-        width: 37px;
-        height: 26px;
-      }
-      .icon-mission {
-        width: 20.8px;
-        height: 26px;
-      }
-      .icon-calendar {
-        width: 26px;
-        height: 26px;
-      }
+  .content .title-bar {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 20px;
+    margin-top: 0px;
+  }
 
-      .content {
-       flex: 1;
-       padding-top: 40px;
-       display: flex;
-       justify-content: center; /* 수평 중앙 정렬 */
-       align-items: flex-start; /* 수직 정렬 유지 */
-      }
+  .content .title-bar h3 {
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 20px;
+    color: #000000;
+    margin: 0;
+  }
 
-      .content .title-bar {
-        display: flex;
-        align-items: baseline;
-        gap: 10px;
-        margin-bottom: 20px;
-        margin-top: 0px;
-      }
+  .content .title-bar span {
+    font-size: 16px;
+    width: auto;
+    height: auto;
+    font-weight: 400;
+    color: #939393;
+  }
 
-      .content .title-bar h3 {
-        font-size: 28px;
-        font-weight: 600;
-        line-height: 20px;
-        color: #000000;
-        margin: 0;
-      }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+    table-layout: fixed;
+    background-color: white;
+  }
 
-      .content .title-bar span {
-        font-size: 16px;
-        width: auto;
-        height: auto;
-        font-weight: 400;
-        color: #939393;
-      }
+  table tbody tr {
+    position: relative;
+  }
 
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 16px;
-        table-layout: fixed;
-        background-color: white;
-      }
+  table td {
+    padding: 0 12px;
+    border-bottom: 1px solid #e1e1e1;
+    height: 50px;
+    font-size: 18px;
+    line-height: 20px;
+    vertical-align: middle;
+  }
 
-      table tbody tr {
-        position: relative;
-      }
+  table td.column {
+    border-left: 16px solid #8bcdf6;
+    padding-left: 12px;
+    text-align: center;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 30px;
+    vertical-align: middle;
+  }
 
-      table td {
-        padding: 0 12px;
-        border-bottom: 1px solid #e1e1e1;
-        height: 50px;
-        font-size: 18px;
-        line-height: 20px;
-        vertical-align: middle;
-      }
+  table th:nth-child(1),
+  table td:nth-child(1) {
+    width: 50px; /* 컬럼 너비 감소 */
+    text-align: center;
+    font-weight: 400;
+    vertical-align: middle;
+    padding-left: 0;
+    padding-right: 0;
+    font-size: 16px;
+  }
 
-      table td.column {
-        border-left: 16px solid #8bcdf6;
-        padding-left: 12px;
-        text-align: center;
-        font-weight: 400;
-        font-size: 16px;
-        line-height: 30px;
-        vertical-align: middle;
-      }
+  table th:nth-child(2),
+  table td:nth-child(2) {
+    font-size: 16px;
+    line-height: 30px;
+  }
 
-      table th:nth-child(1),
-      table td:nth-child(1) {
-        width: 159.12px;
-        text-align: center;
-        font-weight: 400;
-        vertical-align: middle;
-        padding-left: 0;
-        padding-right: 0;
-      }
+  table td.post-title-cell a {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+    display: block;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 0;
+  }
 
-      table th:nth-child(2),
-      table td:nth-child(2) {
-        font-size: 16px;
-        line-height: 30px;
-      }
+  table td.post-title-cell a:hover {
+    text-decoration: underline;
+  }
 
-      table td.post-title-cell a {
-        color: #000;
-        text-decoration: none;
-        cursor: pointer;
-        display: block;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        padding-left: 0;
-      }
+  table th:nth-child(3),
+  table td:nth-child(3) {
+    width: 70px; /* 컬럼 너비 감소 */
+    font-size: 16px;
+  }
 
-      table td.post-title-cell a:hover {
-        text-decoration: underline;
-      }
+  table th:nth-child(4),
+  table td:nth-child(4) {
+    width: 70px; /* 컬럼 너비 감소 */
+    font-size: 16px;
+  }
 
-      table th:nth-child(3),
-      table td:nth-child(3) {
-        width: 159px;
-      }
+  table th:nth-child(5),
+  table td:nth-child(5) {
+    width: 70px; /* 컬럼 너비 감소 */
+    font-size: 16px;
+  }
 
-      table th:nth-child(4),
-      table td:nth-child(4) {
-        width: 168px;
-      }
+  table th:nth-child(6),
+  table td:nth-child(6) {
+    width: 70px; /* 컬럼 너비 감소 */
+    font-size: 16px;
+  }
 
-      .pagination {
-        margin-top: 50px;
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 12.64px;
-        padding-bottom: 30px;
-      }
+  table th:nth-child(7),
+  table td:nth-child(7) {
+    width: 70px; /* 컬럼 너비 감소 */
+    font-size: 16px;
+  }
 
-      .page-btn {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 29.24px;
-        height: 32.4px;
-        border: 0.24px solid #e1e1e1;
-        border-radius: 3.95px;
-        font-family: "Inter", sans-serif;
-        font-size: 16px;
-        font-weight: 600;
-        color: #000;
-        background-color: #fff;
-        cursor: pointer;
-      }
+  .pagination {
+    margin-top: 50px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12.64px;
+    padding-bottom: 30px;
+  }
 
-      .page-btn.active {
-        background-color: #e1e1e1;
-      }
+  .page-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 29.24px;
+    height: 32.4px;
+    border: 0.24px solid #e1e1e1;
+    border-radius: 3.95px;
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+    background-color: #fff;
+    cursor: pointer;
+  }
 
-      .arrow-btn {
-        width: 0;
-        height: 0;
-        border-top: 8px solid transparent;
-        border-bottom: 8px solid transparent;
-        border-left: 12px solid #247eb6;
-        margin-left: 4px;
-        cursor: pointer;
-      }
+  .page-btn.active {
+    background-color: #e1e1e1;
+  }
 
-      
-      .exam-info {
-        display: none; /* 기본 숨김 */
-        width: 284px;
-        background: #f5fbff;
-        border: 1px solid #cce5ff;
-        border-radius: 12px;
-        padding: 20px;
-        font-size: 16px;
-        font-weight: 400;
-        position: relative;
-        flex-shrink: 0;
-      }
+  .arrow-btn {
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 12px solid #247eb6;
+    margin-left: 4px;
+    cursor: pointer;
+  }
 
-      .exam-info.active {
-        display: block;
-      }
+  .exam-info {
+    display: none; /* 기본 숨김 */
+    width: 250px; /* 너비 감소 */
+    background: #f5fbff;
+    border: 1px solid #cce5ff;
+    border-radius: 12px;
+    padding: 15px; /* 패딩 감소 */
+    font-size: 14px; /* 폰트 크기 감소 */
+    font-weight: 400;
+    position: relative;
+    flex-shrink: 0;
+    margin-left: 15px; /* 달력과의 간격 조절 */
+    margin-top: 20px; /* 달력 아래로 배치 */
+  }
 
-      .exam-info .tags {
-        display: flex;
-        gap: 6px;
-        margin-bottom: 10px;
-      }
+  .exam-info.active {
+    display: block;
+  }
 
-      .tag {
-        font-size: 13px;
-        font-weight: 400;
-        color: #ffffff;
-        background: #73c3f4;
-        padding: 4px 10px;
-        border-radius: 10px;
-      }
+  .exam-info .tags {
+    display: flex;
+    gap: 5px; /* 간격 감소 */
+    margin-bottom: 8px; /* 마진 감소 */
+  }
 
-      .tag.light {
-        background: #73c3f4;
-      }
+  .tag {
+    font-size: 12px; /* 폰트 크기 감소 */
+    font-weight: 400;
+    color: #ffffff;
+    background: #73c3f4;
+    padding: 3px 8px; /* 패딩 감소 */
+    border-radius: 8px; /* 둥근 모서리 감소 */
+  }
 
-      .close-btn {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 18px;
-        background: none;
-        border: none;
-        color: #333;
-        cursor: pointer;
-        font-weight: bold;
-      }
+  .tag.light {
+    background: #73c3f4;
+  }
 
-      .calendar-container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 40px;
-  border-radius: 20px;
-  background-color: white;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-  max-width: fit-content;
+  .close-btn {
+    position: absolute;
+    top: 5px; /* 위치 조정 */
+    right: 5px; /* 위치 조정 */
+    font-size: 16px; /* 폰트 크기 감소 */
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  .calendar-container {
+    display: flex;
+    flex-direction: column; /* 내부 요소들을 세로로 배치 */
+    align-items: center; /* 가운데 정렬 */
+    padding: 20px; /* 패딩 감소 */
+    border-radius: 15px; /* 둥근 모서리 감소 */
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); /* 그림자 감소 */
+    max-width: 600px; /* 최대 너비 감소 */
+    margin: 40px auto; /* 중앙 정렬 */
+  }
+
+  .calendar-box {
+    width: 100%; /* 부모 컨테이너에 맞춰 너비 조정 */
+    padding: 15px; /* 패딩 감소 */
+    background: #f8fcff;
+    border-radius: 15px; /* 둥근 모서리 감소 */
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 24px; /* 폰트 크기 감소 */
+    font-weight: 500;
+    margin-bottom: 15px; /* 마진 감소 */
+    width: 90%; /* 헤더 너비 조정 */
+  }
+
+  .calendar-header button {
+    background: none;
+    border: none;
+    font-size: 20px; /* 폰트 크기 감소 */
+    cursor: pointer;
+  }
+
+  .calendar-box table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 16px; /* 폰트 크기 감소 */
+  }
+
+  .calendar-box table th,
+  .calendar-box table td {
+    width: calc(100% / 7); /* 각 셀의 너비 조정 */
+    font-size: 16px; /* 폰트 크기 감소 */
+    font-weight: 500;
+    padding: 5px; /* 패딩 감소 */
+    line-height: 30px; /* 줄 간격 감소 */
+    vertical-align: middle;
+  }
+
+  .calendar-box table td {
+  width: calc(100% / 7); /* 각 셀의 너비 조정 */
+  font-size: 16px; /* 폰트 크기 감소 */
+  font-weight: 500;
+  padding: 5px; /* 패딩 감소 */
+  line-height: 30px; /* 줄 간격 감소 */
+  vertical-align: middle;
+  position: relative; /* 자식 요소 절대 위치 지정을 위해 */
+}
+
+  .calendar-box table td:first-child { /* 일요일 */
+  color: red;
+}
+
+.calendar-box table td:last-child { /* 토요일 */
+  color: blue;
 }
 
 
-      .calendar-box {
-        width: 700px;
-        padding: 20px;
-        background: #f8fcff;
-        border-radius: 20px;
-        flex-shrink: 0;
-        justify-content: center;
-        align-items: center;
-      }
+  .selected {
+    background-color: #b0dcf7;
+    color: white;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 30px; /* 원의 너비 */
+    height: 30px; /* 원의 높이 (너비와 같게 하여 원형 유지) */
+    display: inline-block; /* 원 형태로 감싸기 위해 inline-block 사용 */
+    line-height: 30px; /* 텍스트를 원의 중앙에 배치 */
+    vertical-align: middle; /* 세로 중앙 정렬 */
+    padding: 0; /* 패딩 제거 */
+  }
 
-      .calendar-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 34px;
-        font-weight: 500;
-        margin-bottom: 20px;
-      }
+  .selected-circle { /* 날짜를 감싸는 원형 스타일 */
+  background-color: #b0dcf7;
+  color: white;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 30px; /* 원의 너비 */
+  height: 30px; /* 원의 높이 (너비와 같게 하여 원형 유지) */
+  display: flex; /* 내부 텍스트 중앙 정렬을 위해 flex 사용 */
+  justify-content: center; /* 가로 중앙 정렬 */
+  align-items: center; /* 세로 중앙 정렬 */
+  margin: 0 auto; /* td 내부에서 원 자체를 중앙 정렬 */
+  position: absolute; /* td 내에서 절대 위치로 날짜 위에 겹치기 */
+  top: 50%; /* td의 중앙에 위치 */
+  left: 50%; /* td의 중앙에 위치 */
+  transform: translate(-50%, -50%); /* 정확히 중앙 정렬 */
+  z-index: 1; /* 날짜 위에 오도록 z-index 설정 */
+}
 
-      .calendar-header button {
-        background: none;
-        border: none;
-        font-size: 30px;
-        cursor: pointer;
-      }
-
-      .calendar-box table {
-        width: 100%;
-        table-layout: fixed;
-        border-collapse: collapse;
-        text-align: center;
-        font-size: 20px; /* 이건 전체 폰트에 적용되므로 th/td 개별 조정 시 따로 써야 함 */
-      }
-
-      .calendar-box table th,
-      .calendar-box table td {
-        width: 20px;
-        font-size: 25px;
-        font-weight: 700;
-        padding: 0;
-        line-height: 60px;
-        vertical-align: middle;
-      }
-
-
-      .selected {
-        background-color: #b0dcf7;
-        color: white;
-        font-weight: bold;
-        border-radius: 50%;
-      }
-
-      .footer-msg {
-        margin-top: 100px;
-        color: #555;
-        font-size: 27px;
-        font-weight: 400;
-        text-align: center;
-      }
-    </style>
+/* 날짜 텍스트는 원 안에 배치되므로, 기본 td 텍스트 색상을 설정할 필요 없음 */
+.calendar-box table td span.date-text {
+  position: relative; /* selected-circle 아래에 오도록 */
+  z-index: 2; /* 날짜 텍스트가 원 위에 오도록 */
+}
+  .footer-msg {
+    margin-top: 20px; /* 마진 감소 */
+    color: #555;
+    font-size: 16px; /* 폰트 크기 감소 */
+    font-weight: 400;
+    text-align: center;
+  }
+</style>
   </head>
   <body>
     <div class="blur-circle blur-circle-1"></div>
@@ -589,7 +643,7 @@
           </div>
         </div>
 
-        <div class="write-button">
+        <div class="write-button" onclick="location.href='PostUpload.html'">
           <img src="./icons/pencil.png" alt="글쓰기 아이콘" />
           <span>글쓰기</span>
         </div>
@@ -704,40 +758,46 @@
       };
 
       function renderCalendar(month, year) {
-        calendarBody.innerHTML = "";
-        const firstDay = new Date(year, month).getDay();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        monthYear.textContent = `${year}년 ${month + 1}월`;
+  calendarBody.innerHTML = "";
+  const firstDay = new Date(year, month).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  monthYear.textContent = `${year}년 ${month + 1}월`;
 
-        let date = 1;
-        for (let i = 0; i < 6; i++) {
-          let row = document.createElement("tr");
+  let date = 1;
+  for (let i = 0; i < 6; i++) {
+    let row = document.createElement("tr");
 
-          for (let j = 0; j < 7; j++) {
-            let cell = document.createElement("td");
-            if (i === 0 && j < firstDay) {
-              cell.textContent = "";
-            } else if (date > daysInMonth) {
-              cell.textContent = "";
-            } else {
-              cell.textContent = date;
-              let dateStr = `${year}-${String(month + 1).padStart(
-                2,
-                "0"
-              )}-${String(date).padStart(2, "0")}`;
-              if (examSchedule[dateStr]) {
-                cell.classList.add("selected");
-              }
-              cell.addEventListener("click", () => {
-                showExamInfo(dateStr);
-              });
-              date++;
-            }
-            row.appendChild(cell);
-          }
-          calendarBody.appendChild(row);
+    for (let j = 0; j < 7; j++) {
+      let cell = document.createElement("td");
+      if (i === 0 && j < firstDay) {
+        cell.textContent = "";
+      } else if (date > daysInMonth) {
+        cell.textContent = "";
+      } else {
+        // 날짜 텍스트를 담을 span 생성
+        let dateSpan = document.createElement("span");
+        dateSpan.textContent = date;
+        dateSpan.classList.add("date-text"); // 날짜 텍스트에 클래스 추가
+
+        let dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(date).padStart(2, "0")}`;
+
+        if (examSchedule[dateStr]) {
+          // 선택된 날짜일 경우 span에 selected-circle 클래스 추가
+          dateSpan.classList.add("selected-circle");
         }
+
+        cell.appendChild(dateSpan); // cell에 span 추가
+
+        cell.addEventListener("click", () => {
+          showExamInfo(dateStr);
+        });
+        date++;
       }
+      row.appendChild(cell);
+    }
+    calendarBody.appendChild(row);
+  }
+}
 
       function changeMonth(offset) {
         currentMonth += offset;
@@ -755,17 +815,22 @@
         const info = examSchedule[dateStr];
         examBox.classList.add("active");
         if (info) {
-          examDate.innerHTML = `<strong>${dateStr}</strong> - ${info.title}`;
+          examDate.innerHTML = `<strong>${dateStr.slice(5,7)}.${dateStr.slice(8,10)} (${new Date(dateStr).toLocaleDateString('ko-KR', { weekday: 'short' })[0]})</strong> 오전 9시 20분`; // 스크린샷에 맞춰 날짜 형식 변경
           examDetail.innerHTML = `
-            <p>시간: ${info.time}</p>
-            <p>접수기간: ${info.apply}</p>
-            <p>성적발표: ${info.result}</p>
+            <p>접수기간 ${info.apply}</p>
+            <p>성적발표 ${info.result}</p>
           `;
+          // 태그 업데이트 (예시)
+          const tagsDiv = examBox.querySelector('.tags');
+          tagsDiv.innerHTML = `<div class="tag">정기접수</div><div class="tag light">접수중</div>`; // 스크린샷에 맞춰 고정된 태그 표시
         } else {
-          examDate.innerHTML = `<strong>${dateStr}</strong>`;
+          examDate.innerHTML = `<strong>${dateStr.slice(5,7)}.${dateStr.slice(8,10)} (${new Date(dateStr).toLocaleDateString('ko-KR', { weekday: 'short' })[0]})</strong>`;
           examDetail.innerHTML = `<p>등록된 시험 정보가 없습니다.</p>`;
+          const tagsDiv = examBox.querySelector('.tags');
+          tagsDiv.innerHTML = `<div class="tag">정보 없음</div>`;
         }
       }
+
 
       function closeExamInfo() {
         examBox.classList.remove("active");
