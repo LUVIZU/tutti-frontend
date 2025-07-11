@@ -181,14 +181,22 @@
           }
 
           const data = await res.json();
-          console.log("로그인 응답:", data); // 응답 구조 확인
+          console.log("로그인 응답:", data);
 
-          // 예시: 토큰 저장
-          localStorage.setItem("accessToken", data.accessToken);
-          localStorage.setItem("loginId", username); // <-- 이것 추가
+          const token = data.data?.accessToken;
+          const nickname = data.data?.nickname;
+
+          if (!token) {
+            alert("로그인 실패: 응답에 토큰이 없습니다.");
+            return false;
+          }
+
+          localStorage.setItem("accessToken", token);
+          localStorage.setItem("loginId", username); // ✅ 사용자가 입력한 값 저장
+          localStorage.setItem("nickname", nickname); // (선택) 닉네임 저장해두면 편리
 
           alert("로그인 성공!");
-          window.location.href = "CommuForm.html"; // 👉 로그인 성공 후 이동할 페이지로 변경
+          window.location.href = "CommuForm.html";
         } catch (err) {
           console.error("로그인 실패:", err);
           alert("로그인 실패: " + err.message);

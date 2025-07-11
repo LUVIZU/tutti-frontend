@@ -708,6 +708,10 @@
         width: 20px;
         height: 20px;
       }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
     </style>
   </head>
 
@@ -719,14 +723,20 @@
         <img src="./icons/tutti.png" alt="Tutti 로고" />
       </div>
       <div class="user-actions">
-        <div class="nav-box">홈</div>
-        <div class="nav-box notification">
-          알림
-          <span class="badge">0</span>
-        </div>
-        <div class="profile-btn">
-          <img id="profileImage" src="./icons/profile.png" alt="프로필" />
-        </div>
+        <a href="CommuForm.html">
+          <div class="nav-box">홈</div>
+        </a>
+        <a href="notification.html">
+          <div class="nav-box notification">
+            알림
+            <span class="badge">0</span>
+          </div>
+        </a>
+        <a href="MyPage.html">
+          <div class="profile-btn">
+            <img id="profileImage" src="./icons/profile.png" alt="프로필" />
+          </div>
+        </a>
       </div>
     </div>
 
@@ -752,36 +762,50 @@
           </div>
         </div>
 
-        <div class="write-button">
-          <img src="./icons/pencil.png" alt="글쓰기 아이콘" />
-          <span>글쓰기</span>
-        </div>
+        <a href="PostUpload.html">
+          <div class="write-button">
+            <img src="./icons/pencil.png" alt="글쓰기 아이콘" />
+            <span>글쓰기</span>
+          </div>
+        </a>
 
         <ul id="menu-list">
-          <li data-title="전체글" data-icon="all">
-            <img src="./icons/all-gray.png" class="icon-all" />
-            <span>전체글</span>
-          </li>
-          <li data-title="인기글" data-icon="star">
-            <img src="./icons/star-gray.png" class="icon-star" />
-            <span>인기글</span>
-          </li>
-          <li data-title="정보글" data-icon="info" class="active">
-            <img src="./icons/info-blue.png" class="icon-info" />
-            <span>정보글</span>
-          </li>
-          <li data-title="스터디 모집" data-icon="group">
-            <img src="./icons/group-gray.png" class="icon-group" />
-            <span>스터디 모집</span>
-          </li>
-          <li data-title="미션" data-icon="mission">
-            <img src="./icons/mission-gray.png" class="icon-mission" />
-            <span>미션</span>
-          </li>
-          <li data-title="시험 일정" data-icon="calendar">
-            <img src="./icons/calendar-gray.png" class="icon-calendar" />
-            <span>시험 일정</span>
-          </li>
+          <a href="Community.html"
+            ><li data-title="전체글" data-icon="all">
+              <img src="./icons/all-gray.png" class="icon-all" />
+              <span>전체글</span>
+            </li></a
+          >
+          <a href="hot.html?category=인기글"
+            ><li data-title="인기글" data-icon="star">
+              <img src="./icons/star-gray.png" class="icon-star" />
+              <span>인기글</span>
+            </li></a
+          >
+          <a href="information.html?category=정보글"
+            ><li data-title="정보글" data-icon="info" class="active">
+              <img src="./icons/info-blue.png" class="icon-info" />
+              <span>정보글</span>
+            </li></a
+          >
+          <a href="group.html?category=스터디 모집"
+            ><li data-title="스터디 모집" data-icon="group">
+              <img src="./icons/group-gray.png" class="icon-group" />
+              <span>스터디 모집</span>
+            </li></a
+          >
+          <a href="mission.html"
+            ><li data-title="미션" data-icon="mission">
+              <img src="./icons/mission-gray.png" class="icon-mission" />
+              <span>미션</span>
+            </li></a
+          >
+          <a href="calendar.html"
+            ><li data-title="시험 일정" data-icon="calendar">
+              <img src="./icons/calendar-gray.png" class="icon-calendar" />
+              <span>시험 일정</span>
+            </li></a
+          >
         </ul>
       </div>
 

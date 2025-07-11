@@ -462,8 +462,8 @@
                   return;
                 } else {
                   selected.push(name);
+
                   try {
-                    // BASE_URL -> window.BASE_URL로 수정
                     const res = await fetch(
                       `${window.BASE_URL}/api/communities/${examId}/join`,
                       {
@@ -477,49 +477,46 @@
 
                     let jsonResponse;
                     try {
-                      jsonResponse = await res.json(); // JSON을 한 번만 파싱합니다.
+                      jsonResponse = await res.json();
                     } catch (e) {
-                      // 파싱 실패 시 (예: 서버가 JSON이 아닌 응답을 보내거나 성공 시 빈 응답을 보낼 때)
                       console.warn("JSON 응답 파싱 실패:", e);
-                      jsonResponse = {}; // JSON 파싱 실패 시 빈 객체로 기본 설정
+                      jsonResponse = {};
                     }
 
                     if (!res.ok) {
-                      // 응답이 OK가 아니었을 경우 (예: 4xx, 5xx 상태 코드)
                       let errorMessage = `참여 실패: HTTP ${res.status} - ${res.statusText}`;
-                      if (jsonResponse && jsonResponse.message) {
-                        // 서버가 보낸 메시지를 확인하여 특정 상황을 감지
-                        if (
-                          jsonResponse.message.includes(
-                            "이미 가입된 커뮤니티입니다"
-                          )
-                        ) {
-                          // ✅ 이 메시지는 서버 응답에 따라 정확히 맞춰야 합니다.
-                          alert("이미 가입된 커뮤니티입니다.");
-                          checkbox.checked = false; // 이미 가입된 경우 체크박스 해제
-                          selected = selected.filter((e) => e !== name); // selected 목록에서도 제거
-                          updateDisabling();
-                          updateCommunityUI();
-                          return; // 여기서 함수 종료
-                        } else {
-                          errorMessage += `\n서버 메시지: ${jsonResponse.message}`;
-                        }
-                      } else if (jsonResponse && jsonResponse.error) {
-                        errorMessage += `\n서버 오류: ${jsonResponse.error}`;
+                      if (
+                        jsonResponse.message?.includes(
+                          "이미 가입된 커뮤니티입니다"
+                        )
+                      ) {
+                        alert("이미 가입된 커뮤니티입니다.");
+                        checkbox.checked = true;
+                        checkbox.disabled = true; // ✅ 이미 가입된 경우도 해제 못 하도록
+                        selected = [...new Set([...selected, name])];
+                        updateDisabling();
+                        updateCommunityUI();
+                        return;
+                      } else {
+                        errorMessage += `\n서버 메시지: ${
+                          jsonResponse.message || ""
+                        }`;
                       }
                       throw new Error(errorMessage);
                     }
 
+                    // ✅ 체크한 경우, 해제 못하도록 처리
+                    checkbox.disabled = true;
                     console.log("커뮤니티 참여 성공:", jsonResponse);
-                    // 이제 jsonResponse를 필요한 경우 추가 처리에 사용할 수 있습니다.
                   } catch (err) {
                     console.error("커뮤니티 참여 오류:", err);
                     alert("서버에 커뮤니티 참여를 등록하지 못했습니다.");
                   }
                 }
               } else {
-                selected = selected.filter((e) => e !== name);
-                // ❌ 커뮤니티 나가기 API가 없다면 그냥 로컬에서 제거만
+                // ❌ 체크 해제 금지: 사용자가 해제 시도해도 그냥 무시
+                checkbox.checked = true;
+                return;
               }
 
               localStorage.setItem("selectedExams", JSON.stringify(selected));
