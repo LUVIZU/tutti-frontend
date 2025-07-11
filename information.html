@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>정보글 모음</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      .blur-circle {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .header,
+      .wrapper,
+      .sidebar,
+      .content {
+        position: relative;
+        z-index: 10;
+      }
+
+      .blur-circle-1 {
+        width: 783px;
+        height: 783px;
+        background: #ddf2ff;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        filter: blur(500px);
+        opacity: 1;
+      }
+
+      .blur-circle-2 {
+        width: 507px;
+        height: 507px;
+        background: #b0dcf7;
+        top: 240px;
+        left: 60%;
+        transform: translateX(-50%);
+        filter: blur(250px);
+        opacity: 0.2;
+      }
+
+      .logo img {
+        width: 128px;
+        height: 52px;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        padding-top: 100px;
+      }
+
+      .wrapper {
+        width: 90vw;
+        max-width: 1280px;
+        padding-top: 20px;
+        display: flex;
+        flex-direction: row;
+        gap: 0;
+      }
+
+      .header {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        width: 100%;
+        height: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 5vw;
+        z-index: 1000;
+      }
+
+      .header .user-actions {
+        display: flex;
+        align-items: center;
+        width: auto;
+        height: 42px;
+        gap: 14px;
+      }
+
+      .nav-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 37px;
+        padding: 10px 14px;
+        font-size: 20px;
+        font-weight: 500;
+        border-right: 1px solid #e1e1e1;
+        position: relative;
+        text-decoration: none; /* 밑줄 제거 */
+        color: inherit; /* 부모 요소 색상 상속 */
+      }
+
+      .notification {
+        position: relative;
+      }
+
+      .badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        width: 18px;
+        height: 18px;
+        background: #ff3b3b;
+        color: white;
+        font-size: 12px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .profile-btn {
+        width: 37px;
+        height: 37px;
+        border: 1px solid #247eb6;
+        border-radius: 1000px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+      }
+
+      .profile-btn img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .sidebar {
+        width: 280px;
+        height: auto;
+        padding: 2px;
+        background-color: white;
+        border-top: 5px solid #247eb6;
+        flex-shrink: 0;
+        flex-grow: 0;
+      }
+
+      .sidebar h2 {
+        color: #247eb6;
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 36px;
+        margin-top: 30px;
+        text-align: center;
+      }
+
+      .stats {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10.67px;
+        margin-top: 15px;
+      }
+
+      .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 16px;
+        color: #000;
+      }
+
+      .stat-item img.user-icon {
+        width: 26.27px;
+        height: 20.3px;
+      }
+
+      .stat-item img.calendar-icon {
+        width: 18.67px;
+        height: 18.67px;
+      }
+
+      .stat-item img.day-icon {
+        width: 13.33px;
+        height: 17px;
+      }
+
+      .write-button {
+        margin: 20px auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 200px;
+        height: 40px;
+        background-color: #b0dcf7;
+        border-radius: 21.02px;
+        gap: 7.01px;
+        color: white;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .write-button img {
+        width: 18px;
+        height: 18px;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        margin-top: 20px;
+        padding: 0 15px;
+      }
+
+      .sidebar li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+      }
+
+      .sidebar li[data-icon="group"] {
+        border-bottom: 1px solid #e1e1e1;
+        padding-bottom: 20px;
+        margin-bottom: 10px;
+      }
+      .sidebar li[data-icon="mission"] {
+        border-bottom: 1px solid #e1e1e1;
+        padding-bottom: 20px;
+        margin-bottom: 10px;
+      }
+      .sidebar li[data-icon="calendar"] {
+        border-bottom: 1px solid #e1e1e1;
+        padding-bottom: 20px;
+        margin-bottom: 10px;
+      }
+
+      .sidebar li.active {
+        background-color: #e6f4fd;
+      }
+
+      .sidebar li.active span {
+        color: #247eb6;
+        font-weight: 600;
+      }
+
+      .icon-all {
+        width: 26px;
+        height: 26px;
+      }
+      .icon-star {
+        width: 27px;
+        height: 26px;
+      }
+      .icon-info {
+        width: 27px;
+        height: 26px;
+      }
+      .icon-group {
+        width: 37px;
+        height: 26px;
+      }
+      .icon-mission {
+        width: 20.8px;
+        height: 26px;
+      }
+      .icon-calendar {
+        width: 26px;
+        height: 26px;
+      }
+
+      .content {
+        flex: 1;
+        padding-top: 40px;
+        padding-left: 30px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .content .title-bar {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        margin-bottom: 20px;
+        margin-top: 0px;
+      }
+
+      .content .title-bar h3 {
+        font-size: 28px;
+        font-weight: 600;
+        line-height: 20px;
+        color: #000000;
+        margin: 0;
+      }
+
+      .content .title-bar span {
+        font-size: 16px;
+        width: auto;
+        height: auto;
+        font-weight: 400;
+        color: #939393;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 16px;
+        table-layout: fixed;
+        background-color: white;
+      }
+
+      table tbody tr {
+        position: relative;
+      }
+
+      table td {
+        padding: 0 12px;
+        border-bottom: 1px solid #e1e1e1;
+        height: 50px;
+        font-size: 18px;
+        line-height: 20px;
+        vertical-align: middle;
+      }
+
+      table td.column {
+        border-left: 16px solid #8bcdf6;
+        padding-left: 12px;
+        text-align: center;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 30px;
+        vertical-align: middle;
+      }
+
+      table th:nth-child(1),
+      table td:nth-child(1) {
+        width: 159.12px;
+        text-align: center;
+        font-weight: 400;
+        vertical-align: middle;
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      table th:nth-child(2),
+      table td:nth-child(2) {
+        font-size: 16px;
+        line-height: 30px;
+      }
+
+      table td.post-title-cell a {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+        display: block;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        padding-left: 0;
+      }
+
+      table td.post-title-cell a:hover {
+        text-decoration: underline;
+      }
+
+      table th:nth-child(3),
+      table td:nth-child(3) {
+        width: 159px;
+      }
+
+      table th:nth-child(4),
+      table td:nth-child(4) {
+        width: 168px;
+      }
+
+      .pagination {
+        margin-top: 50px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12.64px;
+        padding-bottom: 30px;
+      }
+
+      .page-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 29.24px;
+        height: 32.4px;
+        border: 0.24px solid #e1e1e1;
+        border-radius: 3.95px;
+        font-family: "Inter", sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        color: #000;
+        background-color: #fff;
+        cursor: pointer;
+      }
+
+      .page-btn.active {
+        background-color: #e1e1e1;
+      }
+
+      .arrow-btn {
+        width: 0;
+        height: 0;
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+        border-left: 12px solid #247eb6;
+        margin-left: 4px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="blur-circle blur-circle-1"></div>
+    <div class="blur-circle blur-circle-2"></div>
+    <div class="header">
+      <div class="logo">
+        <img src="./icons/tutti.png" alt="Tutti 로고" />
+      </div>
+      <div class="user-actions">
+        <a href="CommuForm.html" class="nav-box">홈</a>
+        <div class="nav-box notification">
+          알림
+          <span class="badge">0</span>
+        </div>
+        <div class="profile-btn">
+          <img id="profileImage" src="./icons/profile.png" alt="프로필" />
+        </div>
+      </div>
+    </div>
+
+    <div class="wrapper">
+      <div class="sidebar">
+        <h2>TOEIC 커뮤니티</h2>
+        <div class="stats">
+          <div class="stat-item">
+            <img src="./icons/user.png" class="user-icon" alt="유저 아이콘" />
+            <span>00명</span>
+          </div>
+          <div class="stat-item">
+            <img
+              src="./icons/calendar-blue.png"
+              class="calendar-icon"
+              alt="달력 아이콘"
+            />
+            <span>0/00</span>
+          </div>
+          <div class="stat-item">
+            <img src="./icons/day.png" class="day-icon" alt="D-day 아이콘" />
+            <span>-61</span>
+          </div>
+        </div>
+
+        <div class="write-button">
+          <img src="./icons/pencil.png" alt="글쓰기 아이콘" />
+          <span>글쓰기</span>
+        </div>
+
+        <ul id="menu-list">
+          <li data-title="전체글" data-icon="all" data-page="Community.html">
+            <img src="./icons/all-gray.png" class="icon-star" />
+            <span>전체글</span>
+          </li>
+
+          <li data-title="스터디 모집" data-icon="group" data-page="hot.html">
+            <img src="./icons/star-gray.png" class="icon-star" />
+            <span>인기글</span>
+          </li>
+
+          <li
+            data-title="정보글"
+            data-icon="all"
+            data-page="Community.html"
+            class="active"
+          >
+            <img src="./icons/info-blue.png" class="icon-info" />
+            <span>정보글</span>
+          </li>
+
+          <li data-title="스터디 모집" data-icon="group" data-page="group.html">
+            <img src="./icons/group-gray.png" class="icon-group" />
+            <span>스터디 모집</span>
+          </li>
+          <li data-title="미션" data-icon="mission" data-page="mission.html">
+            <img src="./icons/mission-gray.png" class="icon-mission" />
+            <span>미션</span>
+          </li>
+          <li
+            data-title="시험 일정"
+            data-icon="calendar"
+            data-page="calendar.html"
+          >
+            <img src="./icons/calendar-gray.png" class="icon-calendar" />
+            <span>시험 일정</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="content">
+        <div class="title-bar">
+          <h3>정보글</h3>
+          <span>(22)</span>
+        </div>
+        <table>
+          <thead></thead>
+          <tbody></tbody>
+        </table>
+        <div class="pagination"></div>
+      </div>
+    </div>
+    <script>
+      const posts = [
+        {
+          category: "정보글",
+          title: "RC 시간 부족한분들께 제가 쓴 문제풀이 순서 팁 공유해요",
+          author: "장금2",
+          date: "2025.06.24",
+        },
+        {
+          category: "정보글",
+          title: "토익 2개월 공부 루틴 공유합니다 (850 달성 후기)",
+          author: "할수있다",
+          date: "2025.06.24",
+        },
+        {
+          category: "정보글",
+          title: "3주 만에 LC +100 오른 비법 정리했어요",
+          author: "영어뽀개기",
+          date: "2025.06.24",
+        },
+
+        {
+          category: "정보글",
+          title: "해커스 교재별 난이도 비교 (정리표 포함)",
+          author: "엘리1116",
+          date: "2025.06.24",
+        },
+
+        ...Array.from({ length: 11 }, (_, i) => {
+          const cat =
+            i % 3 === 0 ? "최신글" : i % 3 === 1 ? "정보글" : "스터디 모집";
+          return {
+            category: cat,
+            title: `추가 게시글 제목 ${i + 1}`,
+            author: `추가 작성자 ${i + 1}`,
+            date: `2025.06.${(23 - i).toString().padStart(2, "0")}`,
+          };
+        }),
+      ];
+
+      const informationPosts = posts.filter(
+        (post) => post.category === "정보글"
+      );
+
+      const postsPerPage = 11;
+      let currentPage = 1;
+      const tableBody = document.querySelector("table tbody");
+      const pagination = document.querySelector(".pagination");
+      const totalPostsSpan = document.querySelector(".title-bar span");
+
+      function renderPosts(page) {
+        tableBody.innerHTML = "";
+        const start = (page - 1) * postsPerPage;
+        // posts 대신 informationPosts를 사용합니다.
+        const pagePosts = informationPosts.slice(start, start + postsPerPage);
+
+        pagePosts.forEach((post) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td class="column">${post.category}</td>
+            <td class="post-title-cell"><a href="PostDetail.html?id=${post.title}">${post.title}</a></td>
+            <td>${post.author}</td>
+            <td>${post.date}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+      }
+
+      function renderPagination() {
+        pagination.innerHTML = "";
+        // 총 페이지 수도 informationPosts의 길이를 기준으로 계산합니다.
+        const totalPages = Math.ceil(informationPosts.length / postsPerPage);
+
+        // Previous button
+        if (currentPage > 1) {
+          const prevArrow = document.createElement("span");
+          prevArrow.className = "arrow-btn";
+          prevArrow.style.transform = "rotate(180deg)";
+          prevArrow.addEventListener("click", () => {
+            currentPage--;
+            renderPosts(currentPage);
+            renderPagination();
+          });
+          pagination.appendChild(prevArrow);
+        }
+
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement("span");
+          btn.className = "page-btn" + (i === currentPage ? " active" : "");
+          btn.textContent = i;
+          btn.addEventListener("click", () => {
+            currentPage = i;
+            renderPosts(currentPage);
+            renderPagination();
+          });
+          pagination.appendChild(btn);
+        }
+
+        // Next button
+        if (currentPage < totalPages) {
+          const nextArrow = document.createElement("span");
+          nextArrow.className = "arrow-btn";
+          nextArrow.addEventListener("click", () => {
+            currentPage++;
+            renderPosts(currentPage);
+            renderPagination();
+          });
+          pagination.appendChild(nextArrow);
+        }
+      }
+
+      // 표시되는 게시물 수도 informationPosts의 길이를 사용합니다.
+      totalPostsSpan.textContent = `(${informationPosts.length})`;
+      renderPosts(currentPage);
+      renderPagination();
+
+      const isLoggedIn = true;
+      const profileImage = document.getElementById("profileImage");
+
+      if (isLoggedIn) {
+        profileImage.src = "./user/profile123.jpg";
+      } else {
+        profileImage.src = "./icons/profile.png";
+      }
+
+      const menuItems = document.querySelectorAll("#menu-list li");
+
+      menuItems.forEach((item) => {
+        item.addEventListener("click", () => {
+          const targetPage = item.getAttribute("data-page");
+          if (targetPage) {
+            window.location.href = targetPage;
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
