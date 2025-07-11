@@ -69,16 +69,16 @@
 
       .profile-container {
         display: flex;
-        background: white;
+        background: rgba(255, 255, 255, 0.4);
         width: 1549px;
-        height: 901px;
+        height: 800px;
         border-radius: 20px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
         overflow: hidden;
       }
 
       .sidebar {
-        width: 280px;
+        width: 360px;
         border-right: 1px solid #eee;
         padding: 40px 20px;
       }
@@ -86,25 +86,25 @@
       .sidebar .avatar {
         width: 129px;
         border-radius: 50%;
-        margin: 0 auto 10px auto;
         object-fit: cover;
+        margin: 0 auto 10px auto;
         display: block;
       }
 
       .sidebar h2 {
         text-align: center;
-        font-size: 18px;
-        margin-bottom: 6px;
+        font-size: 30px;
+        margin: 10px 0 5px;
       }
 
       .sidebar p {
         text-align: center;
-        font-size: 14px;
+        font-size: 19px;
         color: #555;
         margin-bottom: 20px;
       }
 
-      .sidebar .menu {
+      .menu {
         display: flex;
         flex-direction: column;
         gap: 10px;
@@ -123,7 +123,7 @@
         transition: background-color 0.2s;
       }
       .icon {
-        width: 26px;
+        width: 30px;
         padding-right: 10px;
       }
 
@@ -149,13 +149,19 @@
         flex-direction: column;
         align-items: center;
       }
+      .content h1 {
+        font-size: 50px;
+        font-weight: 600;
+        margin-bottom: 70px;
+      }
 
       .content .avatar-large {
-        width: 100px;
-        height: 100px;
+        width: 150px;
+        height: 150px;
         background-color: #cfe3f4;
         border-radius: 50%;
-        margin-bottom: 30px;
+        margin-top: 120px;
+        margin-bottom: 50px;
       }
 
       .form-group {
@@ -199,6 +205,11 @@
       button:hover {
         background-color: #6cb8f0;
       }
+      .separator {
+        width: 181px; /* 원하는 너비 */
+        margin: 8px auto; /* 가운데 정렬 + 여백 */
+        display: block;
+      }
     </style>
   </head>
   <body>
@@ -224,6 +235,8 @@
           <div class="sidebar">
             <img src="icons/profile.png" alt="Avatar" class="avatar" />
             <h2 id="saved-nickname">닉네임을 정해주세요.</h2>
+            <img src="icons/verify.png" alt="Separator" class="separator" />
+
             <p id="saved-bio">자유롭게 나를 소개해 주세요!</p>
 
             <div class="menu">
@@ -231,7 +244,7 @@
                 ><img src="icons/bluepencil.png" class="icon" />프로필 편집</a
               >
               <a href="MyPagePass.html" class="menu-item"
-                ><img src="icons/lock-gray.png" class="icon" />비밀번호 변경</a
+                ><img src="icons/lock-gray.png" class="icon" />개인정보 변경</a
               >
               <a href="MyPageAlerts.html" class="menu-item"
                 ><img src="icons/notification-gray.png" class="icon" />알림
@@ -246,11 +259,6 @@
           <!-- 콘텐츠 -->
           <div class="content">
             <div class="avatar-large"></div>
-            <div class="form-group">
-              <label for="nickname">닉네임</label>
-              <input type="text" id="nickname" maxlength="20" />
-              <div class="input-length" id="nick-len">0/20</div>
-            </div>
 
             <div class="form-group">
               <label for="bio">소개글</label>
@@ -266,43 +274,30 @@
     </div>
 
     <script>
-      const nicknameInput = document.getElementById("nickname");
       const bioInput = document.getElementById("bio");
-      const nicknameLength = document.getElementById("nick-len");
       const bioLength = document.getElementById("bio-len");
-
-      const savedNickname = document.getElementById("saved-nickname");
       const savedBio = document.getElementById("saved-bio");
 
-      nicknameInput.addEventListener("input", () => {
-        nicknameLength.textContent = `${nicknameInput.value.length}/20`;
-      });
-
+      // 입력 시 글자 수 표시
       bioInput.addEventListener("input", () => {
         bioLength.textContent = `${bioInput.value.length}/150`;
       });
 
+      // 저장 버튼 클릭 시
       document.getElementById("saveBtn").addEventListener("click", () => {
-        const nickname = nicknameInput.value.trim();
         const bio = bioInput.value.trim();
-
-        localStorage.setItem("nickname", nickname);
-        localStorage.setItem("bio", bio);
-
-        savedNickname.textContent = nickname || "닉네임을 정해주세요.";
-        savedBio.textContent = bio || "자유롭게 나를 소개해 주세요!";
+        localStorage.setItem("bio", bio); // 저장
+        savedBio.textContent = bio || "자유롭게 나를 소개해 주세요!"; // 왼쪽 박스 반영
+        alert("소개글이 저장되었습니다!");
       });
 
+      // 페이지 로딩 시 저장된 값 불러오기
       window.addEventListener("DOMContentLoaded", () => {
-        const storedNickname = localStorage.getItem("nickname");
         const storedBio = localStorage.getItem("bio");
-
-        if (storedNickname) {
-          savedNickname.textContent = storedNickname;
-        }
-
         if (storedBio) {
           savedBio.textContent = storedBio;
+          bioInput.value = storedBio;
+          bioLength.textContent = `${storedBio.length}/150`;
         }
       });
     </script>

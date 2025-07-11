@@ -69,16 +69,16 @@
 
       .profile-container {
         display: flex;
-        background: white;
+        background: rgba(255, 255, 255, 0.4);
         width: 1549px;
-        height: 901px;
+        height: 800px;
         border-radius: 20px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
         overflow: hidden;
       }
 
       .sidebar {
-        width: 280px;
+        width: 360px;
         border-right: 1px solid #eee;
         padding: 40px 20px;
       }
@@ -93,13 +93,13 @@
 
       .sidebar h2 {
         text-align: center;
-        font-size: 18px;
+        font-size: 30px;
         margin: 10px 0 5px;
       }
 
       .sidebar p {
         text-align: center;
-        font-size: 14px;
+        font-size: 19px;
         color: #555;
         margin-bottom: 20px;
       }
@@ -121,7 +121,7 @@
         text-decoration: none;
       }
       .icon {
-        width: 26px;
+        width: 30px;
         padding-right: 10px;
       }
 
@@ -146,8 +146,9 @@
       }
 
       .content h1 {
-        font-size: 22px;
-        margin-bottom: 20px;
+        font-size: 50px;
+        font-weight: 600;
+        margin-bottom: 70px;
       }
 
       .section {
@@ -177,12 +178,17 @@
         display: flex;
         justify-content: flex-end;
         align-items: center;
-        font-size: 14px;
+        font-size: 20px;
         margin-bottom: 20px;
       }
 
       .toggle-container input {
         margin-left: 8px;
+      }
+      .separator {
+        width: 181px; /* 원하는 너비 */
+        margin: 8px auto; /* 가운데 정렬 + 여백 */
+        display: block;
       }
     </style>
   </head>
@@ -208,6 +214,8 @@
           <div class="sidebar">
             <img src="icons/profile.png" alt="Avatar" class="avatar" />
             <h2 id="saved-nickname">닉네임을 정해주세요.</h2>
+            <img src="icons/verify.png" alt="Separator" class="separator" />
+
             <p id="saved-bio">자유롭게 나를 소개해 주세요!</p>
 
             <div class="menu">
@@ -215,7 +223,7 @@
                 ><img src="icons/pencil.png" class="icon" />프로필 편집</a
               >
               <a href="MyPagePass.html" class="menu-item"
-                ><img src="icons/lock-gray.png" class="icon" />비밀번호 변경</a
+                ><img src="icons/lock-gray.png" class="icon" />개인정보 변경</a
               >
               <a href="MyPageAlerts.html" class="menu-item"
                 ><img src="icons/notification-blue.png" class="icon" />알림

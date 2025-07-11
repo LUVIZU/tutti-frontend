@@ -2,7 +2,7 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <title>비밀번호 변경</title>
+    <title>개인정보 변경</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Pretendard&display=swap"
       rel="stylesheet"
@@ -69,16 +69,16 @@
 
       .profile-container {
         display: flex;
-        background: white;
+        background: rgba(255, 255, 255, 0.4);
         width: 1549px;
-        height: 901px;
+        height: 800px;
         border-radius: 20px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
         overflow: hidden;
       }
 
       .sidebar {
-        width: 280px;
+        width: 360px;
         border-right: 1px solid #eee;
         padding: 40px 20px;
       }
@@ -93,13 +93,13 @@
 
       .sidebar h2 {
         text-align: center;
-        font-size: 18px;
+        font-size: 30px;
         margin: 10px 0 5px;
       }
 
       .sidebar p {
         text-align: center;
-        font-size: 14px;
+        font-size: 19px;
         color: #555;
         margin-bottom: 20px;
       }
@@ -120,8 +120,9 @@
         color: inherit;
         text-decoration: none;
       }
+
       .icon {
-        width: 26px;
+        width: 30px;
         padding-right: 10px;
       }
 
@@ -136,33 +137,42 @@
         background-color: #f4f9ff;
       }
 
-      .menu-item i {
-        margin-right: 10px;
-      }
-
       .content {
         flex: 1;
-        padding: 60px 60px;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 좌우 중앙 */
+        padding: 120px 40px 60px; /* 상단 패딩을 늘려 위치 조정 */
+        padding: 60px 40px;
+        width: 100%;
       }
 
       .content h1 {
-        font-size: 22px;
-        margin-bottom: 10px;
+        font-size: 50px;
+        font-weight: 600;
+        margin-bottom: 70px;
       }
 
       .pw-note {
         font-size: 13px;
         color: #888;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
       }
 
       .form-group {
         margin-bottom: 18px;
       }
-
-      input[type="password"] {
+      .form-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         width: 100%;
-        padding: 10px 12px;
+      }
+
+      input[type="text"],
+      input[type="password"] {
+        width: 280px;
+        padding: 8px 10px;
         border: 1px solid #ccc;
         border-radius: 6px;
         font-size: 14px;
@@ -182,10 +192,11 @@
 
       .password-wrapper {
         position: relative;
+        display: flex;
+        justify-content: center;
       }
 
       .password-wrapper input {
-        width: 100%;
         padding-right: 40px;
       }
 
@@ -199,7 +210,8 @@
       }
 
       button {
-        margin-top: 20px;
+        display: block;
+        margin: 30px auto 0 auto; /* 위쪽 마진 유지 + 좌우 auto */
         background-color: #87c9ff;
         border: none;
         padding: 12px 60px;
@@ -211,6 +223,11 @@
 
       button:hover {
         background-color: #6cb8f0;
+      }
+      .separator {
+        width: 181px; /* 원하는 너비 */
+        margin: 8px auto; /* 가운데 정렬 + 여백 */
+        display: block;
       }
     </style>
   </head>
@@ -236,6 +253,8 @@
           <div class="sidebar">
             <img src="icons/profile.png" alt="Avatar" class="avatar" />
             <h2 id="saved-nickname">닉네임을 정해주세요.</h2>
+            <img src="icons/verify.png" alt="Separator" class="separator" />
+
             <p id="saved-bio">자유롭게 나를 소개해 주세요!</p>
 
             <div class="menu">
@@ -243,7 +262,7 @@
                 ><img src="icons/pencil.png" class="icon" />프로필 편집</a
               >
               <a href="MyPagePass.html" class="menu-item"
-                ><img src="icons/lock-blue.png" class="icon" />비밀번호 변경</a
+                ><img src="icons/lock-blue.png" class="icon" />개인정보 변경</a
               >
               <a href="MyPageAlerts.html" class="menu-item"
                 ><img src="icons/notification-gray.png" class="icon" />알림
@@ -256,50 +275,64 @@
           </div>
 
           <div class="content">
-            <h1>비밀번호 변경</h1>
-            <div class="pw-note">
-              8~16자의 영소·대소문자, 숫자 및 특수문자 사용
-            </div>
+            <h1>개인정보 변경</h1>
 
-            <div class="error-text" id="pwErrorMsg" style="display: none">
-              비밀번호를 다시 설정해주세요.<br />
-              8~16자의 영소 대소문자, 숫자 및 특수문자 사용
-            </div>
+            <div class="form-wrapper">
+              <div class="form-group">
+                <input
+                  type="text"
+                  id="newNickname"
+                  placeholder="새 닉네임 (2~20자)"
+                  maxlength="20"
+                />
+              </div>
 
-            <div class="form-group password-wrapper">
-              <input
-                type="password"
-                id="currentPw"
-                placeholder="현재 비밀번호"
-              />
-              <span class="toggle-visibility" onclick="togglePw('currentPw')"
-                >👁</span
-              >
-            </div>
+              <div class="pw-note">
+                8~16자의 영소·대소문자, 숫자 및 특수문자 사용
+              </div>
 
-            <div class="form-group password-wrapper">
-              <input type="password" id="newPw" placeholder="새 비밀번호" />
-              <span class="toggle-visibility" onclick="togglePw('newPw')"
-                >👁</span
-              >
-            </div>
+              <div class="error-text" id="pwErrorMsg" style="display: none">
+                비밀번호를 다시 설정해주세요.<br />
+                8~16자의 영소 대소문자, 숫자 및 특수문자 사용
+              </div>
 
-            <div class="form-group password-wrapper">
-              <input
-                type="password"
-                id="confirmPw"
-                placeholder="새 비밀번호 확인"
-              />
-              <span class="toggle-visibility" onclick="togglePw('confirmPw')"
-                >👁</span
-              >
-            </div>
+              <div class="form-group password-wrapper">
+                <input
+                  type="password"
+                  id="currentPw"
+                  placeholder="현재 비밀번호"
+                />
+                <span class="toggle-visibility" onclick="togglePw('currentPw')"
+                  >👁</span
+                >
+              </div>
 
-            <button onclick="validatePassword()">입력완료</button>
+              <div class="form-group password-wrapper">
+                <input type="password" id="newPw" placeholder="새 비밀번호" />
+                <span class="toggle-visibility" onclick="togglePw('newPw')"
+                  >👁</span
+                >
+              </div>
+
+              <div class="form-group password-wrapper">
+                <input
+                  type="password"
+                  id="confirmPw"
+                  placeholder="새 비밀번호 확인"
+                />
+                <span class="toggle-visibility" onclick="togglePw('confirmPw')"
+                  >👁</span
+                >
+              </div>
+
+              <button onclick="validatePassword()">입력완료</button>
+            </div>
           </div>
         </div>
       </main>
     </div>
+
+    <script src="./config.js"></script>
 
     <script>
       function togglePw(id) {
@@ -311,11 +344,12 @@
         const current = document.getElementById("currentPw");
         const newPw = document.getElementById("newPw");
         const confirmPw = document.getElementById("confirmPw");
+        const nickname = document.getElementById("newNickname");
         const errorMsg = document.getElementById("pwErrorMsg");
 
         let isValid = true;
 
-        [current, newPw, confirmPw].forEach((input) =>
+        [current, newPw, confirmPw, nickname].forEach((input) =>
           input.classList.remove("invalid")
         );
 
@@ -337,12 +371,46 @@
           isValid = false;
         }
 
+        if (
+          nickname.value.trim().length < 2 ||
+          nickname.value.trim().length > 20
+        ) {
+          nickname.classList.add("invalid");
+          isValid = false;
+        }
+
         if (!isValid) {
           errorMsg.style.display = "block";
-        } else {
-          errorMsg.style.display = "none";
-          alert("비밀번호가 성공적으로 변경되었습니다!");
+          return;
         }
+
+        errorMsg.style.display = "none";
+
+        // 🔐 PATCH 요청 보내기
+        const token = localStorage.getItem("accessToken");
+        fetch(`${window.BASE_URL}/api/users/me`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            nickname: nickname.value.trim(),
+            profileImageUrl: "", // 사용 안 하면 빈 문자열
+          }),
+        })
+          .then((res) => {
+            if (!res.ok) throw new Error("닉네임 수정 실패");
+            return res.json();
+          })
+          .then(() => {
+            localStorage.setItem("nickname", nickname.value.trim());
+            alert("닉네임과 비밀번호가 성공적으로 변경되었습니다!");
+          })
+          .catch((err) => {
+            console.error(err);
+            alert("닉네임 변경 중 오류 발생");
+          });
       }
 
       window.addEventListener("DOMContentLoaded", () => {
