@@ -1,4 +1,6 @@
 # LikeLion13-삼삼옥수
+## 🎥 시연 영상
+[![시연 영상 보기](https://img.youtube.com/vi/XQhE6KaugZk/0.jpg)](https://youtu.be/XQhE6KaugZk)
 
 # Tutti Frontend
 > 교내 해커톤 2025 제출작 (팀 프로젝트)  
