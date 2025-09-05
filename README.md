@@ -21,9 +21,3 @@
 - **스터디 그룹**: 시험별 커뮤니티 자동 생성으로 학습 그룹 형성
 
 ## 📂 실행 방법
-```bash
-# 환경변수 설정
-cp .env.example .env
-# .env 파일에 API_BASE, AI_API_KEY 등 입력
-
-# 정적 파일 실행 (Vercel 또는 live-server 등 사용)
