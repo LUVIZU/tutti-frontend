@@ -1,4 +1,4 @@
-# LikeLion13-Team3
+# LikeLion13-삼삼옥수
 
 # Tutti Frontend
 > 교내 해커톤 2025 제출작 (팀 프로젝트)  
